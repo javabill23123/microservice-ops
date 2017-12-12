@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -90,9 +92,11 @@ public class MqOpsController {
 		PageResultResponse<MqMessageResponseDto> pageResultResponse = new PageResultResponse<MqMessageResponseDto>();
 		ESPageQuery query = new ESPageQuery();
 		BeanUtils.copyProperties(request, query);
-		String[] fieldNames = Arrays.asList(MqQueryRequestDto.class.getDeclaredFields()).stream().map(field -> field.getName()).collect(Collectors.toList()).toArray(new String[0]);
-		query.setQueryString(toQueryString(request, fieldNames));
-		PageResultResponse<MqMessage> pageResult = mqMessageService.pageQuery(query, MqOpsConstant.INDEX);
+		String[] fuzzyFields = {"host", "msgKey", "exchangeName", "sender"};
+		String[] ignoreFields = {"occurStartTime", "occurEndTime"};
+		query.setQueryString(toEsQueryString(request, ignoreFields, fuzzyFields));
+		RangeQueryBuilder filter = QueryBuilders.rangeQuery("occurTime").gte(request.getOccurStartTime()).lte(request.getOccurEndTime());
+		PageResultResponse<MqMessage> pageResult = mqMessageService.pageQuery(query, MqOpsConstant.INDEX,filter);
 		BeanUtils.copyProperties(pageResult, pageResultResponse);
 		List<MqMessageResponseDto> dto = Lists.transform(pageResult.getData().getRows(), mqMessage2Dto);
 		pageResultResponse.getData().setRows(dto);
@@ -143,19 +147,21 @@ public class MqOpsController {
 	public RestResultResponse<List<MqMessageResponseDto>> queryByCondition(@RequestBody MqQueryRequestDto request){
 		RestResultResponse<List<MqMessageResponseDto>> response = new RestResultResponse<List<MqMessageResponseDto>>();
 		String[] fieldNames = Arrays.asList(MqQueryRequestDto.class.getDeclaredFields()).stream().map(field -> field.getName()).collect(Collectors.toList()).toArray(new String[0]);
-		List<MqMessage> messages = mqMessageService.selectList(MqOpsConstant.INDEX, toQueryString(request, fieldNames));
+		List<MqMessage> messages = mqMessageService.selectList(MqOpsConstant.INDEX, toEsQueryString(request,null,fieldNames));
 		List<MqMessageResponseDto> messagesDto = Lists.transform(messages, mqMessage2Dto);
 		response.setData(messagesDto);
 		response.setSuccess(true);
 		return response;
 	}
 	
-	private String toQueryString(Object o, String...fuzzyFileds) {
+	private String toEsQueryString(Object o, String [] ignoreFields, String...fuzzyFileds) {
 		String queryString = "";
 		List<String> fuzzyFiledlist = Arrays.asList(fuzzyFileds);
+		List<String> ignoreFieldList = ignoreFields==null?Arrays.asList():Arrays.asList(ignoreFields);
 		Field[] fields=o.getClass().getDeclaredFields();  
 	    for(int i=0;i<fields.length;i++){  
 	        String name = fields[i].getName();  
+	        if(ignoreFieldList.contains(name)) continue;
 	        String value = getFieldValueByName(fields[i].getName(), o);  
 	        if(!StringUtils.isEmpty(value)){
 	        	queryString += "AND " + name + ":" + (fuzzyFiledlist.contains(name)?value+"*":value) + " ";
