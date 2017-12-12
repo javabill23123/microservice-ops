@@ -15,8 +15,17 @@ public class MenuTree extends TreeNode {
     String authority;
     String redirect;
     String code;
+    String type;
 
-    public String getCode() {
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getCode() {
         return code;
     }
 
