@@ -57,14 +57,8 @@ public class WeChatMessageController {
 
     private static Logger logger = Logger.getLogger(WeChatMessageController.class);
 
-//    @Autowired
-//    private MessageResolver messageResolver;
-
     @Autowired
     private ApplicationContext context;
-
-//    @Autowired
-//    private ListeningExecutorService executorService;
     
     @Autowired
     private WechatMessageService wechatMessageService;
@@ -78,12 +72,13 @@ public class WeChatMessageController {
 //    private PushLocalThread push;
 
     //微信验证服务器回调接口  
-	@RequestMapping(value = "/wechatcall/request", method = RequestMethod.GET)//, produces="text/html;charset=UTF-8"
+	@RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.GET)//, produces="text/html;charset=UTF-8"
 	@ResponseBody 
 	public String validateGet(Check tokenModel, HttpServletRequest req,
+			@PathVariable("serviceNo") String serviceNo,
 			HttpServletResponse res) throws ParseException, IOException {
 		logger.info("----WeChatMessageController,get,check");
-		String validate = wechatMessageService.validate(WechatDict.token, tokenModel);
+		String validate = wechatMessageService.validate(tokenModel,serviceNo);
 		logger.info("---"+validate);
 		return validate;
 	}
@@ -100,24 +95,24 @@ public class WeChatMessageController {
     * @param xml
     * @return
     *///@RequestBody Map<String, String> map,
-    @RequestMapping(value = "/wechatcall/request", method = RequestMethod.POST)//,  produces = "text/plain;charset=UTF-8"
+    @RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.POST)//,  produces = "text/plain;charset=UTF-8"
     @ResponseBody
-    public String receiveDealerWeChatMsg(
+    public String receiveDealerWeChatMsg(@PathVariable("serviceNo") String serviceNo,
     		HttpServletRequest req,HttpServletResponse rps,@RequestBody String xml) throws Exception{
 		logger.info("----WeChatMessageController,post,"+xml);
 //        String returnMsg = wechatMessageService.receiveAndReplyDealerWeChatMsg(dealerAppid,nonce,timestamp,signature,xml);
-		String returnMsg = wechatMessageService.receiveAndReplyDealerWeChatMsg(xml,rps);
+		String returnMsg = wechatMessageService.receiveAndReplyDealerWeChatMsg(serviceNo,xml,rps);
 		String openid=req.getParameter("openid");
 		logger.info("----WeChatMessageController,openid,"+openid);
-		writeWechatCookiesInfo(openid,rps);
+//		writeWechatCookiesInfo(openid,rps);
         return returnMsg;
     }
     
-	@RequestMapping(value = "/genToken", method = RequestMethod.GET)
+	@RequestMapping(value = "/genToken/{serviceNo}", method = RequestMethod.GET)
 	@ResponseBody
-	public String genToken() {
+	public String genToken(@PathVariable("serviceNo") String serviceNo) {
 		Map<String,String> map =new HashMap();
-		String tmp=tokenService.genAccessToken();
+		String tmp=tokenService.genAccessToken(1,serviceNo);
 		map.put("token", tmp);
 		map.put("name", "success");
 		logger.info("--genToken:"+tmp);
@@ -126,19 +121,21 @@ public class WeChatMessageController {
 	}
     
 	//发送模板消息
-	@RequestMapping(value = "/wechat-push/api/sendTemplateMessage", method = RequestMethod.POST)
+	@RequestMapping(value = "/wechat-push/api/sendTemplateMessage/{serviceNo}", method = RequestMethod.POST)
 	@ResponseBody
-	public String sendTemplateMessage(@RequestBody String message) {
+	public String sendTemplateMessage(@PathVariable("serviceNo") String serviceNo,
+			@RequestBody String message) {
 		logger.info("--sendTemplateMessage:"+message);
-		return wechatTemplatePublishService.sendTemplateMessage(message, tokenService.getAccessToken());
+		return wechatTemplatePublishService.sendTemplateMessage(message, tokenService.getAccessToken(serviceNo));
 	}
     
 	//添加消息模板
-	@RequestMapping(value = "/wechat-push/api/addTemplate", method = RequestMethod.GET)
+	@RequestMapping(value = "/wechat-push/api/addTemplate/{serviceNo}", method = RequestMethod.GET)
 	@ResponseBody
-	public String addTemplate(@RequestBody String message) {
+	public String addTemplate(@PathVariable("serviceNo") String serviceNo,
+			@RequestBody String message) {
 		logger.info("--massSendPicTxtMessage:"+message);
-		return wechatTemplatePublishService.addTemplate(message, tokenService.getAccessToken());
+		return wechatTemplatePublishService.addTemplate(message, tokenService.getAccessToken(serviceNo));
 	}
     
 //	//添加消息模板
@@ -148,10 +145,11 @@ public class WeChatMessageController {
 //		return "";
 //	}
     
-	@RequestMapping(value = "/wechat-push/api/v1/user/{openid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/wechat-push/api/v1/user/{serviceNo}/{openid}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getUserByopenid(@PathVariable("openid") String openid) {
-		return wechatMessageService.getUser(openid);
+	public String getUserByopenid(@PathVariable("serviceNo") String serviceNo,
+			@PathVariable("openid") String openid) {
+		return wechatMessageService.getUser(serviceNo,openid);
 	}
 
     

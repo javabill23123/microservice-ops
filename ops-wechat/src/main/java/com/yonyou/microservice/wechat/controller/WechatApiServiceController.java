@@ -23,13 +23,14 @@ public class WechatApiServiceController {
 //    @Autowired
 //    private BaseService mqInterface;
 	
-	@RequestMapping(value = "/getOpenid/{code}", method = RequestMethod.GET,consumes = "application/json;UTF-8")
-	public String getOpenidByCode(@PathVariable("code") String code) {
-		return tokenService.getOpenidByCode(code);
+	@RequestMapping(value = "/getOpenid/{serviceNo}/{code}", method = RequestMethod.GET,consumes = "application/json;UTF-8")
+	public String getOpenidByCode(@PathVariable("serviceNo") String serviceNo,
+			@PathVariable("code") String code) {
+		return tokenService.getOpenidByCode(serviceNo,code);
 	}
-	@RequestMapping(value = "/getToken", method = RequestMethod.GET,consumes = "application/json;UTF-8")
-	public String getToken() {
-		return tokenService.getAccessToken();
+	@RequestMapping(value = "/getToken/{serviceNo}", method = RequestMethod.GET,consumes = "application/json;UTF-8")
+	public String getToken(@PathVariable("serviceNo") String serviceNo) {
+		return tokenService.getAccessToken(serviceNo);
 	}
 
 	@RequestMapping(value = "/testsend", method = RequestMethod.GET)

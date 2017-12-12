@@ -36,9 +36,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.netflix.hystrix.contrib.javanica.utils.CommonUtils;
 import com.xiaoleilu.hutool.http.HttpUtil;
-import com.yonyou.cloud.common.service.BaseService;
 import com.yonyou.cloud.mom.client.MqSender;
 import com.yonyou.microservice.wechat.common.BusinessConstant;
 import com.yonyou.microservice.wechat.common.WechatDict;
@@ -47,6 +45,7 @@ import com.yonyou.microservice.wechat.dto.EventWechatAttentionDTO;
 import com.yonyou.microservice.wechat.dto.EventWechatUnAttentionDTO;
 import com.yonyou.microservice.wechat.encryption.WXBizMsgCrypt;
 import com.yonyou.microservice.wechat.entity.Check;
+import com.yonyou.microservice.wechat.entity.OfficeAccountSetting;
 import com.yonyou.microservice.wechat.eventenum.EventConstant.EventBizStep;
 import com.yonyou.microservice.wechat.eventenum.EventConstant.EventBizType;
 import com.yonyou.microservice.wechat.exception.WechatException;
@@ -65,6 +64,8 @@ import net.sf.json.JSONObject;
 */
 @Service
 public class WechatMessageService {
+	@Autowired
+	private OfficeAccountSettingService settingService;
     
     private Logger logger=Logger.getLogger(WechatMessageService.class);
 
@@ -73,7 +74,8 @@ public class WechatMessageService {
     @Autowired
     private TokenService tokenService;
     
-	public String validate(String wxToken,Check tokenModel) {
+	public String validate(Check tokenModel,String serviceNo) {
+		String wxToken=settingService.getOfficeAccountToken(serviceNo);
 		String signature = tokenModel.getSignature();
 		Long timestamp = tokenModel.getTimestamp();
 		Long nonce = tokenModel.getNonce();
@@ -106,11 +108,9 @@ public class WechatMessageService {
     * @throws WechatException
     * @throws ServiceAppException
     */
-    public String receiveAndReplyDealerWeChatMsg(//String dealerAppid, String nonce, String timestamp, String signature,
+    public String receiveAndReplyDealerWeChatMsg(String serviceNo,
                                                  String xml,HttpServletResponse response) throws WechatException{
         try {
-            //WXBizMsgCrypt crypt = new WXBizMsgCrypt(WechatDict.token, WechatDict.AESKey, WechatDict.appid);
-            //String parsedXml = crypt.decryptMsg(signature, timestamp, nonce, xml);
             Map<String,String> xmlMap = WechatMessageHandleUtils.xmlToMap(xml);//parsedXml
             
             String msgType = xmlMap.get("MsgType");
@@ -118,12 +118,12 @@ public class WechatMessageService {
             if (WechatDict.MESSAGE_TYPE_TEXT.equals(msgType)) {
                 logger.info("receiveAndReplyDealerWeChatMsg-text");
                 // 文本类型消息处理
-                return handleTextMsg(xmlMap);//,timestamp, nonce
+                return handleTextMsg(serviceNo,xmlMap);//,timestamp, nonce
                 
             } else if(WechatDict.MESSAGE_TYPE_EVENT.equals(msgType)) {
                 logger.info("receiveAndReplyDealerWeChatMsg-event");
                 // 事件类型消息处理
-                return handleEventMsg(xmlMap,response);//,dealerAppid,timestamp, nonce
+                return handleEventMsg(serviceNo,xmlMap,response);//,dealerAppid,timestamp, nonce
                 
             }else if(WechatDict.MESSAGE_TYPE_IMAGE.equals(msgType)) {
                 
@@ -150,7 +150,7 @@ public class WechatMessageService {
     * @return
     */ 
     //,String timestamp, String nonce
-    private String handleTextMsg(Map<String, String> msgMap) throws WechatException{
+    private String handleTextMsg(String serviceNo,Map<String, String> msgMap) throws WechatException{
         try {
             
             //模拟粉丝发送文本消息给专用测试公众号
@@ -175,45 +175,12 @@ public class WechatMessageService {
                 map.put("Content", "您的问题，我们将抓紧答复！");
             }
 
-            WXBizMsgCrypt crypt = new WXBizMsgCrypt(WechatDict.token, WechatDict.AESKey, WechatDict.appid);
+            OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
+            WXBizMsgCrypt crypt = new WXBizMsgCrypt(oa.getToken(), oa.getAESKey(), oa.getAppid());
             String replyMsg = WechatMessageHandleUtils.mapToXml(map);
             logger.info("handleTextMsg-replyMsg="+replyMsg);
             
-//            if(content.contains("QUERY_AUTH_CODE")){
-////                new Thread(new Runnable() {
-////                    public void run() {
-//                        try{
-//                            String[] arr = content.split("\\:");
-//                            String queryAuthCode = arr[1];
-//                                         
-//                            logger.info("handleTextMsg-content-QUERY_AUTH_CODE="+queryAuthCode);
-//                            
-//                            //获取authorizerAccessToken
-//                            ApiQueryAuthResult result = wechatInterfaceApiService.queryAuth(queryAuthCode);
-//                            String authorizerAccessToken = result.getAuthorization_info().getAuthorizer_access_token();
-//                            logger.info("handleTextMsg-content-authorizerAccessToken="+authorizerAccessToken);
-//                            
-//                            CustomerServiceTextMsg textMsg = new CustomerServiceTextMsg();
-//                            textMsg.setMsgtype(WechatConstant.MESSAGE_TYPE_TEXT);
-//                            textMsg.setTouser(fromUserName);
-//                            CustomerServiceTextMsgContent textMsgContent = new CustomerServiceTextMsgContent();
-//                            textMsgContent.setContent(queryAuthCode+"_from_api");
-//                            textMsg.setText(textMsgContent);
-//                            String customerServiceTextMsgJson = SerializeUtils.serialize(textMsg);
-//                            logger.info("handleTextMsg-customerServiceTextMsgJson="+customerServiceTextMsgJson);
-//                            wechatInterfaceApiService.replyCustomerServiceTextMsg(authorizerAccessToken, customerServiceTextMsgJson);
-//                        }catch (Exception e) {
-//                            logger.error(e.getMessage(),e);
-//                        }
-////                    }
-////                });
-//            }
             return replyMsg;
-            //return crypt.encryptMsg(replyMsg, timestamp, nonce);
-
-
-            
-
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             throw new WechatException();
@@ -232,14 +199,14 @@ public class WechatMessageService {
     * @param nonce
     * @return
     *///,String dealerAppid,String timestamp, String nonce
-    private String handleEventMsg(Map<String, String> msgMap,HttpServletResponse response) {
+    private String handleEventMsg(String serviceNo,Map<String, String> msgMap,HttpServletResponse response) {
 
         String event = msgMap.get("Event");
         logger.info("handleEventMsg-event="+event);
         switch (event) {
         case WechatDict.EVENT_SUBSCRIBE:
             // 用户未关注时，进行关注后的事件推送
-            return handleSubscribeEvent(event,msgMap,response);//,dealerAppid,timestamp,nonce
+            return handleSubscribeEvent(serviceNo,event,msgMap,response);//,dealerAppid,timestamp,nonce
         case WechatDict.EVENT_SCAN:
             // 用户已关注时的事件推送
             return null;//handleSubscribeEvent(event,msgMap,dealerAppid,timestamp,nonce);
@@ -256,17 +223,17 @@ public class WechatMessageService {
             return null;//handleSubscribeEvent(event,msgMap,dealerAppid,timestamp,nonce);
         }
     }
-    public String getUser(String openid)  throws WechatException{
+    public String getUser(String serviceNo,String openid)  throws WechatException{
     	this.logger.info("getUser,openid="+openid);
 		String url = WechatDict.getOpenInfoUrl;
-		url = url.replace("ACCESS_TOKEN", tokenService.getAccessToken());
+		url = url.replace("ACCESS_TOKEN", tokenService.getAccessToken(serviceNo));
 		url = url.replace("OPENID", openid);
         String body=HttpUtil.get(url);
 		return body;
     }
     
     //,String dealerAppid,String timestamp,String nonce
-    private String handleSubscribeEvent(String event,Map<String, String> msgMap,HttpServletResponse response)  throws WechatException{
+    private String handleSubscribeEvent(String serviceNo,String event,Map<String, String> msgMap,HttpServletResponse response)  throws WechatException{
         try{
             
 
@@ -280,7 +247,7 @@ public class WechatMessageService {
             	eventKey=eventKey.substring(i, eventKey.length());
             }
     		String url = WechatDict.getOpenInfoUrl;
-    		url = url.replace("ACCESS_TOKEN", tokenService.getAccessToken());
+    		url = url.replace("ACCESS_TOKEN", tokenService.getAccessToken(serviceNo));
     		url = url.replace("OPENID", fromUserName);
             String body=HttpUtil.get(url);
     		JSONObject fromObject = JSONObject.fromObject(body);
@@ -323,7 +290,7 @@ public class WechatMessageService {
             }else{
                  //如果没有图文消息回复
                 // 第三方公众号测试回复,timestamp,nonce
-                return testReplyTextMessage(fromUserName,toUserName,event,response);
+                return testReplyTextMessage(serviceNo,fromUserName,toUserName,event,response);
             }
 
         }catch (Exception e) {
@@ -348,7 +315,7 @@ public class WechatMessageService {
     * @throws ServiceAppException
     *///,String timestamp,String nonce
     @SuppressWarnings("unused")
-    private String testReplyTextMessage(String fromUserName,String toUserName,String event,HttpServletResponse response) throws WechatException {
+    private String testReplyTextMessage(String code, String fromUserName,String toUserName,String event,HttpServletResponse response) throws WechatException {
         try {
             String value = fromUserName;
             String oxid=value+",,"+new Date().toString();
@@ -358,27 +325,15 @@ public class WechatMessageService {
             map.put("FromUserName", toUserName);
             map.put("CreateTime", new Date().getTime() + "");
             map.put("MsgType", WechatDict.MESSAGE_TYPE_TEXT);
-            //map.put("Content", "感谢您的关注，谢谢！");
-//            Map<String,String> hash = new HashMap<String,String>();
-//            hash.put("【点击加入会员】", "<span onclick=\"javascript:location.href='www.baidu.com'\">【点击加入会员】</span>");
-            //String content = "壮志菱云，共悦人生！亲爱的菱粉，欢迎来到广汽三菱官方微信服务平台，这里是广汽三菱唯一官方车友俱乐部——菱悦会，更是以“热爱SUV，创造愉悦生活”为纽带，促进SUV文化交流，实现权益尊享的车主专属互动平台，还有丰富的活动和豪礼相送。现诚邀您<a href=\"http://wxtest.gmmc.com.cn/wx/views/homepage/signUp.html?openId="+openId+"\">【点击加入会员】</a>与广汽三菱一起纵情天地！";
             String content = "壮志菱云，共悦人生！亲爱的菱粉，欢迎来到广汽三菱官方微信服务平台，这里是广汽三菱唯一官方车友俱乐部——菱悦会，更是以“热爱SUV，创造愉悦生活”为纽带，促进SUV文化交流，实现权益尊享的车主专属互动平台，还有丰富的活动和豪礼相送。现诚邀您<a href=\"http://i-club.gmmc.com.cn/wx/views/homepage/signUp.html?openId="+openId+"\">【点击加入会员】</a>与广汽三菱一起纵情天地！";
-//            Set keySet = hash.keySet();
-//            logger.info("keySet为>>>>>>"+keySet);
-//            Iterator it = keySet.iterator();
-//            logger.info("Iterator为>>>>>>"+it);
-//            while(it.hasNext()){
-//                String key = (String) it.next();
-//                content.replaceAll(key,hash.get(key));
-//            }
             logger.info("发送的消息体为>>>>>>"+content);
             map.put("Content", content);
 
-            WXBizMsgCrypt crypt = new WXBizMsgCrypt(WechatDict.token, WechatDict.AESKey, WechatDict.appid);
+//            OfficeAccountSetting oa=settingService.getOfficeAccount(code);
+//            WXBizMsgCrypt crypt = new WXBizMsgCrypt(oa.getToken(), oa.getAESKey(), oa.getAppid());
             String replyMsg = WechatMessageHandleUtils.mapToXml(map);
             logger.info("handleSubscribeEvent-replyMsg=" + replyMsg);
             return replyMsg;
-//            return crypt.encryptMsg(replyMsg, timestamp, nonce);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new WechatException();
@@ -403,76 +358,6 @@ public class WechatMessageService {
     *///String authorizerAppid,String timestamp,String nonce,
     private String replyImageTextMessage(String fromUserName,String toUserName,String event) throws WechatException {
     	return "";
-//        try {
-//            
-//            logger.info("replyImageTextMessage is entry");
-//            //List<NewsActivityDto> dtoList = dealerApiServiceInterface.getTheLastNewsActivityByDealerCode(authorizerAppid);
-//            List<NewsActivityDto> dtoList=new ArrayList<NewsActivityDto>();
-//            NewsActivityDto n=new NewsActivityDto();
-//            n.setContent("welcome");
-//            n.setTitile("欢迎您");
-//            if (CommonUtils.isNullOrEmpty(dtoList)) {
-//                logger.info("replyImageTextMessage-dtoList is empty");
-//                return BusinessConstant.EMPTY_STRING;
-//            }
-//            StringBuffer replyMsg  = new StringBuffer("");
-//            String wechatImageUrl = BusinessConstant.EMPTY_STRING;
-//            
-//            replyMsg.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-//           .append("<xml>")
-//           .append("<ToUserName><![CDATA["+fromUserName+"]]></ToUserName>")
-//           .append("<FromUserName><![CDATA["+toUserName+"]]></FromUserName>")
-//           .append("<CreateTime>"+(new Date().getTime())+"</CreateTime>")
-//           .append("<MsgType><![CDATA[news]]></MsgType>")
-//           .append("<ArticleCount>"+dtoList.size()+"</ArticleCount>")
-//           .append("<Articles>");
-////            String titleImage = BusinessConstant.EMPTY_STRING;
-////            String newsActivityConntent = BusinessConstant.EMPTY_STRING;
-//            String subscribeUrl = BusinessConstant.EMPTY_STRING;
-//            for (NewsActivityDto newsActivityDto : dtoList) {
-//                //如果该字段在发布时没有维护，则重新将该图片发布到微信端并保存url
-//                if (CommonUtils.isNullOrEmpty(newsActivityDto.getWechatTitleImageUrl())) {
-//                    if(CommonUtils.isNullOrEmpty(newsActivityDto.getTitleImage())){
-//                        continue;
-//                    }
-////                    wechatImageUrl = wechatInterfaceApiService.getMediaUpLoadingUrl(authorizerAppid,
-////                                                                                    newsActivityDto.getTitleImage());
-//                    logger.info("replyImageTextMessage-wechatImageUrl=" + wechatImageUrl);
-//                    if (CommonUtils.isNullOrEmpty(wechatImageUrl)) {
-//                        continue;
-//                    }
-//
-//                } else {
-//                    
-//                    wechatImageUrl = newsActivityDto.getWechatTitleImageUrl();
-//                    logger.info("replyImageTextMessage-newsActivityDto.getWechatTitleImageUrl()="
-//                                + newsActivityDto.getWechatTitleImageUrl());
-//
-//                }
-//                
-////                subscribeUrl = config.getBaseUrl()+"/views/subscribe/subscribeIView.html?naiId="+newsActivityDto.getNaiId();
-//
-//                
-//                 replyMsg.append("<item>")
-//                .append("<Title><![CDATA["+newsActivityDto.getTitile()+"]]></Title>") 
-//                .append("<Description><![CDATA["+newsActivityDto.getTitile()+"]]></Description>")
-//                .append("<PicUrl><![CDATA["+wechatImageUrl+"]]></PicUrl>")
-//                .append("<Url><![CDATA["+subscribeUrl+"]]></Url>")
-//                .append("</item>");
-//
-//            }
-//            
-//            
-//            replyMsg.append("</Articles>").append("</xml>");
-//            logger.info("handleSubscribeEvent-replyImageTextMessage=" + replyMsg.toString());
-//            return replyMsg.toString();
-////            WXBizMsgCrypt crypt = new WXBizMsgCrypt(WechatDict.token, WechatDict.AESKey, WechatDict.appid);
-//////            String replyMsg = WechatMessageHandleUtils.mapToXml(map);
-////            return crypt.encryptMsg(replyMsg.toString(), timestamp, nonce);
-//        } catch (Exception e) {
-//            logger.error(e.getMessage(), e);
-//            throw new ServiceAppException(e.getMessage(), e);
-//        }
 
     }
 
@@ -540,8 +425,6 @@ public class WechatMessageService {
         String messageXml = "";
         String toUserName = map.get("ToUserName");
         String fromUserName = map.get("FromUserName");
-
-        
         return messageXml;
     }
 

@@ -30,6 +30,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,13 +68,13 @@ public class WechatLocalPublishController {
     * @param xml
     * @return
     */
-    @RequestMapping(value = "/massSendMessage", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/massSendMessage/{serviceNo}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Map<String, Object> massSendMessage() throws Exception{
+    public Map<String, Object> massSendMessage(@PathVariable("serviceNo") String serviceNo) throws Exception{
         logger.info("newsInformationSend in");
         Map<String ,Object> resultMap ;
         try {
-            String accessToken = tokenService.getAccessToken();
+            String accessToken = tokenService.getAccessToken(serviceNo);
             
             resultMap = wechatLocalPublishService.treatWechatMessages(accessToken);//titleImageBytes, wechatInfo,
         } catch(Exception e) {
@@ -86,32 +87,4 @@ public class WechatLocalPublishController {
         
     }
     
-//    //发送模板消息
-//    @RequestMapping(value = "/templateMessage", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-//    @ResponseBody
-//    public String sendTemplateMessage(@RequestBody WeChatMessageProtocol origin) throws Exception{
-//        logger.info("newsInformationSend in");
-//        webChatTemplateMessage.transform(origin);
-//        return "";
-//        
-//    }
-    
-    
-    @RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public Map<String, Object> publictest() throws Exception{
-        logger.info("newsInformationSend in");
-        Map<String ,Object> resultMap ;
-        try {
-            String accessToken = tokenService.getAccessToken();
-            
-            resultMap = wechatLocalPublishService.treatWechatMessages(accessToken);//data, wechatInfo, 
-        } catch(Exception e) {
-            resultMap = new HashMap<>();
-            resultMap.put("STATUS", "0");
-            resultMap.put("MESSAGE", e.getMessage());
-        }
-        return resultMap;
-        
-    }
 }

@@ -9,11 +9,13 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiaoleilu.hutool.http.HttpUtil;
 import com.yonyou.microservice.wechat.common.WechatDict;
-import com.yonyou.microservice.wechat.entity.AccessToken;
+import com.yonyou.microservice.wechat.entity.OfficeAccountSetting;
+import com.yonyou.microservice.wechat.entity.WechatToken;
 import com.yonyou.microservice.wechat.util.EncoderHandler;
 
 import net.sf.json.JSONObject;
@@ -22,12 +24,15 @@ import net.sf.json.JSONObject;
 public class TokenService {
 
 	private Logger logger=Logger.getLogger(TokenService.class);
+	@Autowired
+	private OfficeAccountSettingService settingService;
+	private Map<String,WechatToken> tokens=new HashMap();
 	/**
 	 * 根据微信传递过来的code获取openid
 	 */
-	public String getOpenidByCode( String code){
+	public String getOpenidByCode(String serviceNo, String code){
 		if (code!=null) {
-			String getPpenIdUrl = getOpenIdRequestUrl(code);
+			String getPpenIdUrl = getOpenIdRequestUrl(serviceNo,code);
 			String sendGetResponse = HttpUtil.get(getPpenIdUrl);
 			JSONObject fromObject = JSONObject.fromObject(sendGetResponse);
 			String openid = (String) fromObject.get("openid");
@@ -42,22 +47,23 @@ public class TokenService {
 	 * 读取token
 	 */
 	//@Cacheable(value = "wechatAccessToken",key="#wechatAccessToken + 'wechatAccessToken'")//,keyGenerator = "wechatAccessTokenGenerator"
-	public String getAccessToken(){
+	public String getAccessToken(String serviceNo){
 		logger.info("----------------get wechatAccessToken");
-		String tmp=AccessToken.getAccessToken();
-		if(tmp==null || "".equals(tmp)){
-			tmp=genAccessToken();
+		WechatToken tmp=tokens.get(serviceNo);
+		if(tmp==null){
+			return genAccessToken(1,serviceNo);
 		}
-		return tmp;
+		return tmp.getAccessToken();
 	}
 	/**
 	 * 产生token，存入缓存
 	 */
 	//@CachePut(value = "wechatAccessToken",key="#wechatAccessToken + 'wechatAccessToken'")//,keyGenerator = "wechatKeyGenerator"
-	public String genAccessToken() {
+	public String genAccessToken(int i,String serviceNo) {
 		logger.info("----------------gen wechatAccessToken");
-		String appid = WechatDict.appid;
-		String secret = WechatDict.appsecret;
+        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
+		String appid = oa.getAppid();
+		String secret = oa.getAppsecret();
 		if (StringUtils.isEmpty(appid) || StringUtils.isEmpty(secret))
 			return "";
 		String reqUrl = WechatDict.getAccessTokenUrl;
@@ -66,16 +72,12 @@ public class TokenService {
 		
 		String sendGetRequest = HttpUtil.get(reqUrl);
 		JSONObject fromObject = JSONObject.fromObject(sendGetRequest);
-		AccessToken.setAccessToken(fromObject.get("access_token")
-				.toString());
-		AccessToken.setExpiresIn(fromObject.get("expires_in")
-				.toString());
-		//reqUrl = WechatDict.getticketUrl;
-		//reqUrl = reqUrl.replace("ACCESS_TOKEN", AccessToken.getAccessToken());
-        //sendGetRequest = HttpClientUtil.sendGetRequest(reqUrl); 
-        //fromObject = JSONObject.fromObject(sendGetRequest);
-        //AccessToken.setTicket(fromObject.get("ticket").toString());
-        return AccessToken.getAccessToken();
+		WechatToken token=new WechatToken();
+		token.setAccessToken(fromObject.get("access_token").toString());
+		token.setExpiresIn(fromObject.get("expires_in").toString());
+		tokens.put(serviceNo, token);
+		return fromObject.get("access_token").toString();
+//        return AccessToken.getAccessToken();
         
 	}
 	
@@ -86,9 +88,9 @@ public class TokenService {
 	 * @throws UnsupportedEncodingException 
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public Map<String, Object> sign(String url) throws Exception {
+	public Map<String, Object> sign(String serviceNo,String url) throws Exception {
         Map<String, Object> ret = new HashMap<String, Object>();
-        String jsapi_ticket = AccessToken.getTicket();
+        String jsapi_ticket = tokens.get(serviceNo).getTicket();
         String nonce_str = UUID.randomUUID().toString();
         String timestamp = System.currentTimeMillis() / 1000 + "";
         String bigStr;
@@ -112,9 +114,10 @@ public class TokenService {
 	 * 获取网页授权code的url
 	 * @return
 	 */
-	public static String getCodeRequestUrl(String url) {
+	public String getCodeRequestUrl(String serviceNo,String url) {
+        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
 		String getCodeUrl = WechatDict.getCodeUrl;
-		getCodeUrl = getCodeUrl.replace("APPID", urlEnodeUTF8(WechatDict.appid));
+		getCodeUrl = getCodeUrl.replace("APPID", urlEnodeUTF8(oa.getAppid()));
 		getCodeUrl = getCodeUrl.replace("REDIRECT_URI", urlEnodeUTF8(url));
 		getCodeUrl = getCodeUrl.replace("SCOPE", "snsapi_base");
 		return getCodeUrl;
@@ -125,10 +128,11 @@ public class TokenService {
 	 * @param code
 	 * @return
 	 */
-	public static String getOpenIdRequestUrl(String code) {
+	public String getOpenIdRequestUrl(String serviceNo,String code) {
+        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
 		String url = WechatDict.getOpenIdUrl;
-		url = url.replace("APPID", WechatDict.appid);
-		url = url.replace("SECRET", WechatDict.appsecret);
+		url = url.replace("APPID", oa.getAppid());
+		url = url.replace("SECRET", oa.getAppsecret());
 		url = url.replace("CODE", code);
 		return url;
 	}
@@ -137,10 +141,11 @@ public class TokenService {
 	 * 刷新网页授权的access_token
 	 * @return
 	 */
-	public static String getRefreshTokenRequestUrl(String refreshToken) {
+	public String getRefreshTokenRequestUrl(String serviceNo,String refreshToken) {
+        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
 		String url = WechatDict.getRefreshTokenUrl;
-		url = url.replace("APPID", WechatDict.appid);
-		url = url.replace("SECRET", WechatDict.appsecret);
+		url = url.replace("APPID", oa.getAppid());
+		url = url.replace("SECRET", oa.getAppsecret());
 		url = url.replace("REFRESH_TOKEN", refreshToken);
 		return url;
 	}
