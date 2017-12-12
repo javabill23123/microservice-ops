@@ -1,6 +1,6 @@
 spring:
     application:
-        name: auth-service
+        name: ops-auth
     jackson:
         date-format: yyyy-MM-dd HH:mm:ss
         time-zone: GMT+8

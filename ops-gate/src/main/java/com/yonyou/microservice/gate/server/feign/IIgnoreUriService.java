@@ -16,7 +16,7 @@ import com.yonyou.microservice.gate.server.config.ZuulConfig;
  * @author joy
  * @create 2017-06-21 8:11
  */
-@FeignClient(value = "back-admin",configuration = {ZuulConfig.class})
+@FeignClient(value = "ops-admin",configuration = {ZuulConfig.class})
 @RequestMapping("api")
 public interface IIgnoreUriService {
   @RequestMapping(value = "/ignoreUri/all", method = RequestMethod.GET)

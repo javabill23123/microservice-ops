@@ -13,7 +13,7 @@ import com.yonyou.microservice.gate.server.config.ZuulConfig;
  * @author joy
  * @create 2017-07-01 15:16
  */
-@FeignClient(value="back-admin",configuration = {ZuulConfig.class})
+@FeignClient(value="ops-admin",configuration = {ZuulConfig.class})
 public interface ILogService {
   @RequestMapping(value="/api/log/save",method = RequestMethod.POST)
   public void saveLog(LogInfo info);

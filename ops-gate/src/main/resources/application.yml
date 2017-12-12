@@ -1,6 +1,6 @@
 spring:
     application:
-        name: gate-service
+        name: ops-gate
     thymeleaf:
         mode: LEGACYHTML5
         cache: false
@@ -41,14 +41,14 @@ zuul:
   routes:
     back:
       path: /admin/**
-      serviceId: back-admin
+      serviceId: ops-admin
 
     auth:
       path: /auth/**
-      serviceId: auth-service
+      serviceId: ops-auth
     captcha:
       path: /captcha/**
-      serviceId: auth-service
+      serviceId: ops-auth
       strip-prefix: false
     wechat:
       path: /wechat/**
@@ -101,7 +101,7 @@ logging:
   level:
     root: info
 auth:
-  serviceId: auth-service
+  serviceId: ops-auth
   user:
     token-header: Authorization ##所有业务的请求头使用这个来传递JWT
     pub-key:
