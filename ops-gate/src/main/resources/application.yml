@@ -56,6 +56,9 @@ zuul:
     message:
       path: /message/**
       serviceId: ops-mq
+    service:
+      path: /service/**
+      serviceId: ops-service
   store:
     mysql:
       enabled: true
