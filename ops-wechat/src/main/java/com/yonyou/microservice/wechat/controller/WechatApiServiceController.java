@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yonyou.cloud.common.annotation.YcApi;
+import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.microservice.wechat.common.ApiVersionConsts;
 import com.yonyou.microservice.wechat.service.TokenService;
 
@@ -18,41 +20,22 @@ public class WechatApiServiceController {
 	private TokenService tokenService;
     @Autowired
     private RabbitTemplate rabbitTemplate;
-//    @Autowired
-//    private ListeningExecutorService executorService;
-//    @Autowired
-//    private BaseService mqInterface;
-	
+
+
+	@YcApi
 	@RequestMapping(value = "/getOpenid/{serviceNo}/{code}", method = RequestMethod.GET,consumes = "application/json;UTF-8")
-	public String getOpenidByCode(@PathVariable("serviceNo") String serviceNo,
+	public RestResultResponse getOpenidByCode(@PathVariable("serviceNo") String serviceNo,
 			@PathVariable("code") String code) {
-		return tokenService.getOpenidByCode(serviceNo,code);
-	}
-	@RequestMapping(value = "/getToken/{serviceNo}", method = RequestMethod.GET,consumes = "application/json;UTF-8")
-	public String getToken(@PathVariable("serviceNo") String serviceNo) {
-		return tokenService.getAccessToken(serviceNo);
+		String d=tokenService.getOpenidByCode(serviceNo,code);
+		return new RestResultResponse<String>().success(true).data(d);
 	}
 
-	@RequestMapping(value = "/testsend", method = RequestMethod.GET)
-	public void testsend() throws Exception {
-//		EventPointsChangedDTO o=new EventPointsChangedDTO();
-//		o.setAfterPoints(100l);
-//		o.setBeforePoints(1000l);
-//		o.setChangePoints(900l);
-//		o.setUserId(1512);
-//		o.setReason("buy car");
-//		BizEvent event=new BizEvent();
-//		event.setEventBizType(EventBizType.COMMON);
-//		event.setEventBizStep(EventBizStep.COMMON_POINTS_CHANGED);
-//		event.setEventKey("CD110000111");
-//		event.setEventData(MapConverUtil.PO2Map(o));
-//		PointChangeEventHandler test=new PointChangeEventHandler();
-//		test.executorService=executorService;
-//		test.handleing(event);
-		//mqInterface.sendEvent2MQ("exchange2", "1", "1", "2017-03-03", "1", JSON.toJSON(event).toString());
-		
-//        WeChatMessageProtocol messageProtocol = getDemoWXTemplate();
-//        this.rabbitTemplate.convertAndSend(MessagePushConstant.WECHAT_QUEUE, messageProtocol);
+	@YcApi
+	@RequestMapping(value = "/getToken/{serviceNo}", method = RequestMethod.GET,consumes = "application/json;UTF-8")
+	public RestResultResponse getToken(@PathVariable("serviceNo") String serviceNo) {
+		String d=tokenService.getAccessToken(serviceNo);
+		return new RestResultResponse<String>().success(true).data(d);
 	}
+
 	
 }

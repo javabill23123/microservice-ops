@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.microservice.wechat.common.CookieConstant;
 import com.yonyou.microservice.wechat.common.WechatDict;
 import com.yonyou.microservice.wechat.entity.Check;
@@ -67,20 +68,17 @@ public class WeChatMessageController {
     private TokenService tokenService;
     @Autowired
     private WechatTemplatePublishService wechatTemplatePublishService;
-    
-//    @Autowired
-//    private PushLocalThread push;
 
     //微信验证服务器回调接口  
 	@RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.GET)//, produces="text/html;charset=UTF-8"
 	@ResponseBody 
-	public String validateGet(Check tokenModel, HttpServletRequest req,
+	public RestResultResponse<String> validateGet(Check tokenModel, HttpServletRequest req,
 			@PathVariable("serviceNo") String serviceNo,
 			HttpServletResponse res) throws ParseException, IOException {
 		logger.info("----WeChatMessageController,get,check");
 		String validate = wechatMessageService.validate(tokenModel,serviceNo);
 		logger.info("---"+validate);
-		return validate;
+		return new RestResultResponse<String>().data(validate);
 	}
     
     /**

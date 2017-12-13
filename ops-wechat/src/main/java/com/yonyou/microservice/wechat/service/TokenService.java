@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiaoleilu.hutool.http.HttpUtil;
+import com.yonyou.microservice.gate.common.vo.wechat.OfficeAccountSettingInfo;
 import com.yonyou.microservice.wechat.common.WechatDict;
-import com.yonyou.microservice.wechat.entity.OfficeAccountSetting;
 import com.yonyou.microservice.wechat.entity.WechatToken;
 import com.yonyou.microservice.wechat.util.EncoderHandler;
 
@@ -61,7 +61,7 @@ public class TokenService {
 	//@CachePut(value = "wechatAccessToken",key="#wechatAccessToken + 'wechatAccessToken'")//,keyGenerator = "wechatKeyGenerator"
 	public String genAccessToken(int i,String serviceNo) {
 		logger.info("----------------gen wechatAccessToken");
-        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
+        OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
 		String appid = oa.getAppid();
 		String secret = oa.getAppsecret();
 		if (StringUtils.isEmpty(appid) || StringUtils.isEmpty(secret))
@@ -115,7 +115,7 @@ public class TokenService {
 	 * @return
 	 */
 	public String getCodeRequestUrl(String serviceNo,String url) {
-        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
+		OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
 		String getCodeUrl = WechatDict.getCodeUrl;
 		getCodeUrl = getCodeUrl.replace("APPID", urlEnodeUTF8(oa.getAppid()));
 		getCodeUrl = getCodeUrl.replace("REDIRECT_URI", urlEnodeUTF8(url));
@@ -129,7 +129,7 @@ public class TokenService {
 	 * @return
 	 */
 	public String getOpenIdRequestUrl(String serviceNo,String code) {
-        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
+		OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
 		String url = WechatDict.getOpenIdUrl;
 		url = url.replace("APPID", oa.getAppid());
 		url = url.replace("SECRET", oa.getAppsecret());
@@ -142,7 +142,7 @@ public class TokenService {
 	 * @return
 	 */
 	public String getRefreshTokenRequestUrl(String serviceNo,String refreshToken) {
-        OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
+		OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
 		String url = WechatDict.getRefreshTokenUrl;
 		url = url.replace("APPID", oa.getAppid());
 		url = url.replace("SECRET", oa.getAppsecret());

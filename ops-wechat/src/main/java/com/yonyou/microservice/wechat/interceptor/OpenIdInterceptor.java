@@ -30,11 +30,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.netflix.hystrix.contrib.javanica.utils.CommonUtils;
+import com.yonyou.cloud.common.jwt.JWTHelper;
+import com.yonyou.cloud.common.jwt.JWTInfo;
 import com.yonyou.cloud.common.jwt.StringHelper;
+import com.yonyou.cloud.common.vo.user.UserInfo;
+import com.yonyou.microservice.gate.common.vo.wechat.MenuUrlInfo;
+import com.yonyou.microservice.wechat.exception.WechatException;
+import com.yonyou.microservice.wechat.service.MenuUrlService;
 import com.yonyou.microservice.wechat.service.TokenService;
 import com.yonyou.microservice.wechat.util.copy.CookieUtil;
 
@@ -48,15 +56,23 @@ import com.yonyou.microservice.wechat.util.copy.CookieUtil;
 public class OpenIdInterceptor implements HandlerInterceptor{
     
     private Logger logger=Logger.getLogger(OpenIdInterceptor.class);
-    
+    @Value("${jwt.expire:30}")
+    private int expire;
+    @Value("${jwt.pri-key.path}")
+    private String priKeyPath;
+    @Value("${openid.user.map-code}")
+    private String userMapCode;
+
+	@Autowired
+	private RestTemplate restTemplate;
 	@Autowired
 	private TokenService tokenService;
-    
+    @Autowired
+    private MenuUrlService menuUrlService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
         
-//        String dealerCode = getCookiesByKey(request, CookieConstant.WECHAT_COOKIE_DEALERCODE);
         String code  = request.getParameter("code");
 //        String appid  = request.getParameter("appid");
         logger.info("------receivecode:"+code+",url="+request.getRequestURL()+",uri="+request.getRequestURI());
@@ -136,14 +152,16 @@ public class OpenIdInterceptor implements HandlerInterceptor{
             	logger.info("gateway-wechat,openid is null="+openId);
         		return;
         	}
-        	logger.info("gateway-wechat,openid="+openId);
-        	//String authorizerAppid = getAuthorizerAppid(request);
-        	//Long potentialUserId = getPotentialUserId(request);
-        	//String dealerCode = getDealerCode(request);
-        	if (!StringHelper.isNullOrEmpty(openId)) {
-        		logger.info("--write cookie openid="+openId);
-        		CookieUtil.writeOpenid(openId, response);
-        	}
+    		MenuUrlInfo m=menuUrlService.getMenuUrl(userMapCode);
+    		if(m==null)
+    			throw WechatException.WECHAT_USER_URL_NOT_FIND;
+    		String url=m.getUrl()+"?openid="+openId;
+    		ResponseEntity<UserInfo> r=restTemplate.getForEntity(url, UserInfo.class);
+        	JWTInfo jwtInfo=new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", r.getBody().getName());
+        	String jwt=JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
+        	logger.info("--gateway-wechat,openid="+openId);
+    		logger.info("--write cookie jwt="+jwt);
+    		CookieUtil.writeOpenid(jwt, response);
     	}catch(Exception e){
     		
     	}

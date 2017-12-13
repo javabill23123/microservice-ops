@@ -1,17 +1,14 @@
-package com.yonyou.microservice.wechat.entity;
-
-import javax.persistence.Table;
+package com.yonyou.microservice.gate.common.vo.wechat;
 
 /*
  * 服务号相关的信息
  * appid/secret/token/AESKey等
  */
 
-@Table(name = "base_office_account")
-public class OfficeAccountSetting {
+public class OfficeAccountSettingInfo {
 	private  int id;
 	
-	private  String officeAccount;
+	private  String serviceNo;
 	
 	private  String appid;
 
@@ -71,12 +68,13 @@ public class OfficeAccountSetting {
 		this.id = id;
 	}
 
-	public String getOfficeAccount() {
-		return officeAccount;
+	public String getServiceNo() {
+		return serviceNo;
 	}
 
-	public void setOfficeAccount(String officeAccount) {
-		this.officeAccount = officeAccount;
+	public void setServiceNo(String serviceNo) {
+		this.serviceNo = serviceNo;
 	}
-	
+
+
 }

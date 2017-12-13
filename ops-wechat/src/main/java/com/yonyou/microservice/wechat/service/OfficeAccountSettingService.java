@@ -2,11 +2,11 @@ package com.yonyou.microservice.wechat.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yonyou.cloud.common.service.BaseService;
-import com.yonyou.microservice.wechat.dao.OfficeAccountSettingMapper;
-import com.yonyou.microservice.wechat.entity.OfficeAccountSetting;
+import com.yonyou.microservice.gate.common.vo.wechat.OfficeAccountSettingInfo;
+import com.yonyou.microservice.wechat.util.feign.IOfficeAccountSettingService;
 
 /**
  * ${DESCRIPTION}
@@ -15,32 +15,33 @@ import com.yonyou.microservice.wechat.entity.OfficeAccountSetting;
  * @create 2017-06-08 16:23
  */
 @Service
-public class OfficeAccountSettingService extends BaseService<OfficeAccountSettingMapper,OfficeAccountSetting> {
+public class OfficeAccountSettingService  {
+	@Autowired
+	private IOfficeAccountSettingService service;
 
-	private List<OfficeAccountSetting> list=null;
+	private List<OfficeAccountSettingInfo> list=null;
 
-	@Override
-    public List<OfficeAccountSetting> selectListAll() {
+    public List<OfficeAccountSettingInfo> selectListAll() {
 		if(list==null){
-			list=mapper.selectAll();
+			list=service.getOfficeAccountSettingAll().getData();
 		}
         return list;
     }
 
 	public String getOfficeAccountToken(String code){
-		List<OfficeAccountSetting> tmp=this.selectListAll();
-		for(OfficeAccountSetting e:tmp){
-			if(e.getOfficeAccount().equals(code)){
+		List<OfficeAccountSettingInfo> tmp=this.selectListAll();
+		for(OfficeAccountSettingInfo e:tmp){
+			if(e.getServiceNo().equals(code)){
 				return e.getToken();
 			}
 		}
 		return "";
 	}
 
-	public OfficeAccountSetting getOfficeAccount(String code){
-		List<OfficeAccountSetting> tmp=this.selectListAll();
-		for(OfficeAccountSetting e:tmp){
-			if(e.getOfficeAccount().equals(code)){
+	public OfficeAccountSettingInfo getOfficeAccount(String code){
+		List<OfficeAccountSettingInfo> tmp=this.selectListAll();
+		for(OfficeAccountSettingInfo e:tmp){
+			if(e.getServiceNo().equals(code)){
 				return e;
 			}
 		}

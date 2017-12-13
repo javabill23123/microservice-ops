@@ -13,12 +13,10 @@ import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 @AutoConfigureAfter(DatasourceConfig.class)
 public class MyBatisMapperScannerConfig {
 	 	@Bean
-//	 	@Primary
 	    public MapperScannerConfigurer mapperScannerConfigurer() {
 	 		 MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
 		        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
 		        mapperScannerConfigurer.setBasePackage("com.yonyou.microservice.wechat.dao");
-//		        mapperScannerConfigurer.setAnnotationClass(MySQLDb.class);
 		        Properties properties = new Properties();
 		        properties.setProperty("mappers", "com.yonyou.microservice.wechat.util.MyMapper");
 		        properties.setProperty("notEmpty", "false");
@@ -27,17 +25,4 @@ public class MyBatisMapperScannerConfig {
 		        return mapperScannerConfigurer;
 	    }
 	 	
-//	 	@Bean
-//	    public MapperScannerConfigurer mapperScannerConfigurerOracle() {
-//	 		 MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-//		        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactoryOracle");
-//		        mapperScannerConfigurer.setBasePackage("com.yonyou.microservice.wechat.dao");
-////		        mapperScannerConfigurer.setAnnotationClass(OracleDb.class);
-//		        Properties properties = new Properties();
-//		        properties.setProperty("mappers", "com.yonyou.microservice.wechat.util.MyMapper");
-//		        properties.setProperty("notEmpty", "false");
-//		        properties.setProperty("IDENTITY", "ORACLE");
-//		        mapperScannerConfigurer.setProperties(properties);
-//		        return mapperScannerConfigurer;
-//	    }
 }

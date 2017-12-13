@@ -222,7 +222,7 @@
 
 
 	<build>
-		<finalName>service-wechat</finalName>
+		<finalName>ops-wechat</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

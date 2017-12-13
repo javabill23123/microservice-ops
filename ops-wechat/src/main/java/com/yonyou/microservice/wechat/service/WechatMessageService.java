@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import com.xiaoleilu.hutool.http.HttpUtil;
 import com.yonyou.cloud.mom.client.MqSender;
+import com.yonyou.microservice.gate.common.vo.wechat.OfficeAccountSettingInfo;
 import com.yonyou.microservice.wechat.common.BusinessConstant;
 import com.yonyou.microservice.wechat.common.WechatDict;
 import com.yonyou.microservice.wechat.dto.BizEvent;
@@ -45,7 +46,6 @@ import com.yonyou.microservice.wechat.dto.EventWechatAttentionDTO;
 import com.yonyou.microservice.wechat.dto.EventWechatUnAttentionDTO;
 import com.yonyou.microservice.wechat.encryption.WXBizMsgCrypt;
 import com.yonyou.microservice.wechat.entity.Check;
-import com.yonyou.microservice.wechat.entity.OfficeAccountSetting;
 import com.yonyou.microservice.wechat.eventenum.EventConstant.EventBizStep;
 import com.yonyou.microservice.wechat.eventenum.EventConstant.EventBizType;
 import com.yonyou.microservice.wechat.exception.WechatException;
@@ -175,7 +175,7 @@ public class WechatMessageService {
                 map.put("Content", "您的问题，我们将抓紧答复！");
             }
 
-            OfficeAccountSetting oa=settingService.getOfficeAccount(serviceNo);
+            OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
             WXBizMsgCrypt crypt = new WXBizMsgCrypt(oa.getToken(), oa.getAESKey(), oa.getAppid());
             String replyMsg = WechatMessageHandleUtils.mapToXml(map);
             logger.info("handleTextMsg-replyMsg="+replyMsg);

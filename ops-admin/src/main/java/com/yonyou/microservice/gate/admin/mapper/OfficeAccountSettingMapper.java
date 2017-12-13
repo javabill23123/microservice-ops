@@ -1,9 +1,9 @@
-package com.yonyou.microservice.wechat.dao;
+package com.yonyou.microservice.gate.admin.mapper;
 
-import com.yonyou.microservice.wechat.entity.OfficeAccountSetting;
+import com.yonyou.microservice.gate.admin.entity.OfficeAccountSetting;
 
 import tk.mybatis.mapper.common.Mapper;
 
 public interface OfficeAccountSettingMapper extends Mapper<OfficeAccountSetting> {
-    
+
 }

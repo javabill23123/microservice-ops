@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yonyou.cloud.common.annotation.YcApi;
+import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.microservice.wechat.common.ApiVersionConsts;
 import com.yonyou.microservice.wechat.service.TokenService;
 import com.yonyou.microservice.wechat.service.WechatLocalMassPublishService;
@@ -54,8 +56,6 @@ public class WechatLocalPublishController {
     private WechatLocalMassPublishService wechatLocalPublishService;
     @Autowired
     private TokenService tokenService;
-//    @Autowired
-//    private WebChatTemplateMessage webChatTemplateMessage;
     /**
     *
     * @author LiuJun
@@ -70,7 +70,8 @@ public class WechatLocalPublishController {
     */
     @RequestMapping(value = "/massSendMessage/{serviceNo}", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Map<String, Object> massSendMessage(@PathVariable("serviceNo") String serviceNo) throws Exception{
+	@YcApi
+    public RestResultResponse massSendMessage(@PathVariable("serviceNo") String serviceNo) throws Exception{
         logger.info("newsInformationSend in");
         Map<String ,Object> resultMap ;
         try {
@@ -83,7 +84,7 @@ public class WechatLocalPublishController {
             resultMap.put("STATUS", "0");
             resultMap.put("MESSAGE", e.getMessage());
         }
-        return resultMap;
+		return new RestResultResponse<Map<String ,Object>>().success(true).data(resultMap);
         
     }
     
