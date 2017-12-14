@@ -44,11 +44,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.microservice.wechat.common.CookieConstant;
-import com.yonyou.microservice.wechat.common.WechatDict;
 import com.yonyou.microservice.wechat.entity.Check;
 import com.yonyou.microservice.wechat.service.TokenService;
 import com.yonyou.microservice.wechat.service.WechatMessageService;
-import com.yonyou.microservice.wechat.service.WechatTemplatePublishService;
 import com.yonyou.microservice.wechat.util.CookieSecurityUtil;
 
 import net.sf.json.JSONObject;
@@ -66,8 +64,8 @@ public class WeChatMessageController {
     
     @Autowired
     private TokenService tokenService;
-    @Autowired
-    private WechatTemplatePublishService wechatTemplatePublishService;
+//    @Autowired
+//    private WechatTemplatePublishService wechatTemplatePublishService;
 
     //微信验证服务器回调接口  
 	@RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.GET)//, produces="text/html;charset=UTF-8"
@@ -118,23 +116,23 @@ public class WeChatMessageController {
 		return obj.toString();
 	}
     
-	//发送模板消息
-	@RequestMapping(value = "/wechat-push/api/sendTemplateMessage/{serviceNo}", method = RequestMethod.POST)
-	@ResponseBody
-	public String sendTemplateMessage(@PathVariable("serviceNo") String serviceNo,
-			@RequestBody String message) {
-		logger.info("--sendTemplateMessage:"+message);
-		return wechatTemplatePublishService.sendTemplateMessage(message, tokenService.getAccessToken(serviceNo));
-	}
+//	//发送模板消息
+//	@RequestMapping(value = "/wechat-push/api/sendTemplateMessage/{serviceNo}", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String sendTemplateMessage(@PathVariable("serviceNo") String serviceNo,
+//			@RequestBody String message) {
+//		logger.info("--sendTemplateMessage:"+message);
+//		return wechatTemplatePublishService.sendTemplateMessage(message, tokenService.getAccessToken(serviceNo));
+//	}
     
-	//添加消息模板
-	@RequestMapping(value = "/wechat-push/api/addTemplate/{serviceNo}", method = RequestMethod.GET)
-	@ResponseBody
-	public String addTemplate(@PathVariable("serviceNo") String serviceNo,
-			@RequestBody String message) {
-		logger.info("--massSendPicTxtMessage:"+message);
-		return wechatTemplatePublishService.addTemplate(message, tokenService.getAccessToken(serviceNo));
-	}
+//	//添加消息模板
+//	@RequestMapping(value = "/wechat-push/api/addTemplate/{serviceNo}", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String addTemplate(@PathVariable("serviceNo") String serviceNo,
+//			@RequestBody String message) {
+//		logger.info("--massSendPicTxtMessage:"+message);
+//		return wechatTemplatePublishService.addTemplate(message, tokenService.getAccessToken(serviceNo));
+//	}
     
 //	//添加消息模板
 //	@RequestMapping(value = "/wechat-push/api/addTemplate", method = RequestMethod.GET)
