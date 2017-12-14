@@ -39,7 +39,7 @@ public class WechatMenuProxyController {
 //	}
 
 	@RequestMapping("/proxy/{serviceNo}/{id}")
-    public RestResultResponse<String> proxy(@PathVariable("serviceNo") String serviceNo,@PathVariable("id") String id,
+    public String proxy(@PathVariable("serviceNo") String serviceNo,@PathVariable("id") String id,
     		HttpServletRequest request) throws Exception{
         logger.info("菜单Code为>>>>>>>"+id);
 //        String value = CookieUtil.getOpenid(request);
@@ -47,7 +47,7 @@ public class WechatMenuProxyController {
         MenuUrlInfo m=menuUrlService.getMenuUrl(id);
         String url="redirect:"+m.getUrl();
         logger.info("菜单url为>>>>>>>"+url);
-        return new RestResultResponse<String>().data(url);
+        return url;
     }
 
 }
