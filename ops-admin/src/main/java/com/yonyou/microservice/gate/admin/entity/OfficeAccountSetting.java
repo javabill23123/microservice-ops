@@ -23,7 +23,7 @@ public class OfficeAccountSetting {
 	
 	private  String menuStr;
 	
-	private  String AESKey;
+	private  String aeskey;
 
 	public String getAppid() {
 		return appid;
@@ -57,12 +57,13 @@ public class OfficeAccountSetting {
 		this.menuStr = menuStr;
 	}
 
-	public String getAESKey() {
-		return AESKey;
+
+	public String getAeskey() {
+		return aeskey;
 	}
 
-	public void setAESKey(String aESKey) {
-		AESKey = aESKey;
+	public void setAeskey(String aeskey) {
+		this.aeskey = aeskey;
 	}
 
 	public int getId() {
