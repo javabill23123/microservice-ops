@@ -78,9 +78,9 @@ public class WechatLocalMassPublishService {
     @Autowired
     private TtWoMassSendMapper ttWoMassSendMapper;
 
-	@Value("${image.src.ip}")
+//	@Value("${image.src.ip}")
 	private String srcIp;
-	@Value("${image.tgt.ip}")
+//	@Value("${image.tgt.ip}")
 	private String tgtIp;
     
     public Map<String, Object> treatWechatMessages(String accessToken) {

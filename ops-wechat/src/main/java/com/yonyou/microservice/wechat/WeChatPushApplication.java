@@ -20,9 +20,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @SpringBootApplication
 //@EnableTransactionManagement
-//@EnableFeignClients
+@EnableFeignClients
 //@EnableConfigurationProperties
-//@EnableDiscoveryClient
+@EnableDiscoveryClient
 public class WeChatPushApplication {
 
     /**

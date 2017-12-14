@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yonyou.cloud.common.annotation.YcApi;
 import com.yonyou.cloud.common.beans.RestResultResponse;
-import com.yonyou.microservice.wechat.common.ApiVersionConsts;
 import com.yonyou.microservice.wechat.service.TokenService;
 import com.yonyou.microservice.wechat.service.WechatLocalMassPublishService;
 
@@ -49,7 +48,7 @@ import com.yonyou.microservice.wechat.service.WechatLocalMassPublishService;
 * @date 2016年12月6日
 */
 @RestController
-@RequestMapping(value = ApiVersionConsts.BASE_PATH )
+@RequestMapping("wechat" )
 public class WechatLocalPublishController {
     private static Logger logger=Logger.getLogger(WechatLocalPublishController.class);
     @Autowired

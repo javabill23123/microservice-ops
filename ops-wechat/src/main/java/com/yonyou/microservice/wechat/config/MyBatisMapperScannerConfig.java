@@ -17,11 +17,11 @@ public class MyBatisMapperScannerConfig {
 	 		 MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
 		        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
 		        mapperScannerConfigurer.setBasePackage("com.yonyou.microservice.wechat.dao");
-		        Properties properties = new Properties();
-		        properties.setProperty("mappers", "com.yonyou.microservice.wechat.util.MyMapper");
-		        properties.setProperty("notEmpty", "false");
-		        properties.setProperty("IDENTITY", "MYSQL");
-		        mapperScannerConfigurer.setProperties(properties);
+//		        Properties properties = new Properties();
+//		        properties.setProperty("mappers", "com.yonyou.microservice.wechat.util.MyMapper");
+//		        properties.setProperty("notEmpty", "false");
+////		        properties.setProperty("IDENTITY", "MYSQL");
+//		        mapperScannerConfigurer.setProperties(properties);
 		        return mapperScannerConfigurer;
 	    }
 	 	
