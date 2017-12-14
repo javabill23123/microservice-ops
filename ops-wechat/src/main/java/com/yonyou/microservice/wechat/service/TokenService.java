@@ -40,7 +40,7 @@ public class TokenService {
 			logger.info("------------call getOpenidByCode,openid="+fromObject.toString());
 			return openid;
 		}
-		return "";
+		return "test";
 	}
 
 	/**

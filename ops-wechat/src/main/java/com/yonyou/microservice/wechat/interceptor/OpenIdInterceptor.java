@@ -90,12 +90,8 @@ public class OpenIdInterceptor implements HandlerInterceptor{
         if(!StringHelper.isNullOrEmpty(code)){
         	writeWechatCookiesInfo(code,"",request,response);
             
-        }else{ //业务请求没有经过zuul，而是在网关的controller转发，这时basecontroller中提供从cookie取身份的方法
-        	String openId=CookieUtil.getOpenid(request);
-        	if(StringHelper.isNullOrEmpty(openId)){
-        		logger.info("拦截了cookie中没有openId的请求");
-        		return false;
-        	}
+        }else{ //业务请求经过网关,这里可以从header取得用户id等信息
+        	
         	return true;
         }
         
@@ -143,27 +139,23 @@ public class OpenIdInterceptor implements HandlerInterceptor{
     public void writeWechatCookiesInfo(String code, String appid,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
     	logger.info("writeWechatCookiesInfo is entry,code=" + code + ";appid=" + appid);
-    	try{
-    		String uri=request.getRequestURI();
-    		String[] us=uri.split("/");
-    		String serviceNo=us[us.length-2];
-    		String openId = tokenService.getOpenidByCode(serviceNo,code);
-        	if(StringHelper.isNullOrEmpty(openId)) {
-            	logger.info("gateway-wechat,openid is null="+openId);
-        		return;
-        	}
-    		MenuUrlInfo m=menuUrlService.getMenuUrl(userMapCode);
-    		if(m==null)
-    			throw WechatException.WECHAT_USER_URL_NOT_FIND;
-    		String url=m.getUrl()+"?openid="+openId;
-    		ResponseEntity<UserInfo> r=restTemplate.getForEntity(url, UserInfo.class);
-        	JWTInfo jwtInfo=new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", r.getBody().getName());
-        	String jwt=JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
-        	logger.info("--gateway-wechat,openid="+openId);
-    		logger.info("--write cookie jwt="+jwt);
-    		CookieUtil.writeOpenid(jwt, response);
-    	}catch(Exception e){
-    		
+		String uri=request.getRequestURI();
+		String[] us=uri.split("/");
+		String serviceNo=us[us.length-2];
+		String openId = tokenService.getOpenidByCode(serviceNo,code);
+    	if(StringHelper.isNullOrEmpty(openId)) {
+        	logger.info("gateway-wechat,openid is null="+openId);
+			throw WechatException.WECHAT_OPENID_NOT_FIND;
     	}
+		MenuUrlInfo m=menuUrlService.getMenuUrl(userMapCode);
+		if(m==null)
+			throw WechatException.WECHAT_USER_URL_NOT_FIND;
+		String url=m.getUrl()+"?openid="+openId;
+		ResponseEntity<UserInfo> r=restTemplate.getForEntity(url, UserInfo.class);
+    	JWTInfo jwtInfo=new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", r.getBody().getName());
+    	String jwt=JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
+    	logger.info("--gateway-wechat,openid="+openId);
+		logger.info("--write cookie jwt="+jwt);
+		CookieUtil.writeOpenid(jwt, response);
     }    
 }
