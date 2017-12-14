@@ -25,7 +25,7 @@ public class OfficeAccountSettingService {
     	for(OfficeAccountSetting p:list){
     		OfficeAccountSettingInfo i=new OfficeAccountSettingInfo();
     		i.setId(p.getId());
-    		i.setAESKey(p.getAESKey());
+    		i.setAESKey(p.getAeskey());
     		i.setAppid(p.getAppid());
     		i.setAppsecret(p.getAppsecret());
     		i.setMenuStr(p.getMenuStr());
