@@ -38,9 +38,12 @@ public class TokenService {
 			String openid = (String) fromObject.get("openid");
 			logger.info("------------call getOpenidByCode,url="+getPpenIdUrl);
 			logger.info("------------call getOpenidByCode,openid="+fromObject.toString());
+			if(openid==null){
+				return "test";
+			}
 			return openid;
 		}
-		return "test";
+		return "";
 	}
 
 	/**
