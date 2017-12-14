@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.microservice.gate.common.vo.wechat.MenuUrlInfo;
+import com.yonyou.microservice.wechat.common.ApiVersionConsts;
 import com.yonyou.microservice.wechat.service.MenuUrlService;
 import com.yonyou.microservice.wechat.service.TokenService;
 
@@ -17,6 +18,7 @@ import com.yonyou.microservice.wechat.service.TokenService;
  * 统一微信菜单格式，代理转发到配置的页面
  */
 @Controller
+@RequestMapping(value ="/wechat" )
 public class WechatMenuProxyController {
 
 	private static Logger logger=Logger.getLogger(WechatMenuProxyController.class);
