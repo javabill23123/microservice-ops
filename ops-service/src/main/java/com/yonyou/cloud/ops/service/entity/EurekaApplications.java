@@ -3,13 +3,8 @@ package com.yonyou.cloud.ops.service.entity;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EurekaApplications {
