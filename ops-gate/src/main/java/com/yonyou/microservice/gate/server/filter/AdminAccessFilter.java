@@ -53,6 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminAccessFilter extends ZuulFilter {
 	private static final String USER_HEAD_ID="userId";
 	private static final String USER_HEAD_NAME="userName";
+	private static final String USER_HEAD_REMARK="remark";
 	private static Logger logger=Logger.getLogger(AdminAccessFilter.class);
 
     @Autowired
@@ -137,6 +138,7 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
         ctx.addZuulRequestHeader(USER_HEAD_ID,user.getId());
         ctx.addZuulRequestHeader(USER_HEAD_NAME,user.getUniqueName());
+        ctx.addZuulRequestHeader(USER_HEAD_REMARK,user.getRemark());
         BaseContextHandler.remove();
         return null;
     }

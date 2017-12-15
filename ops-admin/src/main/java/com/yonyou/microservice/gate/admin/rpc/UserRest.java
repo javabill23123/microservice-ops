@@ -43,6 +43,12 @@ public class UserRest {
         return permissionService.getUserByUsername("test");
     }
 
+    @RequestMapping(value = "/user/token2jwt",method = RequestMethod.GET, produces="application/json")
+    public  @ResponseBody UserInfo getUserByToken(@RequestBody Map<String,String> map) {
+    	String token=map.get("token");
+        return permissionService.getUserByUsername(token);//"test"
+    }
+
 
     @RequestMapping(value = "/user/phone/{phone}",method = RequestMethod.GET, produces="application/json")
     public  @ResponseBody UserInfo getUserByPhone(@PathVariable("phone")String phone) {

@@ -90,7 +90,7 @@ public class OpenIdInterceptor implements HandlerInterceptor{
         if(!StringHelper.isNullOrEmpty(code)){
         	writeWechatCookiesInfo(code,"",request,response);
             
-        }else{ //业务请求经过网关,这里可以从header取得用户id等信息
+        }else{ //其它请求经过ops-gate网关,这里可以从header取得用户id等信息
         	
         	return true;
         }
@@ -152,7 +152,9 @@ public class OpenIdInterceptor implements HandlerInterceptor{
 			throw WechatException.WECHAT_USER_URL_NOT_FIND;
 		String url=m.getUrl()+"?openid="+openId;
 		ResponseEntity<UserInfo> r=restTemplate.getForEntity(url, UserInfo.class);
-    	JWTInfo jwtInfo=new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", r.getBody().getName());
+		String remark=serviceNo+","+openId;
+    	JWTInfo jwtInfo=new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", 
+    			r.getBody().getName(),remark);
     	String jwt=JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
     	logger.info("--gateway-wechat,openid="+openId);
 		logger.info("--write cookie jwt="+jwt);
