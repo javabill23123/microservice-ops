@@ -56,8 +56,8 @@
 基于groovy实现，直接在页面动态添加自己Filter的逻辑,动态修改网关filter无需重启服务
 
 ### 权限服务   
-由于不同系统的用户信息的多样化(如微信、app等用户)，为了方便于业务开发和系统性能提升，各个系统负责用户信息的存储和管理，ops-auth代理用户认证，不同  
-系统提供返回用户信息的接口，ops-auth负责生成jwt。该接口接收手机号/验证码、用户名/密码等认证参数，返回包含id,username,name,description,telPhone的json   
+由于不同系统的用户信息的多样化(如微信、app等用户)，为了方便于业务开发和系统性能提升，各个系统负责用户信息的存储和管理，ops-auth代理用户认证，不同
+系统提供返回用户信息的接口，ops-auth负责生成jwt。该接口接收手机号/验证码、用户名/密码等认证参数，返回包含id,username,name,description,telPhone的json
 信息给ops-auth，其中id为userId，username为登陆账号，name用户名称，这三个参数必须返回，其它参数可为空。
 	
 ### 微信接口
