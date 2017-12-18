@@ -59,4 +59,15 @@ public class OpsServiceService {
         return erkIstInfoList;
 	}
 
+	public boolean delete(String appId, String instanceId) {
+		try {
+			eurekaApi.deleteOne(appId, instanceId);
+		} catch (Exception e) {
+			logger.error("delete {} error! message:{}",instanceId,e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+
 }

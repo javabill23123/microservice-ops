@@ -3,6 +3,7 @@ package com.yonyou.cloud.ops.service.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,10 +27,10 @@ public class OpsServiceController {
 		return  new RestResultResponse<EurekaApplications>().data(opsServiceService.getAll()).success(true);
 	}
 	
-	@RequestMapping(value="delete",method=RequestMethod.DELETE)
+	@RequestMapping(value="delete/{appId}/{instanceId}",method=RequestMethod.DELETE)
 	@YcApi
-	public RestResultResponse<EurekaApplications> deleteOne(){
-		return  new RestResultResponse<EurekaApplications>().data(opsServiceService.getAll()).success(true);
+	public RestResultResponse<?> deleteOne(@PathVariable("appId") String appId, @PathVariable("instanceId") String instanceId){
+		return  new RestResultResponse<>().success(opsServiceService.delete(appId, instanceId));
 	}
 	
 	@RequestMapping(value="allInst",method=RequestMethod.GET)
