@@ -21,8 +21,8 @@ public class JwtTokenUtil {
     @Value("${jwt.pub-key.path}")
     private String pubKeyPath;
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+//    @Autowired
+//    private RedisTemplate<String, Object> redisTemplate;
 
     public String generateToken(IJWTInfo jwtInfo) throws Exception {
         return JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
