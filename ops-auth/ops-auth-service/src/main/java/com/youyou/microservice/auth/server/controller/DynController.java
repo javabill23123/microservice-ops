@@ -64,6 +64,11 @@ public class DynController implements Controller{
 	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) throws Exception {
 		logger.info("--DynController.handleRequest");
 		String uri=p0.getRequestURI();
+		int i=uri.indexOf("?");
+		String param="";
+		if(i!=-1){
+			param=uri.substring(i, uri.length());
+		}
 		logger.info("--DynController,uri="+uri);
 		AuthProvider pInfo=this.getService(uri);
 		if(pInfo!=null && !"".equals(pInfo.getAuthService())){
@@ -73,7 +78,7 @@ public class DynController implements Controller{
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> entity = new HttpEntity<String>(body, headers);
-			ResponseEntity<UserInfo> r=restTemplate.exchange(pInfo.getAuthService(), HttpMethod.POST, entity, UserInfo.class);
+			ResponseEntity<UserInfo> r=restTemplate.exchange(pInfo.getAuthService()+param, HttpMethod.POST, entity, UserInfo.class);
 			JSONObject sk=new JSONObject(r.getBody());
 	        String token = "{\"token\":\"";
 			if(pInfo.getAcceptType().equals(ACCEPT_USER)){
