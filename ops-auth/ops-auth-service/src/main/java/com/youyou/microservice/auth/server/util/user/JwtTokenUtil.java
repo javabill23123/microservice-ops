@@ -1,8 +1,6 @@
 package com.youyou.microservice.auth.server.util.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.yonyou.cloud.common.jwt.IJWTInfo;
