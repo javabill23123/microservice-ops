@@ -63,30 +63,47 @@ public class DynController implements Controller{
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) throws Exception {
 		logger.info("--DynController.handleRequest");
-		String uri=p0.getRequestURI();
-		int i=uri.indexOf("?");
+		String tmp=p0.getQueryString();
 		String param="";
-		if(i!=-1){
-			param=uri.substring(i, uri.length());
+		if(tmp!=null && !"".equals(tmp)){
+			param="?"+tmp;
 		}
+		String uri=p0.getRequestURI();
 		logger.info("--DynController,uri="+uri);
 		AuthProvider pInfo=this.getService(uri);
 		if(pInfo!=null && !"".equals(pInfo.getAuthService())){
 			logger.info("--DynController,service="+pInfo.getAuthService());
+			
+			String method=p0.getMethod();
+			HttpMethod hm;
+			if("GET".equals(method)){
+				hm=HttpMethod.GET;
+			}else{
+				hm=HttpMethod.POST;
+			}
 			String body=this.getBody(p0);
 			JSONObject rBody=new JSONObject(body);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> entity = new HttpEntity<String>(body, headers);
-			ResponseEntity<UserInfo> r=restTemplate.exchange(pInfo.getAuthService()+param, HttpMethod.POST, entity, UserInfo.class);
+			ResponseEntity<String> r=restTemplate.exchange(pInfo.getAuthService()+param, hm, entity, String.class);
+			logger.info("--restTemplate,response="+r.getBody());
 			JSONObject sk=new JSONObject(r.getBody());
 	        String token = "{\"token\":\"";
+	        String passWord=(String)sk.get("passWord");
+	        String username=(String)sk.get("username");
+	        String userId=(String)sk.get("userId");
+	        String name=(String)sk.get("name");
+	        if(userId==null || "".equals(userId)){
+	        	p1.getOutputStream().write(("error:"+r.getBody()).getBytes());
+	        	return null;
+	        }
 			if(pInfo.getAcceptType().equals(ACCEPT_USER)){
-		        if (encoder.matches((String)rBody.get("password"), r.getBody().getPassword())) {
-		            token = token+jwtTokenUtil.generateToken(new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", r.getBody().getName()));
+		        if (encoder.matches((String)rBody.get("password"), passWord)) {
+		            token = token+jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
 		        }
 			}else{
-				token = token+jwtTokenUtil.generateToken(new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", r.getBody().getName()));
+				token = token+jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
 			}
 			token=token+"\"}";
 			p1.getOutputStream().write(token.getBytes());
