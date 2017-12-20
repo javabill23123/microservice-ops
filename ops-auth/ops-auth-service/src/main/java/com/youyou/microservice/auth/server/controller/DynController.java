@@ -92,19 +92,33 @@ public class DynController implements Controller{
 			HttpHeaders headers = new HttpHeaders();
 //			headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 			HttpEntity<String> entity = new HttpEntity<String>(body, headers);
-			ResponseEntity<String> r=restTemplate.exchange(pInfo.getAuthService()+param, hm, entity, String.class);
-			logger.info("--restTemplate,response="+r.getBody());
-			JSONObject sk=new JSONObject(r.getBody());
+			ResponseEntity<String> rr=null;
+			String repBody="";
+			RestResultResponse<JwtAuthenticationDataResponse> restResponse=new RestResultResponse();
+			try{
+				rr=restTemplate.exchange(pInfo.getAuthService()+param, hm, entity, String.class);
+				repBody=rr.getBody();
+			}catch(Exception e){
+				restResponse.setSuccess(false);
+				restResponse.setResultCode(500);
+				restResponse.setData(new JwtAuthenticationDataResponse("",e.getMessage()));
+				JSONObject json=new JSONObject(restResponse);
+	        	p1.getOutputStream().write(json.toString().getBytes());
+				logger.error(e.getMessage());
+	        	return null;
+			}
+			logger.info("--restTemplate,response="+repBody);
+			JSONObject sk=new JSONObject(repBody);
 	        String jwt = "";
 	        String passWord=(String)sk.get("passWord");
 	        String username=(String)sk.get("username");
 	        String userId=(String)sk.get("userId");
 	        String name=(String)sk.get("name");
-			RestResultResponse<JwtAuthenticationDataResponse> restResponse=new RestResultResponse();
 			restResponse.setSuccess(true);
+			restResponse.setResultCode(200);
 	        if(userId==null || "".equals(userId)){
 				logger.error("--DynController,login error");
-				restResponse.setData(new JwtAuthenticationDataResponse("",r.getBody()));
+				restResponse.setData(new JwtAuthenticationDataResponse("",repBody));
 				JSONObject json=new JSONObject(restResponse);
 	        	p1.getOutputStream().write(json.toString().getBytes());
 	        	return null;
@@ -116,7 +130,7 @@ public class DynController implements Controller{
 			}else{
 				jwt = jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
 			}
-			restResponse.setData(new JwtAuthenticationDataResponse(jwt,r.getBody()));
+			restResponse.setData(new JwtAuthenticationDataResponse(jwt,repBody));
 			JSONObject result=new JSONObject(restResponse);
 			p1.getOutputStream().write(result.toString().getBytes());
 		}
