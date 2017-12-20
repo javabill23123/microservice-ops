@@ -95,7 +95,8 @@ public class DynController implements Controller{
 	        String userId=(String)sk.get("userId");
 	        String name=(String)sk.get("name");
 	        if(userId==null || "".equals(userId)){
-	        	p1.getOutputStream().write(("error:"+r.getBody()).getBytes());
+				logger.error("--DynController,login error");
+	        	p1.getOutputStream().write((r.getBody()).getBytes());
 	        	return null;
 	        }
 			if(pInfo.getAcceptType().equals(ACCEPT_USER)){
