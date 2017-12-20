@@ -23,7 +23,7 @@ import com.youyou.microservice.auth.server.mapper.AuthProviderMapper;
 public class AuthConfiguration {
 
 	 @Bean
-	 @LoadBalanced
+//	 @LoadBalanced
 	 public  RestTemplate restTemplate(){
 		 return new RestTemplate(); 
 	 }
