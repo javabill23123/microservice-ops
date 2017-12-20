@@ -2,6 +2,8 @@ package com.youyou.microservice.auth.server.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,11 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,8 +25,6 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import com.xiaoleilu.hutool.json.JSONObject;
 import com.yonyou.cloud.common.jwt.JWTInfo;
-import com.yonyou.cloud.common.vo.user.UserInfo;
-import com.yonyou.microservice.gate.common.vo.user.AuthProviderInfo;
 import com.youyou.microservice.auth.server.entity.AuthProvider;
 import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
 
@@ -35,7 +37,7 @@ public class DynController implements Controller{
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
+//	@Autowired
 	private RestTemplate restTemplate;
 
 	private AuthProvider getService(String name){
@@ -63,6 +65,10 @@ public class DynController implements Controller{
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) throws Exception {
 		logger.info("--DynController.handleRequest");
+		if(restTemplate==null){
+			StringHttpMessageConverter m = new StringHttpMessageConverter(Charset.forName("UTF-8"));  
+	        restTemplate = new RestTemplateBuilder().additionalMessageConverters(m).build();  
+		}
 		String tmp=p0.getQueryString();
 		String param="";
 		if(tmp!=null && !"".equals(tmp)){
@@ -84,10 +90,15 @@ public class DynController implements Controller{
 			String body=this.getBody(p0);
 			JSONObject rBody=new JSONObject(body);
 			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+			List<MediaType> acceptableMediaTypes =new ArrayList();
+			acceptableMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+			headers.setAccept(acceptableMediaTypes);
 			HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 			ResponseEntity<String> r=restTemplate.exchange(pInfo.getAuthService()+param, hm, entity, String.class);
 			logger.info("--restTemplate,response="+r.getBody());
+			String data=new String(r.getBody().getBytes(),"UTF-8");
+			logger.info("--restTemplate,response="+data);
 			JSONObject sk=new JSONObject(r.getBody());
 	        String token = "{\"token\":\"";
 	        String passWord=(String)sk.get("passWord");
