@@ -3,7 +3,6 @@ package com.youyou.microservice.auth.server.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,8 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com.xiaoleilu.hutool.json.JSONObject;
+import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.cloud.common.jwt.JWTInfo;
 import com.youyou.microservice.auth.server.entity.AuthProvider;
+import com.youyou.microservice.auth.server.util.user.JwtAuthenticationDataResponse;
 import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
 
 public class DynController implements Controller{
@@ -95,25 +95,30 @@ public class DynController implements Controller{
 			ResponseEntity<String> r=restTemplate.exchange(pInfo.getAuthService()+param, hm, entity, String.class);
 			logger.info("--restTemplate,response="+r.getBody());
 			JSONObject sk=new JSONObject(r.getBody());
-	        String token = "{\"token\":\"";
+	        String jwt = "";
 	        String passWord=(String)sk.get("passWord");
 	        String username=(String)sk.get("username");
 	        String userId=(String)sk.get("userId");
 	        String name=(String)sk.get("name");
+			RestResultResponse<JwtAuthenticationDataResponse> restResponse=new RestResultResponse();
+			restResponse.setSuccess(true);
 	        if(userId==null || "".equals(userId)){
 				logger.error("--DynController,login error");
-	        	p1.getOutputStream().write((r.getBody()).getBytes());
+				restResponse.setData(new JwtAuthenticationDataResponse("",r.getBody()));
+				JSONObject json=new JSONObject(restResponse);
+	        	p1.getOutputStream().write(json.toString().getBytes());
 	        	return null;
 	        }
 			if(pInfo.getAcceptType().equals(ACCEPT_USER)){
 		        if (encoder.matches(passWord, passWord)) {
-		            token = token+jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
+		            jwt = jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
 		        }
 			}else{
-				token = token+jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
+				jwt = jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
 			}
-			token=token+"\"}";
-			p1.getOutputStream().write(token.getBytes());
+			restResponse.setData(new JwtAuthenticationDataResponse(jwt,r.getBody()));
+			JSONObject result=new JSONObject(restResponse);
+			p1.getOutputStream().write(result.toString().getBytes());
 		}
 		return null;
 	}
