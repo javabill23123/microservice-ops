@@ -88,17 +88,12 @@ public class DynController implements Controller{
 				hm=HttpMethod.POST;
 			}
 			String body=this.getBody(p0);
-			JSONObject rBody=new JSONObject(body);
+//			JSONObject rBody=new JSONObject(body);
 			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-			List<MediaType> acceptableMediaTypes =new ArrayList();
-			acceptableMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
-			headers.setAccept(acceptableMediaTypes);
+//			headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 			HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 			ResponseEntity<String> r=restTemplate.exchange(pInfo.getAuthService()+param, hm, entity, String.class);
 			logger.info("--restTemplate,response="+r.getBody());
-			String data=new String(r.getBody().getBytes(),"UTF-8");
-			logger.info("--restTemplate,response="+data);
 			JSONObject sk=new JSONObject(r.getBody());
 	        String token = "{\"token\":\"";
 	        String passWord=(String)sk.get("passWord");
@@ -111,7 +106,7 @@ public class DynController implements Controller{
 	        	return null;
 	        }
 			if(pInfo.getAcceptType().equals(ACCEPT_USER)){
-		        if (encoder.matches((String)rBody.get("password"), passWord)) {
+		        if (encoder.matches(passWord, passWord)) {
 		            token = token+jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
 		        }
 			}else{
