@@ -35,8 +35,8 @@ public class DynController implements Controller{
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//	@Autowired
-	private RestTemplate restTemplate=new RestTemplate();
+	@Autowired
+	private RestTemplate restTemplate;
 
 	private AuthProvider getService(String name){
 		for(AuthProvider i:providers){
