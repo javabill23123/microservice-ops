@@ -26,7 +26,7 @@ import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 import com.yonyou.microservice.gate.common.vo.user.UserInfo;
 
 /**
- * Created by ace on 2017/9/12.
+ * @author joy
  */
 @Service
 public class PermissionService {

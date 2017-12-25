@@ -2,7 +2,10 @@ package com.yonyou.microservice.gate.admin.entity;
 
 import java.util.Date;
 import javax.persistence.*;
-
+/**
+ * 
+ * @author joy
+ */
 @Table(name = "base_element")
 public class Element {
     @Id

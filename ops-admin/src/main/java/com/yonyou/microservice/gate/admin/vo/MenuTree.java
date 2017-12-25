@@ -3,7 +3,7 @@ package com.yonyou.microservice.gate.admin.vo;
 import com.yonyou.cloud.common.service.utils.TreeNode;
 
 /**
- * Created by Ace on 2017/6/12.
+ * @author joy
  */
 public class MenuTree extends TreeNode {
     String icon;

@@ -101,7 +101,7 @@ public class GroupBiz extends BaseService<GroupMapper,Group>{
     public void modifyAuthorityMenu(int groupId, String[] menus){
         resourceAuthorityMapper.deleteByAuthorityIdAndResourceType(groupId+"", AdminCommonConstant.RESOURCE_TYPE_MENU);
         List<Menu> menuList = menuMapper.selectAll();
-        Map<String,String> map = new HashMap<String, String>();
+        Map<String,String> map = new HashMap<String, String>(menuList.size());
         for(Menu menu:menuList){
             map.put(menu.getId().toString(),menu.getParentId().toString());
         }

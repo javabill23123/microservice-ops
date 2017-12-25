@@ -44,7 +44,6 @@ public class MybatisConfiguration implements EnvironmentAware {
     private String password;
     private String xmlLocation;
     private String typeAliasesPackage;
-    /////////////////////druid参数///////////////////////////////////////////////////
     private String filters;
     private String maxActive;
     private String initialSize;

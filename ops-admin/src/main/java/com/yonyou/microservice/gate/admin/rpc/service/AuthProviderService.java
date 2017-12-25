@@ -30,7 +30,7 @@ import com.yonyou.microservice.gate.common.vo.user.AuthProviderInfo;
 import com.yonyou.microservice.gate.common.vo.user.UserInfo;
 
 /**
- * Created by ace on 2017/9/12.
+ * @author joy
  */
 @Service
 public class AuthProviderService {

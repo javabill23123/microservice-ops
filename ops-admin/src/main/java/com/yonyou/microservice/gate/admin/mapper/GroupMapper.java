@@ -3,7 +3,9 @@ package com.yonyou.microservice.gate.admin.mapper;
 import com.yonyou.microservice.gate.admin.entity.Group;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
-
+/**
+ * @author joy
+ */
 public interface GroupMapper extends Mapper<Group> {
     public void deleteGroupMembersById (@Param("groupId") int groupId);
     public void deleteGroupLeadersById (@Param("groupId") int groupId);

@@ -5,7 +5,7 @@ import com.yonyou.microservice.gate.admin.entity.User;
 import java.util.List;
 
 /**
- * Created by Ace on 2017/6/18.
+ * @author joy
  */
 public class GroupUsers {
     List<User> members ;

@@ -46,7 +46,7 @@ public class UserRest {
     @RequestMapping(value = "/user/token2jwt",method = RequestMethod.POST, produces="application/json")
     public  @ResponseBody UserInfo getUserByToken(@RequestBody Map<String,String> map) {
     	String token=map.get("token");
-        return permissionService.getUserByUsername(token);//"test"
+        return permissionService.getUserByUsername(token);
     }
 
 

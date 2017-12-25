@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yonyou.cloud.common.controller.BaseController;
 import com.yonyou.microservice.gate.admin.biz.RouteBiz;
 import com.yonyou.microservice.gate.admin.entity.Route;
-
+/**
+ * @author joy
+ */
 @RestController
 @RequestMapping("routes")
 public class RouteController extends BaseController<RouteBiz,Route> {

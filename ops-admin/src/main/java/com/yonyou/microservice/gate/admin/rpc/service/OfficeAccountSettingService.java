@@ -12,7 +12,7 @@ import com.yonyou.microservice.gate.common.vo.wechat.MenuUrlInfo;
 import com.yonyou.microservice.gate.common.vo.wechat.OfficeAccountSettingInfo;
 
 /**
- * Created by ace on 2017/9/12.
+ * @author joy
  */
 @Service
 public class OfficeAccountSettingService {

@@ -3,11 +3,10 @@ package com.yonyou.microservice.gate.admin.entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/*
+/**
  * 微信菜单与url对应的信息
- * 
+ * @author joy
  */
-
 @Table(name = "wechat_menu_url")
 public class MenuUrl {
 	@Id

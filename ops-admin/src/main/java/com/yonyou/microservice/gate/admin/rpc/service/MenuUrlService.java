@@ -11,7 +11,7 @@ import com.yonyou.microservice.gate.admin.entity.MenuUrl;
 import com.yonyou.microservice.gate.common.vo.wechat.MenuUrlInfo;
 
 /**
- * Created by ace on 2017/9/12.
+ * @author joy
  */
 @Service
 public class MenuUrlService {

@@ -4,7 +4,10 @@ import com.yonyou.microservice.gate.admin.constant.AdminCommonConstant;
 
 import java.util.Date;
 import javax.persistence.*;
-
+/**
+ * 
+ * @author joy
+ */
 @Table(name = "base_group")
 public class Group {
     @Id

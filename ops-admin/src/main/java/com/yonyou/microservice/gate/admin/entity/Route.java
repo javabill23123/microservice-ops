@@ -2,7 +2,9 @@ package com.yonyou.microservice.gate.admin.entity;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+/**
+ * @author joy
+ */
 @Table(name = "gate_routes")
 public class Route {
     @Id

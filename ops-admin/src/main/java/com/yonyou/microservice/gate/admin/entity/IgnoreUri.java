@@ -3,7 +3,10 @@ package com.yonyou.microservice.gate.admin.entity;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+/**
+ * 
+ * @author joy
+ */
 @Table(name = "gate_ignore_uri")
 public class IgnoreUri {
     @Id

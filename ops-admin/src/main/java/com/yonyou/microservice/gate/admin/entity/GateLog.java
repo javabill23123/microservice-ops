@@ -4,7 +4,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import javax.persistence.*;
-
+/**
+ * 
+ * @author joy
+ */
 @Table(name = "gate_log")
 public class GateLog {
     @Id

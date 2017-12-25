@@ -13,7 +13,7 @@ import com.yonyou.microservice.gate.common.vo.authority.IgnoreUriInfo;
 import com.yonyou.microservice.gate.common.vo.user.AuthProviderInfo;
 
 /**
- * Created by ace on 2017/9/12.
+ * @author joy
  */
 @Service
 public class IgnoreUriService {

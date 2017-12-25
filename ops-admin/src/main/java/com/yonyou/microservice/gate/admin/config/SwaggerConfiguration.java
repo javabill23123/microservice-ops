@@ -19,6 +19,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.service.Contact;
 
 /**
  * swagger配置项
@@ -63,10 +64,11 @@ public class SwaggerConfiguration extends WebMvcConfigurerAdapter implements Env
 	}
 
 	private ApiInfo apiInfo() {
+		Contact contact = new Contact(this.creatName, "", "");
 		return new ApiInfoBuilder()
 				.title(this.serviceName+" Restful APIs")
 				.description(this.description)
-				.contact(this.creatName).version("1.0").build();
+				.contact(contact).version("1.0").build();
 	}
 
 	@Override

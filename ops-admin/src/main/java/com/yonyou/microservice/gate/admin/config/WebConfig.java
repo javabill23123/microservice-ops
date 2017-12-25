@@ -13,7 +13,8 @@ import com.yonyou.microservice.auth.client.interceptor.ServiceAuthRestIntercepto
 import com.yonyou.microservice.auth.client.interceptor.UserAuthRestInterceptor;
 
 /**
- * Created by ace on 2017/9/8.
+ * 
+ * @author joy
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {

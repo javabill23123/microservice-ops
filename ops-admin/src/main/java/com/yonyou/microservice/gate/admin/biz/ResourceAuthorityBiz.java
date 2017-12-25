@@ -7,7 +7,8 @@ import com.yonyou.microservice.gate.admin.entity.ResourceAuthority;
 import com.yonyou.microservice.gate.admin.mapper.ResourceAuthorityMapper;
 
 /**
- * Created by Ace on 2017/6/19.
+ * 
+ * @author joy
  */
 @Service
 public class ResourceAuthorityBiz extends BaseService<ResourceAuthorityMapper,ResourceAuthority> {

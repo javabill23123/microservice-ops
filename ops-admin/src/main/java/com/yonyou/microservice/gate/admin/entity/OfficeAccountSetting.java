@@ -3,11 +3,11 @@ package com.yonyou.microservice.gate.admin.entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/*
+/**
  * 服务号相关的信息
  * appid/secret/token/AESKey等
+ * @author joy
  */
-
 @Table(name = "wechat_office_account")
 public class OfficeAccountSetting {
 	@Id
