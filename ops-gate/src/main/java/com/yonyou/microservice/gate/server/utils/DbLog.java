@@ -17,15 +17,15 @@ import lombok.extern.slf4j.Slf4j;
  * @create 2017-07-01 15:28
  */
 @Slf4j
-public class DBLog extends Thread {
-    private static DBLog dblog = null;
+public class DbLog extends Thread {
+    private static DbLog dblog = null;
     private static BlockingQueue<LogInfo> logInfoQueue = new LinkedBlockingQueue<LogInfo>(1024);
 
     public ILogService getLogService() {
         return logService;
     }
 
-    public DBLog setLogService(ILogService logService) {
+    public DbLog setLogService(ILogService logService) {
         if(this.logService==null) {
             this.logService = logService;
         }
@@ -33,14 +33,14 @@ public class DBLog extends Thread {
     }
 
     private ILogService logService;
-    public static synchronized DBLog getInstance() {
+    public static synchronized DbLog getInstance() {
         if (dblog == null) {
-            dblog = new DBLog();
+            dblog = new DbLog();
         }
         return dblog;
     }
 
-    private DBLog() {
+    private DbLog() {
         super("CLogOracleWriterThread");
     }
 
@@ -54,7 +54,8 @@ public class DBLog extends Thread {
 
     @Override
     public void run() {
-        List<LogInfo> bufferedLogList = new ArrayList<LogInfo>(); // 缓冲队列
+    	// 缓冲队列
+        List<LogInfo> bufferedLogList = new ArrayList<LogInfo>(); 
         while (true) {
             try {
                 bufferedLogList.add(logInfoQueue.take());

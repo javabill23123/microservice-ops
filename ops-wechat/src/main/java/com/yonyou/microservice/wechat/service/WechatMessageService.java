@@ -176,7 +176,7 @@ public class WechatMessageService {
             }
 
             OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
-            WXBizMsgCrypt crypt = new WXBizMsgCrypt(oa.getToken(), oa.getAESKey(), oa.getAppid());
+            WXBizMsgCrypt crypt = new WXBizMsgCrypt(oa.getToken(), oa.getAesKey(), oa.getAppid());
             String replyMsg = WechatMessageHandleUtils.mapToXml(map);
             logger.info("handleTextMsg-replyMsg="+replyMsg);
             

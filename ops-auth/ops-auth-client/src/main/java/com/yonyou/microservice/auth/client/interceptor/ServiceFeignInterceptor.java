@@ -13,7 +13,7 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 
 /**
- * Created by ace on 2017/9/15.
+ * @author joy
  */
 public class ServiceFeignInterceptor implements RequestInterceptor {
     private Logger logger = LoggerFactory.getLogger(ServiceFeignInterceptor.class);

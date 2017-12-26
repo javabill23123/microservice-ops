@@ -4,7 +4,7 @@ package com.youyou.microservice.auth.server.bean;
 import com.yonyou.cloud.common.jwt.IJWTInfo;
 
 /**
- * Created by ace on 2017/9/10.
+ *  @author joy
  */
 public class ClientInfo implements IJWTInfo {
     String clientId;

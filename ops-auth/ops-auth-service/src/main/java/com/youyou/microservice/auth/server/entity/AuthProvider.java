@@ -3,7 +3,9 @@ package com.youyou.microservice.auth.server.entity;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+/**
+ *  @author joy
+ */
 @Table(name = "gate_auth_provider")
 public class AuthProvider {
     @Id

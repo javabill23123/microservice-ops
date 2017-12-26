@@ -1,7 +1,9 @@
 package com.yonyou.microservice.gate.common.vo.user;
 
 import java.io.Serializable;
-
+/**
+ * @author joy
+ */
 public class AuthProviderInfo implements Serializable{
 
 	private int id;

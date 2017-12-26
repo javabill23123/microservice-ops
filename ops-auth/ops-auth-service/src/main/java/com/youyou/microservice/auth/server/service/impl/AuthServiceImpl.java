@@ -18,9 +18,12 @@ import com.youyou.microservice.auth.server.feign.IUserService;
 import com.youyou.microservice.auth.server.service.AuthService;
 import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
 import com.youyou.microservice.auth.server.vo.FrontUser;
-
+/**
+ *  @author joy
+ */
 @Service
 public class AuthServiceImpl implements AuthService {
+	private static final String TEST_CAPTCHA="8888";
 	private static Logger logger=Logger.getLogger(AuthServiceImpl.class);
 
     private JwtTokenUtil jwtTokenUtil;
@@ -44,11 +47,12 @@ public class AuthServiceImpl implements AuthService {
         }
         return token;
     }
+    @Override
     public String loginPhone(String phone, String captcha) throws Exception{
     	logger.info("--AuthServiceImpl,phone="+phone+",captcha="+captcha);
         UserInfo info = userService.getUserByPhone(phone);
         String token = "";
-        if (info!=null&& captcha.equals("8888")) {
+        if (info!=null&& TEST_CAPTCHA.equals(captcha)) {
             token = jwtTokenUtil.generateToken(new JWTInfo(info.getUsername(), info.getId() + "", info.getName()));
         }
         return token;

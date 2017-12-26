@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by ace on 2017/9/15.
+ * @author joy
  */
 @Configuration
 @ComponentScan("com.yonyou.microservice.auth.client")

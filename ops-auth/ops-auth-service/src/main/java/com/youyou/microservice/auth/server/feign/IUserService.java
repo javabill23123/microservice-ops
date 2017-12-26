@@ -20,12 +20,31 @@ import com.youyou.microservice.auth.server.configuration.FeignConfiguration;
  */
 @FeignClient(value = "ops-admin",configuration = FeignConfiguration.class)
 public interface IUserService {
-  @RequestMapping(value = "/api/user/username/{username}", method = RequestMethod.GET)
-  public UserInfo getUserByUsername(@PathVariable("username") String username);
-  @RequestMapping(value = "/api/user/phone/{phone}", method = RequestMethod.GET)
-  public UserInfo getUserByPhone(@PathVariable("phone") String phone);
-  @RequestMapping(value = "/api/user/un/{username}/permissions", method = RequestMethod.GET)
-  public List<PermissionInfo> getPermissionByUsername(@PathVariable("username") String username);
-  @RequestMapping(value = "/api/permissions", method = RequestMethod.GET)
-  List<PermissionInfo> getAllPermissionInfo();
+	/**
+	 * 获取用户信息
+	 * @param username，用户账户
+	 * @return
+	 */
+	  @RequestMapping(value = "/api/user/username/{username}", method = RequestMethod.GET)
+	  public UserInfo getUserByUsername(@PathVariable("username") String username);
+	  /**
+	   * 获取用户信息
+	   * @param phone
+	   * @return
+	   */
+	  @RequestMapping(value = "/api/user/phone/{phone}", method = RequestMethod.GET)
+	  public UserInfo getUserByPhone(@PathVariable("phone") String phone);
+	  /**
+	   * 获取授权的资源
+	   * @param username
+	   * @return
+	   */
+	  @RequestMapping(value = "/api/user/un/{username}/permissions", method = RequestMethod.GET)
+	  public List<PermissionInfo> getPermissionByUsername(@PathVariable("username") String username);
+	  /**
+	   * 获取授权资源列表
+	   * @return
+	   */
+	  @RequestMapping(value = "/api/permissions", method = RequestMethod.GET)
+	  List<PermissionInfo> getAllPermissionInfo();
 }

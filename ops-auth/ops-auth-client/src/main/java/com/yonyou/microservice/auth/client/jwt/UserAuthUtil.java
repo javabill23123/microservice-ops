@@ -14,7 +14,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 
 /**
- * Created by ace on 2017/9/15.
+ * @author joy
  */
 @Configuration
 public class UserAuthUtil {

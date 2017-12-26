@@ -3,7 +3,9 @@ package com.yonyou.microservice.gate.common.vo.authority;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+/**
+ * @author joy
+ */
 public class IgnoreUriInfo {
 	private int id;
     

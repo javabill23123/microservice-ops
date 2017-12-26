@@ -19,6 +19,10 @@ import com.yonyou.microservice.gate.server.config.ZuulConfig;
 @FeignClient(value = "ops-admin",configuration = {ZuulConfig.class})
 @RequestMapping("api")
 public interface IIgnoreUriService {
+	/**
+	 * 读取所有忽略的url
+	 * @return
+	 */
   @RequestMapping(value = "/ignoreUri/all", method = RequestMethod.GET)
   List<IgnoreUriInfo> getIgnoreUris();
 

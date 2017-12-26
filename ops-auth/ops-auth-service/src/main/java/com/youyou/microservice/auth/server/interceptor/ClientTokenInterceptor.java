@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by ace on 2017/9/12.
+ *  @author joy
  */
 public class ClientTokenInterceptor implements RequestInterceptor {
+	private static final String URL_AUTH_PROVIDE="/api/authProvider";
     private Logger logger = LoggerFactory.getLogger(ClientTokenInterceptor.class);
     @Autowired
     private ClientConfig clientConfig;
@@ -23,8 +24,9 @@ public class ClientTokenInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         try {
-        	if(requestTemplate.toString().contains("/api/authProvider"))
+        	if(requestTemplate.toString().contains(URL_AUTH_PROVIDE)){
         		return;
+        	}
             requestTemplate.header(clientConfig.getClientTokenHeader(), clientService.apply(clientConfig.getClientId(), clientConfig.getClientSecret()));
         } catch (Exception e) {
             e.printStackTrace();

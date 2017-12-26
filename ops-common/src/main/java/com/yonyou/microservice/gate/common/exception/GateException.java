@@ -1,7 +1,9 @@
 package com.yonyou.microservice.gate.common.exception;
 
 import com.yonyou.cloud.common.exception.BizException;
-
+/**
+ * @author joy
+ */
 public class GateException extends BizException{
 
 	/**

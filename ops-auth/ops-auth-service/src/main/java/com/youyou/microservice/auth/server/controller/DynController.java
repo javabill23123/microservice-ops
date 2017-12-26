@@ -27,8 +27,11 @@ import com.yonyou.cloud.common.jwt.JWTInfo;
 import com.youyou.microservice.auth.server.entity.AuthProvider;
 import com.youyou.microservice.auth.server.util.user.JwtAuthenticationDataResponse;
 import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
-
+/**
+ *  @author joy
+ */
 public class DynController implements Controller{
+	private static final String HTTP_GET="GET";
 	private static Logger logger=Logger.getLogger(DynController.class);
 	public static final String ACCEPT_USER="user";
 	public static final String ACCEPT_USER_PASSWORD="userAndPassword";
@@ -37,7 +40,6 @@ public class DynController implements Controller{
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//	@Autowired
 	private RestTemplate restTemplate;
 
 	private AuthProvider getService(String name){
@@ -82,7 +84,7 @@ public class DynController implements Controller{
 			
 			String method=p0.getMethod();
 			HttpMethod hm;
-			if("GET".equals(method)){
+			if(HTTP_GET.equals(method)){
 				hm=HttpMethod.GET;
 			}else{
 				hm=HttpMethod.POST;
@@ -123,7 +125,7 @@ public class DynController implements Controller{
 	        	p1.getOutputStream().write(json.toString().getBytes());
 	        	return null;
 	        }
-			if(pInfo.getAcceptType().equals(ACCEPT_USER)){
+			if(ACCEPT_USER.equals(pInfo.getAcceptType())){
 		        if (encoder.matches(passWord, passWord)) {
 		            jwt = jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
 		        }

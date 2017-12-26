@@ -1,7 +1,7 @@
 package com.yonyou.microservice.auth.client.exception;
 
 /**
- * Created by ace on 2017/9/15.
+ * @author joy
  */
 public class JwtTokenExpiredException extends Exception {
     public JwtTokenExpiredException(String s) {

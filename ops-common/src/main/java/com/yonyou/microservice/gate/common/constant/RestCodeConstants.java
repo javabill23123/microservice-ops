@@ -1,7 +1,7 @@
 package com.yonyou.microservice.gate.common.constant;
 
 /**
- * Created by ace on 2017/8/23.
+ * @author joy
  */
 public class RestCodeConstants {
     public static final int TOKEN_ERROR_CODE = 40101;

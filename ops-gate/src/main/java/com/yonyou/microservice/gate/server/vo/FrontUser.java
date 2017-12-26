@@ -5,7 +5,7 @@ import java.util.List;
 import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 
 /**
- * Created by ace on 2017/8/22.
+ * @author joy
  */
 public class FrontUser {
     public String id;

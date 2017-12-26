@@ -17,10 +17,10 @@ import com.youyou.microservice.auth.server.service.ClientService;
 import com.youyou.microservice.auth.server.util.client.ClientTokenUtil;
 
 /**
- * Created by ace on 2017/9/10.
+ *  @author joy
  */
 @Service
-public class DBClientService implements ClientService {
+public class DbClientServiceImpl implements ClientService {
     @Autowired
     private ClientMapper clientMapper;
     @Autowired

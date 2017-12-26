@@ -18,7 +18,7 @@ import com.yonyou.microservice.auth.client.jwt.ServiceAuthUtil;
 import com.yonyou.microservice.gate.common.exception.GateException;
 
 /**
- * Created by ace on 2017/9/12.
+ * @author joy
  */
 @SuppressWarnings("ALL")
 public class ServiceAuthRestInterceptor extends HandlerInterceptorAdapter {
@@ -46,7 +46,8 @@ public class ServiceAuthRestInterceptor extends HandlerInterceptorAdapter {
 
         String token = request.getHeader(serviceAuthConfig.getTokenHeader());
         IJWTInfo infoFromToken = serviceAuthUtil.getInfoFromToken(token);
-        String uniqueName = infoFromToken.getUniqueName(); // clientName（code）
+        // clientName（code）
+        String uniqueName = infoFromToken.getUniqueName(); 
         for(String client:serviceAuthUtil.getAllowedClient()){
             if(client.equals(uniqueName)){
                 return super.preHandle(request, response, handler);

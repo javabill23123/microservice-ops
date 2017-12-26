@@ -1,5 +1,7 @@
 package com.yonyou.microservice.gate.common.vo.wechat;
-
+/**
+ * @author joy
+ */
 public class MenuUrlInfo {
 	private  int id;
 	

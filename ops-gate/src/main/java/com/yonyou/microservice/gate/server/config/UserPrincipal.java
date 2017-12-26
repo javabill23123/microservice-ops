@@ -11,7 +11,7 @@ import com.yonyou.microservice.auth.client.jwt.UserAuthUtil;
 import com.yonyou.microservice.gate.ratelimit.config.IUserPrincipal;
 
 /**
- * Created by ace on 2017/9/23.
+ * @author joy
  */
 
 public class UserPrincipal implements IUserPrincipal {

@@ -1,10 +1,11 @@
 package com.yonyou.microservice.gate.common.vo.wechat;
 
-/*
+
+/**
  * 服务号相关的信息
  * appid/secret/token/AESKey等
+ * @author joy
  */
-
 public class OfficeAccountSettingInfo {
 	private  int id;
 	
@@ -18,7 +19,7 @@ public class OfficeAccountSettingInfo {
 	
 	private  String menuStr;
 	
-	private  String AESKey;
+	private  String aesKey;
 
 	public String getAppid() {
 		return appid;
@@ -52,14 +53,6 @@ public class OfficeAccountSettingInfo {
 		this.menuStr = menuStr;
 	}
 
-	public String getAESKey() {
-		return AESKey;
-	}
-
-	public void setAESKey(String aESKey) {
-		AESKey = aESKey;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -74,6 +67,14 @@ public class OfficeAccountSettingInfo {
 
 	public void setServiceNo(String serviceNo) {
 		this.serviceNo = serviceNo;
+	}
+
+	public String getAesKey() {
+		return aesKey;
+	}
+
+	public void setAesKey(String aesKey) {
+		this.aesKey = aesKey;
 	}
 
 

@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+/**
+ *  @author joy
+ */
 @RestController
 @RequestMapping("jwt")
 public class AuthController {

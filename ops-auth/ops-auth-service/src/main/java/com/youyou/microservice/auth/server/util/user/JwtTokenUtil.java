@@ -7,7 +7,7 @@ import com.yonyou.cloud.common.jwt.IJWTInfo;
 import com.yonyou.cloud.common.jwt.JWTHelper;
 
 /**
- * Created by ace on 2017/9/10.
+ *  @author joy
  */
 @Component
 public class JwtTokenUtil {

@@ -1,15 +1,19 @@
 package com.yonyou.microservice.gate.common.constant;
 
 /**
- * Created by ace on 2017/8/29.
+ * @author joy
  */
 public class CommonConstants {
     public final static String RESOURCE_TYPE_MENU = "menu";
     public final static String RESOURCE_TYPE_BTN = "button";
     public static final Integer EX_TOKEN_ERROR_CODE = 40101;
-    // 用户token异常
+    /**
+     * 用户token异常
+     */
     public static final Integer EX_USER_INVALID_CODE = 40102;
-    // 客户端token异常
+    /**
+     * 客户端token异常
+     */
     public static final Integer EX_CLIENT_INVALID_CODE = 40131;
     public static final Integer EX_CLIENT_FORBIDDEN_CODE = 40331;
     public static final Integer EX_OTHER_CODE = 500;

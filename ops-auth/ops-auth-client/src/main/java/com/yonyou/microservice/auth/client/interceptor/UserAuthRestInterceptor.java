@@ -16,7 +16,7 @@ import com.yonyou.microservice.auth.client.jwt.UserAuthUtil;
 import com.yonyou.microservice.gate.common.context.BaseContextHandler;
 
 /**
- * Created by ace on 2017/9/10.
+ * @author joy
  */
 public class UserAuthRestInterceptor extends HandlerInterceptorAdapter {
     private Logger logger = LoggerFactory.getLogger(UserAuthRestInterceptor.class);

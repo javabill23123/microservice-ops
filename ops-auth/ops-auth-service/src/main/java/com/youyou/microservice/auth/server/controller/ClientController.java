@@ -11,7 +11,7 @@ import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.youyou.microservice.auth.server.service.ClientService;
 
 /**
- * Created by ace on 2017/9/10.
+ *  @author joy
  */
 @RestController
 @RequestMapping("client")

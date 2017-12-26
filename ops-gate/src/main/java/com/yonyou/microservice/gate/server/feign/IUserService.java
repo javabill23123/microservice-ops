@@ -21,11 +21,25 @@ import com.yonyou.microservice.gate.server.config.ZuulConfig;
 @FeignClient(value = "ops-admin",configuration = {ZuulConfig.class})
 @RequestMapping("api")
 public interface IUserService {
-  @RequestMapping(value = "/user/username/{username}", method = RequestMethod.GET)
-  public UserInfo getUserByUsername(@PathVariable("username") String username);
-  @RequestMapping(value = "/user/un/{username}/permissions", method = RequestMethod.GET)
-  public List<PermissionInfo> getPermissionByUsername(@PathVariable("username") String username);
-  @RequestMapping(value = "/permissions", method = RequestMethod.GET)
-  List<PermissionInfo> getAllPermissionInfo();
-
+	/**
+	 * 读取用户信息
+	 * @param username
+	 * @return
+	 */
+	  @RequestMapping(value = "/user/username/{username}", method = RequestMethod.GET)
+	  public UserInfo getUserByUsername(@PathVariable("username") String username);
+	  /**
+	   * 读取用户允许的访问资源
+	   * @param username
+	   * @return
+	   */
+	  @RequestMapping(value = "/user/un/{username}/permissions", method = RequestMethod.GET)
+	  public List<PermissionInfo> getPermissionByUsername(@PathVariable("username") String username);
+	  /**
+	   * 读取所有允许的访问资源
+	   * @param username
+	   * @return
+	   */
+	  @RequestMapping(value = "/permissions", method = RequestMethod.GET)
+	  List<PermissionInfo> getAllPermissionInfo();
 }

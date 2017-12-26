@@ -4,9 +4,16 @@ package com.youyou.microservice.auth.server.service;
 import java.util.List;
 
 /**
- * Created by ace on 2017/9/10.
+ *  @author joy
  */
 public interface ClientService {
+	/**
+	 * 生成token
+	 * @param clientId
+	 * @param secret
+	 * @return
+	 * @throws Exception
+	 */
     public String apply(String clientId, String secret) throws Exception;
 
     /**
@@ -16,6 +23,8 @@ public interface ClientService {
      * @return
      */
     public List<String> getAllowedClient(String serviceId, String secret);
-
+    /**
+     * 注册微服务到db，用于微服务之间访问授权
+     */
     public void registryClient();
 }

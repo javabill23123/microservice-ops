@@ -13,7 +13,9 @@ import com.youyou.microservice.auth.server.service.AuthService;
 import com.youyou.microservice.auth.server.util.user.JwtAuthenticationRequest;
 import com.youyou.microservice.auth.server.util.user.JwtAuthenticationResponse;
 
-
+/**
+ *  @author joy
+ */
 @RestController
 @RequestMapping("captcha")
 public class CaptchaController {

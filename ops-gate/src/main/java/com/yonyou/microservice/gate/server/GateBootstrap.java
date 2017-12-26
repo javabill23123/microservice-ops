@@ -1,6 +1,8 @@
 package com.yonyou.microservice.gate.server;
 
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,10 +33,10 @@ import com.yonyou.microservice.gate.ratelimit.EnableAceGateRateLimit;
 import com.yonyou.microservice.gate.ratelimit.config.IUserPrincipal;
 import com.yonyou.microservice.gate.ratelimit.config.properties.RateLimitProperties;
 import com.yonyou.microservice.gate.server.config.UserPrincipal;
-import com.yonyou.microservice.gate.server.utils.DBLog;
+import com.yonyou.microservice.gate.server.utils.DbLog;
 
 /**
- * Created by Ace on 2017/6/2.
+ * @author joy
  */
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -55,18 +57,8 @@ public class GateBootstrap {
     public String test(){
     	return "ok";
     }
-    public static void main(String[] args) throws ParseException {
-//    	DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//    	Date date1=df.parse("2017-11-27 15:35:28");
-//    	Date date2=df.parse("2017-11-27 15:35:29");
-//    	long l1=date1.getTime();
-//    	long l2=date2.getTime();
-//    	if(l1<l2){
-//    		System.out.println("--------");
-//    	}
-//    	RequestMappingInfo info=new RequestMappingInfo(null,null);
-//    	info.equals(GateBootstrap.class);
-        DBLog.getInstance().start();
+    public static void main(String[] args) throws ParseException, UnsupportedEncodingException {
+        DbLog.getInstance().start();
         SpringApplication.run(GateBootstrap.class, args);
     }
 
@@ -81,7 +73,7 @@ public class GateBootstrap {
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) throws Exception {
 		System.out.println("--x");
-		Map<String, String> map=new HashMap();
+		Map<String, String> map=new HashMap(10);
 		map.put("ab", "value");
 		
 		p1.getOutputStream().write(map.toString().getBytes());

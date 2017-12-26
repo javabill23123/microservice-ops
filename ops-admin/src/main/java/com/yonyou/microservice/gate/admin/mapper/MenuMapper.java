@@ -9,6 +9,12 @@ import java.util.List;
  * @author joy
  */
 public interface MenuMapper extends Mapper<Menu> {
+	/**
+	 * 根据角色id和角色类型查询菜单
+	 * @param authorityId，角色id
+	 * @param authorityType，角色类型
+	 * @return
+	 */
     public List<Menu> selectMenuByAuthorityId(@Param("authorityId") String authorityId,@Param("authorityType") String authorityType);
 
     /**

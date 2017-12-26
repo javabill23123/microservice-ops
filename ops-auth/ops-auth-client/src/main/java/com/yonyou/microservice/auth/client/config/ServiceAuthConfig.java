@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by ace on 2017/9/15.
+ * @author joy
  */
 
 public class ServiceAuthConfig {

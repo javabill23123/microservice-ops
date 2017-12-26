@@ -6,8 +6,15 @@ import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
-
+/**
+ *  @author joy
+ */
 public interface ClientMapper extends Mapper<Client> {
+	/**
+	 * 获取允许访问的微服务名称列表
+	 * @param serviceId
+	 * @return
+	 */
     @Select(" SELECT\n" +
             "        client.CODE\n" +
             "      FROM\n" +

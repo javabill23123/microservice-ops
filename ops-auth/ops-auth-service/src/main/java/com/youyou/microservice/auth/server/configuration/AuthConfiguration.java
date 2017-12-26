@@ -17,13 +17,12 @@ import com.youyou.microservice.auth.server.entity.AuthProvider;
 import com.youyou.microservice.auth.server.mapper.AuthProviderMapper;
 
 /**
- * Created by ace on 2017/9/10.
+ *  @author joy
  */
 @Configuration
 public class AuthConfiguration {
 
 	 @Bean
-//	 @LoadBalanced
 	 public  RestTemplate restTemplate(){
 		 return new RestTemplate(); 
 	 }
@@ -37,7 +36,7 @@ public class AuthConfiguration {
     	List<AuthProvider> list=service.selectAuthProviders();
     	DynController bean=new DynController();
     	bean.setProviders(list);
-    	Map<String,Object> urlMap=new HashMap();
+    	Map<String,Object> urlMap=new HashMap(list.size());
     	for(AuthProvider i:list){
         	urlMap.put(i.getSrcUrl(), bean);
     	}

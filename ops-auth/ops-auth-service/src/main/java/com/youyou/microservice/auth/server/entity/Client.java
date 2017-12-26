@@ -4,7 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
-
+/**
+ *  @author joy
+ */
 @Table(name = "gate_client")
 public class Client {
     @Id

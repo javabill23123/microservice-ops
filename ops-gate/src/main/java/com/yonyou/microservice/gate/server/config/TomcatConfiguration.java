@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-
+/**
+ * @author joy
+ */
 @Configuration
 public class TomcatConfiguration  {
 	
@@ -27,7 +29,7 @@ public class TomcatConfiguration  {
 
 		TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
 		Connector ajpConnector = new Connector("AJP/1.3");
-		ajpConnector.setProtocol("AJP/1.3");
+//		ajpConnector.setProtocol("AJP/1.3");
 		ajpConnector.setPort(ajpport);
 		ajpConnector.setProperty("jvmRoute", jvmRoute);
 //		ajpConnector.setSecure(isAjpSecure());

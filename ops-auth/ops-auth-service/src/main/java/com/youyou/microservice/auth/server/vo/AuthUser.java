@@ -1,5 +1,7 @@
 package com.youyou.microservice.auth.server.vo;
-
+/**
+ *  @author joy
+ */
 public class AuthUser {
     private String id;
     private String username;

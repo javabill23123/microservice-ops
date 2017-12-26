@@ -12,7 +12,7 @@ import com.xiaoleilu.hutool.json.JSONObject;
 import com.yonyou.cloud.common.vo.user.UserInfo;
 
 /**
- * Created by Ace on 2017/6/2.
+ *  @author joy
  */
 @SpringBootApplication
 @EnableEurekaClient

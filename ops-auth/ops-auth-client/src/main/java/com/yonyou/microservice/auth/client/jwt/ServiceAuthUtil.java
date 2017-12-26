@@ -22,12 +22,13 @@ import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by ace on 2017/9/15.
+ * @author joy
  */
 @Configuration
 @Slf4j
 @EnableScheduling
 public class ServiceAuthUtil {
+	private static final int HTTP_OK=200;
     @Autowired
     private ServiceAuthConfig serviceAuthConfig;
     @Autowired
@@ -52,7 +53,7 @@ public class ServiceAuthUtil {
     public void refreshAllowedClient() {
         log.info("refresh allowedClient.....");
         RestResultResponse resp = serviceAuthFeign.getAllowedClient(serviceAuthConfig.getClientId(), serviceAuthConfig.getClientSecret());
-        if (resp.getResultCode() == 200) {
+        if (resp.getResultCode() == HTTP_OK) {
         	RestResultResponse<List<String>> allowedClient = (RestResultResponse<List<String>>) resp;
             this.allowedClient = allowedClient.getData();
         }
@@ -63,7 +64,7 @@ public class ServiceAuthUtil {
     public void refreshClientToken() {
         log.info("refresh client token.....");
         RestResultResponse resp = serviceAuthFeign.getAccessToken(serviceAuthConfig.getClientId(), serviceAuthConfig.getClientSecret());
-        if (resp.getResultCode() == 200) {
+        if (resp.getResultCode() == HTTP_OK) {
         	RestResultResponse<String> clientToken = (RestResultResponse<String>) resp;
             this.clientToken = clientToken.getData();
         }

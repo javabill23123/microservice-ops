@@ -1,5 +1,6 @@
 package com.yonyou.microservice.gate.server.filter;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Date;
@@ -36,7 +37,7 @@ import com.yonyou.microservice.gate.common.vo.user.UserInfo;
 import com.yonyou.microservice.gate.server.feign.IIgnoreUriService;
 import com.yonyou.microservice.gate.server.feign.ILogService;
 import com.yonyou.microservice.gate.server.feign.IUserService;
-import com.yonyou.microservice.gate.server.utils.DBLog;
+import com.yonyou.microservice.gate.server.utils.DbLog;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,6 +55,8 @@ public class AdminAccessFilter extends ZuulFilter {
 	private static final String USER_HEAD_ID="userId";
 	private static final String USER_HEAD_NAME="userName";
 	private static final String USER_HEAD_REMARK="remark";
+	private static final String PERMISSION="permission";
+	private static final String HTTP_GET="GET";
 	private static Logger logger=Logger.getLogger(AdminAccessFilter.class);
 
     @Autowired
@@ -122,9 +125,10 @@ public class AdminAccessFilter extends ZuulFilter {
         }
         IJWTInfo user = null;
         try {
-            user = getJWTUser(request,ctx);//从JWT中解析出用户信息
+        	//从JWT中解析出用户信息
+            user = getJWTUser(request,ctx);
         } catch (Exception e) {
-        	//TODO 如果jwt中的用户信息获取失败，这块返回信息可能要改成统一的response格式
+        	//如果jwt中的用户信息获取失败，这块返回信息可能要改成统一的response格式
             setFailedRequest(JSON.toJSONString(new TokenErrorResponse(e.getMessage())),200);
             return null;
         }
@@ -132,7 +136,7 @@ public class AdminAccessFilter extends ZuulFilter {
         // 判断资源是否启用权限约束
         Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
         if(result.size()>0){
-            checkAllow(requestUri, method, ctx, user.getUniqueName());
+			checkAllow(requestUri, method, ctx, user.getUniqueName());
         }
         // 申请客户端密钥头
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
@@ -167,10 +171,15 @@ public class AdminAccessFilter extends ZuulFilter {
         UserInfo info = userService.getUserByUsername(username);
         String host =  ClientUtil.getClientIp(ctx.getRequest());
         ctx.addZuulRequestHeader("userId", info.getId());
-        ctx.addZuulRequestHeader("userName", URLEncoder.encode(info.getName()));
+        try {
+        	String name=URLEncoder.encode(info.getName(),"utf-8");
+			ctx.addZuulRequestHeader("userName", name);
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage());
+		}
         ctx.addZuulRequestHeader("userHost", ClientUtil.getClientIp(ctx.getRequest()));
         LogInfo logInfo = new LogInfo(pm.getMenu(),pm.getName(),pm.getUri(),new Date(),info.getId(),info.getName(),host);
-        DBLog.getInstance().setLogService(logService).offerQueue(logInfo);
+        DbLog.getInstance().setLogService(logService).offerQueue(logInfo);
     }
 
     /**
@@ -201,7 +210,7 @@ public class AdminAccessFilter extends ZuulFilter {
      */
     private List<PermissionInfo> getPermissionInfos(HttpServletRequest request, String username) {
         List<PermissionInfo> permissionInfos;
-        if (request.getSession().getAttribute("permission") == null) {
+        if (request.getSession().getAttribute(PERMISSION) == null) {
             permissionInfos = userService.getPermissionByUsername(username);
             request.getSession().setAttribute("permission", permissionInfos);
         } else {
@@ -214,6 +223,7 @@ public class AdminAccessFilter extends ZuulFilter {
      * 权限校验
      * @param requestUri
      * @param method
+     * @throws UnsupportedEncodingException 
      */
     private void checkAllow(final String requestUri, final String method ,RequestContext ctx,String username) {
         log.debug("uri：" + requestUri + "----method：" + method);
@@ -224,27 +234,12 @@ public class AdminAccessFilter extends ZuulFilter {
         } else{
             PermissionInfo[] pms =  result.toArray(new PermissionInfo[]{});
             PermissionInfo pm = pms[0];
-            if(!"GET".equals(method)){
+            if(!HTTP_GET.equals(method)){
                 setCurrentUserInfoAndLog(ctx, username, pm);
             }
         }
     }
 
-
-//    /**
-//     * URI是否以什么打头
-//     * @param requestUri
-//     * @return
-//     */
-//    private boolean isStartWith(String requestUri) {
-//        boolean flag = false;
-//        for (String s : startWith.split(",")) {
-//            if (requestUri.startsWith(s)) {
-//                return true;
-//            }
-//        }
-//        return flag;
-//    }
 
     /**
      * URI是否以什么打头
