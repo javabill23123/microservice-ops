@@ -21,6 +21,9 @@ spring:
 server:
     port: ${ops.gate.port:8766} #启动端口
 
+ajpport: 9101
+jvmroute: ""
+
 #
 zuul:
   ignored-services: "*"
