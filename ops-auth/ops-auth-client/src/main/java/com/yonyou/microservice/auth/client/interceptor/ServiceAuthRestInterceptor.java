@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.yonyou.cloud.common.jwt.IJWTInfo;
+import com.yonyou.cloud.common.jwt.IJwtInfo;
 import com.yonyou.microservice.auth.client.annotation.IgnoreClientToken;
 import com.yonyou.microservice.auth.client.config.ServiceAuthConfig;
 import com.yonyou.microservice.auth.client.jwt.ServiceAuthUtil;
@@ -45,7 +45,7 @@ public class ServiceAuthRestInterceptor extends HandlerInterceptorAdapter {
         }
 
         String token = request.getHeader(serviceAuthConfig.getTokenHeader());
-        IJWTInfo infoFromToken = serviceAuthUtil.getInfoFromToken(token);
+        IJwtInfo infoFromToken = serviceAuthUtil.getInfoFromToken(token);
         // clientName（code）
         String uniqueName = infoFromToken.getUniqueName(); 
         for(String client:serviceAuthUtil.getAllowedClient()){

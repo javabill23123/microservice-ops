@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import com.yonyou.cloud.common.jwt.IJWTInfo;
-import com.yonyou.cloud.common.jwt.JWTHelper;
+import com.yonyou.cloud.common.jwt.IJwtInfo;
+import com.yonyou.cloud.common.jwt.JwtHelper;
 
 /**
  *  @author joy
@@ -22,12 +22,12 @@ public class ClientTokenUtil {
     @Value("${client.pub-key.path}")
     private String pubKeyPath;
 
-    public String generateToken(IJWTInfo jwtInfo) throws Exception {
-        return JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
+    public String generateToken(IJwtInfo jwtInfo) throws Exception {
+        return JwtHelper.generateToken(jwtInfo,priKeyPath,expire);
     }
 
-    public IJWTInfo getInfoFromToken(String token) throws Exception {
-        return JWTHelper.getInfoFromToken(token,pubKeyPath);
+    public IJwtInfo getInfoFromToken(String token) throws Exception {
+        return JwtHelper.getInfoFromToken(token,pubKeyPath);
     }
 
 }

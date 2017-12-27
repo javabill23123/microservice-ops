@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.yonyou.cloud.common.service.EsBaseService;
+import com.yonyou.cloud.common.service.BaseEsService;
 import com.yonyou.cloud.ops.mq.common.MqMessageStatus;
 import com.yonyou.cloud.ops.mq.common.MqMessageType;
 import com.yonyou.cloud.ops.mq.common.MqOpsConstant;
 import com.yonyou.cloud.ops.mq.entity.MqMessage;
 
 @Service
-public class MqMessageService extends EsBaseService<MqMessage>{
+public class MqMessageService extends BaseEsService<MqMessage>{
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 

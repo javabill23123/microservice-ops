@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.yonyou.cloud.common.jwt.IJWTInfo;
+import com.yonyou.cloud.common.jwt.IJwtInfo;
 import com.yonyou.microservice.auth.client.annotation.IgnoreUserToken;
 import com.yonyou.microservice.auth.client.config.UserAuthConfig;
 import com.yonyou.microservice.auth.client.jwt.UserAuthUtil;
@@ -40,7 +40,7 @@ public class UserAuthRestInterceptor extends HandlerInterceptorAdapter {
         }
 
         String token = request.getHeader(userAuthConfig.getTokenHeader());
-        IJWTInfo infoFromToken = userAuthUtil.getInfoFromToken(token);
+        IJwtInfo infoFromToken = userAuthUtil.getInfoFromToken(token);
         BaseContextHandler.setUsername(infoFromToken.getUniqueName());
         BaseContextHandler.setName(infoFromToken.getName());
         BaseContextHandler.setUserID(infoFromToken.getId());

@@ -2,12 +2,12 @@ package com.yonyou.cloud.ops.mq.service;
 
 import org.springframework.stereotype.Service;
 
-import com.yonyou.cloud.common.service.EsBaseService;
+import com.yonyou.cloud.common.service.BaseEsService;
 import com.yonyou.cloud.ops.mq.common.MqOpsConstant;
 import com.yonyou.cloud.ops.mq.entity.MqProducer;
 
 @Service
-public class MqProducerService extends EsBaseService<MqProducer>{
+public class MqProducerService extends BaseEsService<MqProducer>{
 	
 //	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
