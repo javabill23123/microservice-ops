@@ -26,7 +26,11 @@ package com.yonyou.marketing.message.spi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Component
 @PropertySource(value = "classpath:wechatTest.properties")
 public class WebChatToolsTestConfig {

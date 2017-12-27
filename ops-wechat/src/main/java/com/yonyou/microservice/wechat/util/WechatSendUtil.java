@@ -51,21 +51,32 @@ import okhttp3.Response;
 
 public class WechatSendUtil {
 	private static Logger logger = Logger.getLogger(WechatSendUtil.class);
-	// 发送的字符为UTF-8格式
+	/**
+	 *  发送的字符为UTF-8格式
+	 */
 	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-	// 设置读取超时时间 默认5S
+	/**
+	 *  设置读取超时时间 默认5S
+	 */
 	public static final int REST_READ_TIMEOUT = 10000;
-	// 设置写的超时时间 默认5S
+	/**
+	 *  设置写的超时时间 默认5S
+	 */
 	public static final int REST_WRITE_TIMEOUT = 10000;
-	// 设置连接超时时间 默认5S
+	/**
+	 *  设置连接超时时间 默认5S
+	 */
 	public static final int REST_CONN_TIMEOUT = 5000;
 
 	public static RestServiceResultDto getMessageFromWechat(String url) {
 
 		// 创建连接
-		OkHttpClient client = new OkHttpClient.Builder().readTimeout(REST_READ_TIMEOUT, TimeUnit.MILLISECONDS)// 设置读取超时时间
-				.writeTimeout(REST_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)// 设置写的超时时间
-				.connectTimeout(REST_CONN_TIMEOUT, TimeUnit.MILLISECONDS)// 设置连接超时时间
+		// 设置读取超时时间
+		OkHttpClient client = new OkHttpClient.Builder().readTimeout(REST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+				// 设置写的超时时间
+				.writeTimeout(REST_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+				// 设置连接超时时间
+				.connectTimeout(REST_CONN_TIMEOUT, TimeUnit.MILLISECONDS)
 				.build();
 
 		// 设置URL,JSON内容，头信息
@@ -129,9 +140,12 @@ public class WechatSendUtil {
 	public static RestServiceResultDto postMessageForWechat(String url, String jsonBody) throws Exception {
 
 		// 创建连接
-		OkHttpClient client = new OkHttpClient.Builder().readTimeout(REST_READ_TIMEOUT, TimeUnit.MILLISECONDS)// 设置读取超时时间
-				.writeTimeout(REST_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)// 设置写的超时时间
-				.connectTimeout(REST_CONN_TIMEOUT, TimeUnit.MILLISECONDS)// 设置连接超时时间
+		// 设置读取超时时间
+		OkHttpClient client = new OkHttpClient.Builder().readTimeout(REST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+				// 设置写的超时时间
+				.writeTimeout(REST_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+				// 设置连接超时时间
+				.connectTimeout(REST_CONN_TIMEOUT, TimeUnit.MILLISECONDS)
 				.build();
 		// 建立发送消息体
 		RequestBody body = RequestBody.create(JSON, jsonBody);

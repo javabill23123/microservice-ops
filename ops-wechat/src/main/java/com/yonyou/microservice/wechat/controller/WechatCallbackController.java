@@ -18,7 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.microservice.wechat.entity.Check;
 import com.yonyou.microservice.wechat.service.WechatMessageService;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Controller
 public class WechatCallbackController {
 
@@ -26,8 +30,17 @@ public class WechatCallbackController {
     @Autowired
     private WechatMessageService wechatMessageService;
 
-    //微信验证服务器回调接口  
-	@RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.GET)//, produces="text/html;charset=UTF-8"
+    /**
+     * 微信验证服务器回调接口  
+     * @param tokenModel
+     * @param req
+     * @param serviceNo
+     * @param res
+     * @return
+     * @throws ParseException
+     * @throws IOException
+     */
+	@RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.GET)
 	@ResponseBody 
 	public RestResultResponse<String> validateGet(Check tokenModel, HttpServletRequest req,
 			@PathVariable("serviceNo") String serviceNo,
@@ -49,8 +62,8 @@ public class WechatCallbackController {
     * @param signature
     * @param xml
     * @return
-    *///@RequestBody Map<String, String> map,
-    @RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.POST)//,  produces = "text/plain;charset=UTF-8"
+    */
+    @RequestMapping(value = "/wechat/callback/{serviceNo}", method = RequestMethod.POST)
     @ResponseBody
     public String receiveDealerWeChatMsg(@PathVariable("serviceNo") String serviceNo,
     		HttpServletRequest req,HttpServletResponse rps,@RequestBody String xml) throws Exception{

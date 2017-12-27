@@ -38,36 +38,66 @@ import java.util.List;
 public class TmNewsActivityWechatDto {
 
     private static final long serialVersionUID = 1L;
-    //nviId
+    /**
+     * nviId
+     */
     private Long nviId;
-    //tagsId
+    /**
+     * tagsId
+     */
     private Long tagsId;
-    //类型 0：新闻资讯 1：营销活动
+    /**
+     * 类型 0：新闻资讯 1：营销活动
+     */
     private Integer type;
-    //标题
+    /**
+     * 标题
+     */
     private String title;
-    //标题图片URL
+    /**
+     * 标题图片URL
+     */
     private String titleImageUrl;
-    //标题图片字节流
+    /**
+     * 标题图片字节流
+     */
     private String titleImageStream;
-    //是否热点
+    /**
+     * 是否热点
+     */
     private Integer isHot;
-    //热点图片URL
+    /**
+     * 热点图片URL
+     */
     private String hotImageUrl;
-    //热点图片字节流
+    /**
+     * 热点图片字节流
+     */
     private String hotImageStream;
-    //开始时间
+    /**
+     * 开始时间
+     */
     private Date startTime;
-    //结束时间
+    /**
+     * 结束时间
+     */
     private Date endTime;
-    //状态 0：草稿 1：发布
+    /**
+     * 状态 0：草稿 1：发布
+     */
     private int status;
-    //发布时间
+    /**
+     * 发布时间
+     */
     private Date publishTime;
-    //内容
+    /**
+     * 内容
+     */
     private String content;
     
-    //经销商编号
+    /**
+     * 经销商编号
+     */
     private String dealerCode;
     private List<String> openIdList;
     

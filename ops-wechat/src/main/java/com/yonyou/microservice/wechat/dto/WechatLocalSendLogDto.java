@@ -36,15 +36,25 @@ import java.util.Date;
 
 public class WechatLocalSendLogDto {
     
-    //主键ID
+    /**
+     * 主键ID
+     */
     private Long tlWechatSendId;
-    //类型 1:上传图片信息 2:上传图文信息 3:批量发送 4:上传关注图片信息
+    /**
+     * 类型 1:上传图片信息 2:上传图文信息 3:批量发送 4:上传关注图片信息
+     */
     private Integer type;
-    //备注
+    /**
+     * 备注
+     */
     private String remark;
-    //是否成功 是否成功 1:成功  0:失败'
+    /**
+     * 是否成功 是否成功 1:成功  0:失败'
+     */
     private int isSuccess;
-    //错误信息
+    /**
+     * 错误信息
+     */
     private String errorInfo;
     private Date createDate;
     private Long createBy;
@@ -187,19 +197,33 @@ public class WechatLocalSendLogDto {
         this.updateBy = updateBy;
     }
 
-    //上传图片
+    /**
+     * 上传图片
+     */
     public static final int TYPE_UPLOAD_PIC = 1;
-    //上传图文信息
+    /**
+     * 上传图文信息
+     */
     public static final int TYPE_UPLOAD_PIC_AND_TEXT = 2;
-    //批量发送给关注号
+    /**
+     * 批量发送给关注号
+     */
     public static final int TYPE_BATCH_SEND_OPENUSER = 3;
-    //上传给关注用户的图片
+    /**
+     * 上传给关注用户的图片
+     */
     public static final int TYPE_UPLOAD_CARE_PIC = 4;
-    //成功
+    /**
+     * 成功
+     */
     public static final int SUCCESS_YES = 1;
-    //失败
+    /**
+     * 失败
+     */
     public static final int SUCCESS_NO = 0;
-    //数据库错误信息最大保存1999个字符，最小0个
+    /**
+     * 数据库错误信息最大保存1999个字符，最小0个
+     */
     public static final int LOG_WORD_MIN = 0;
     public static final int LOG_WORD_MAX = 666;
 }

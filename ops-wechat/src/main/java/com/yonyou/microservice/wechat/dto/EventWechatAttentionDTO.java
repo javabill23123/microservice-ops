@@ -2,7 +2,11 @@ package com.yonyou.microservice.wechat.dto;
 
 import java.util.Date;
 
-//用户关注微信事件的DTO
+/**
+ * 用户关注微信事件的DTO
+ * @author Richard
+ *
+ */
 public class EventWechatAttentionDTO {
 	private String deviceOpenId;
 
@@ -193,5 +197,9 @@ public class EventWechatAttentionDTO {
 	public void setHeadImgurl(String headImgurl) {
 		this.headImgurl = headImgurl;
 	}
-    
+	
+	@Override
+    public String toString() {
+        return super.toString() ;
+    }
 }

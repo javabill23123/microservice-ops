@@ -22,7 +22,11 @@
 ----------------------------------------------------------------------------------
 */
 package com.yonyou.microservice.wechat.common;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class MessagePushConstant {
 
     //public static final String FACTORY="MESSAGE.FACTORY";
@@ -60,14 +64,22 @@ public class MessagePushConstant {
     public static final String ALL ="ALL";
 
     public static final String DEMO ="TEST";
-
-    public static final String WX_MSG_PROP_THUMB="MEDIA_THUMB_ID";//缩略图 视频、音乐
-
-    public static final String WX_MSG_PROP_DESC="DESCRIPTION";//描述信息 视频、音乐、
-
-    public static final String WX_MSG_PROP_URL="URL";//公众号模板url
-
-    public static final String WX_MSG_PROP_COLOR="COLOR";//公众号模板颜色
+    /**
+     * 缩略图 视频、音乐
+     */
+    public static final String WX_MSG_PROP_THUMB="MEDIA_THUMB_ID";
+    /**
+     * 描述信息 视频、音乐、
+     */
+    public static final String WX_MSG_PROP_DESC="DESCRIPTION";
+    /**
+     * 公众号模板url
+     */
+    public static final String WX_MSG_PROP_URL="URL";
+    /**
+     * 公众号模板颜色
+     */
+    public static final String WX_MSG_PROP_COLOR="COLOR";
 
     public static final String IOS_MESSAGE_ENCODE = "utf-8";
 
@@ -79,9 +91,32 @@ public class MessagePushConstant {
     //public static final String PROVIDER_POOL_PATH="classpath:pool.properties";
 
 
-    //消息类型 涵盖了app与webchat的各种类型
+    /**
+     * 消息类型 涵盖了app与webchat的各种类型
+     * @author joy
+     *
+     */
     public enum MESSAGE_CONTENT_TYPE {
-        TEXT(0),IMAGE(1),VOICE(2),VIDEO(3),NEWS(4);
+    	/**
+    	 * 文本类型
+    	 */
+        TEXT(0),
+        /**
+         * 图片类型
+         */
+        IMAGE(1),
+        /**
+         * 声音类型
+         */
+        VOICE(2),
+        /**
+         * 视频类型
+         */
+        VIDEO(3),
+        /**
+         * 新闻
+         */
+        NEWS(4);
 
         private final Integer type;
 
@@ -89,17 +124,35 @@ public class MessagePushConstant {
             this.type = type;
         }
 
+        @Override
         public String toString() {
             return type.toString();
         }
     }
 
 
-
-    //推送渠道
+    /**
+     * 推送渠道
+     * @author joy
+     *
+     */
     public enum PUSH_CHANNEL {
-
-        APP(PROVIDER_APP),WEBCHAT(PROVIDER_WEBCHAT),SMS(PROVIDER_SMS), TEST(PROVIDER_DEMO);
+        /**
+         * app推送
+         */
+        APP(PROVIDER_APP),
+        /**
+         * 微信推送
+         */
+        WEBCHAT(PROVIDER_WEBCHAT),
+        /**
+         * 短信推送
+         */
+        SMS(PROVIDER_SMS), 
+        /**
+         * 测试
+         */
+        TEST(PROVIDER_DEMO);
 
         private final String type;
 
@@ -107,15 +160,42 @@ public class MessagePushConstant {
             this.type = type;
         }
 
+        @Override
         public String toString() {
             return type;
         }
     }
 
-    //APP平台
+    /**
+     * APP平台
+     * @author joy
+     *
+     */
     public enum PUSH_PLATFORM {
-
-        APP_IOS(IOS),APP_ANDROID(ANDROID),APP_ALL(ALL),WC_CUSTOMER(CUSTOMER),WC_PUBLIC(PUBLIC),TEST(DEMO);
+    	/**
+    	 * ios app
+    	 */
+        APP_IOS(IOS),
+        /**
+         * android app
+         */
+        APP_ANDROID(ANDROID),
+        /**
+         * all
+         */
+        APP_ALL(ALL),
+        /**
+         * 自定义
+         */
+        WC_CUSTOMER(CUSTOMER),
+        /**
+         * public
+         */
+        WC_PUBLIC(PUBLIC),
+        /**
+         * test
+         */
+        TEST(DEMO);
 
         private final String type;
 
@@ -123,14 +203,25 @@ public class MessagePushConstant {
             this.type = type;
         }
 
+        @Override
         public String toString() {
             return type;
         }
     }
 
     public enum RECEIVER_TYPE {
-
-        DETAIL(0),GROUP(1),ALL(2);
+    	/**
+    	 * detail
+    	 */
+        DETAIL(0),
+        /**
+         * group
+         */
+        GROUP(1),
+        /**
+         * all
+         */
+        ALL(2);
 
         private final Integer type;
 
@@ -138,6 +229,7 @@ public class MessagePushConstant {
             this.type = type;
         }
 
+        @Override
         public String toString() {
             return type.toString();
         }

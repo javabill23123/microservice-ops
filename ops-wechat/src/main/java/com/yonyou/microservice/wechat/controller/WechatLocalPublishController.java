@@ -76,10 +76,10 @@ public class WechatLocalPublishController {
         try {
             String accessToken = tokenService.getAccessToken(serviceNo);
             
-            resultMap = wechatLocalPublishService.treatWechatMessages(accessToken);//titleImageBytes, wechatInfo,
+            resultMap = wechatLocalPublishService.treatWechatMessages(accessToken);
         } catch(Exception e) {
         	logger.error(e.getMessage(),e);
-            resultMap = new HashMap<String , Object>();
+            resultMap = new HashMap<String , Object>(10);
             resultMap.put("STATUS", "0");
             resultMap.put("MESSAGE", e.getMessage());
         }

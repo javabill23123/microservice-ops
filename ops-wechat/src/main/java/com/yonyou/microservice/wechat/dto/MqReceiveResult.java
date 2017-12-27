@@ -1,6 +1,10 @@
 package com.yonyou.microservice.wechat.dto;
-
-public class MQReceiveResult {
+/**
+ * 
+ * @author Richard
+ *
+ */
+public class MqReceiveResult {
 	private String result;
 	
 	private String message;

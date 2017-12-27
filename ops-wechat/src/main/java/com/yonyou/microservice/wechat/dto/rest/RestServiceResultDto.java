@@ -36,13 +36,21 @@ package com.yonyou.microservice.wechat.dto.rest;
 public class RestServiceResultDto {
     public final static int SUCCESS = 1;
     public final static int FAIL = 0;
-    //0:失败 1:成功
+    /**
+     * 0:失败 1:成功
+     */
     private int resultCode = SUCCESS;
-    //返回的HTTP状态
+    /**
+     * 返回的HTTP状态
+     */
     private int httpCode;
-    //返回消息(成功，或者错误原因)
+    /**
+     * 返回消息(成功，或者错误原因)
+     */
     private String resultMsg;
-    //返回的JSON体内容(GET请求时候取得对象的集合)
+    /**
+     * 返回的JSON体内容(GET请求时候取得对象的集合)
+     */
     private String resultBody;
     /**
      * @return the resultCode

@@ -17,7 +17,11 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 public class DatasourceConfig {
@@ -30,8 +34,6 @@ public class DatasourceConfig {
      * @return
      * @throws Exception
      */
-//    @Bean(name="dataSourceMySql")
-//    @Primary
     public DataSource dataSourceMySql() throws Exception{
         Properties dataSourceProps = new Properties();
         dataSourceProps.put("driverClassName", env.getProperty("mysql.driverClassName"));

@@ -13,12 +13,15 @@ import com.yonyou.microservice.gate.common.vo.wechat.OfficeAccountSettingInfo;
 
 /**
  * ${DESCRIPTION}
+ * @author Richard
  *
- * @author wanghaobin
- * @create 2017-06-21 8:11
  */
 @FeignClient(value = "ops-admin")
 public interface IMenuUrlService {
+	/**
+	 * 获取所有的菜单url
+	 * @return
+	 */
   @RequestMapping(value = "/api/menuUrl/all", method = RequestMethod.GET)
   public RestResultResponse<List<MenuUrlInfo>> getMenuUrlAll();
 }

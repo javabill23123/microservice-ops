@@ -47,7 +47,11 @@ import com.yonyou.microservice.wechat.service.WechatMessageService;
 import com.yonyou.microservice.wechat.util.CookieSecurityUtil;
 
 import net.sf.json.JSONObject;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Controller
 public class WeChatMessageController {
 
@@ -89,7 +93,7 @@ public class WeChatMessageController {
 //	}
 
     
-	@RequestMapping(value = "/wechatcall/test", method = RequestMethod.GET)//, produces="text/html;charset=UTF-8"
+	@RequestMapping(value = "/wechatcall/test", method = RequestMethod.GET)
 	@ResponseBody 
 	public String validateTest(Check tokenModel, HttpServletRequest req,
 			HttpServletResponse res) throws ParseException, IOException {

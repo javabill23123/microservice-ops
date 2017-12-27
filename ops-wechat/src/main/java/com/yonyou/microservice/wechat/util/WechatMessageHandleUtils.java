@@ -45,7 +45,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.yonyou.microservice.wechat.common.WechatDict;
 
 
-/*
+/**
 *
 * @author LiuJun
 * 微信消息处理工具类
@@ -54,7 +54,7 @@ import com.yonyou.microservice.wechat.common.WechatDict;
 public class WechatMessageHandleUtils {
     
 
-    /*
+    /**
      * @author LiuJun 将接收微信消息转化为map
      * @date 2016年10月20日
      * @param request
@@ -64,7 +64,7 @@ public class WechatMessageHandleUtils {
     public static Map<String, String> reqMsgToMap(HttpServletRequest request) throws UtilException {
         String xml = parseMsgToXml(request);
         try {
-            Map<String, String> maps = new HashMap<>();
+            Map<String, String> maps = new HashMap<>(20);
             Document document = DocumentHelper.parseText(xml);
             Element root = document.getRootElement();
             List<Element> eles = root.elements();
@@ -90,7 +90,7 @@ public class WechatMessageHandleUtils {
     @SuppressWarnings("unchecked")
     public static Map<String, String> xmlToMap(String xml) throws UtilException {
         try {
-            Map<String, String> maps = new HashMap<>();
+            Map<String, String> maps = new HashMap<>(20);
             Document document = DocumentHelper.parseText(xml);
             Element root = document.getRootElement();
             List<Element> eles = root.elements();
@@ -103,7 +103,7 @@ public class WechatMessageHandleUtils {
         }
     }
 
-    /*
+    /**
      * @author LiuJun map转xml
      * @date 2016年10月20日
      * @param map
@@ -194,7 +194,7 @@ public class WechatMessageHandleUtils {
     }
 
 
-    /*
+    /**
      * @author LiuJun 消息解xmlTODO 
      * @date 2016年10月20日
      * @param request
@@ -219,7 +219,7 @@ public class WechatMessageHandleUtils {
 
     }
 
-    /*
+    /**
     *
     * @author LiuJun
     * 回复文本消息
@@ -230,7 +230,7 @@ public class WechatMessageHandleUtils {
     * @throws UtilException
     */
     public static Map<String, Object> replyTextMsg(Map<String, String> msgMap, String content) throws UtilException {
-        Map<String, Object> tm = new HashMap<String, Object>();
+        Map<String, Object> tm = new HashMap<String, Object>(10);
         tm.put(WechatDict.MSG_STRUCT_TOUSERNAME, msgMap.get(WechatDict.MSG_STRUCT_FROMUSERNAME));
         tm.put(WechatDict.MSG_STRUCT_FROMUSERNAME, msgMap.get(WechatDict.MSG_STRUCT_TOUSERNAME));
         tm.put(WechatDict.MSG_STRUCT_CREATETIME, System.currentTimeMillis() + "");
@@ -240,7 +240,7 @@ public class WechatMessageHandleUtils {
     }
     
     
-    /*
+    /**
     *
     * @author LiuJun
     * 回复语音消息
@@ -251,7 +251,7 @@ public class WechatMessageHandleUtils {
     * @throws UtilException
     */
     public static Map<String, Object> replyVoiceMsg(Map<String, String> msgMap, String mediaId) throws UtilException {
-        Map<String, Object> tm = new HashMap<String, Object>();
+        Map<String, Object> tm = new HashMap<String, Object>(10);
         return tm;
     }
 

@@ -1,12 +1,22 @@
 package com.yonyou.microservice.wechat.entity;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class Check {
 	String signature;
 	Long timestamp;
 	Long nonce;
 	String echostr;
-	String errcode;//全局返回码
-	String errmsg;//说明
+	/**
+	 * //全局返回码
+	 */
+	String errcode;
+	/**
+	 * //说明
+	 */
+	String errmsg;
 	
 	
 	public String getSignature() {

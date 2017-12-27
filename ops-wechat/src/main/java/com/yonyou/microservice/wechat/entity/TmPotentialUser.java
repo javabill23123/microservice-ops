@@ -2,7 +2,11 @@ package com.yonyou.microservice.wechat.entity;
 
 import java.util.Date;
 import javax.persistence.*;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Table(name = "TM_POTENTIAL_USER")
 public class TmPotentialUser {
     @Id

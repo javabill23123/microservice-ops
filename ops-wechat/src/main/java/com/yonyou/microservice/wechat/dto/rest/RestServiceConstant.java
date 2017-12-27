@@ -35,27 +35,41 @@ package com.yonyou.microservice.wechat.dto.rest;
 
 public class RestServiceConstant {
     
-    //REST放置的内容
+    /**
+     * REST放置的内容
+     */
     public static final String REST_BUSINESS_MSG = "REST_BUSINESS_MSG";
-    //REST成/失败返回HTTP CODE
+    /**
+     * REST成/失败返回HTTP CODE
+     */
     public static final String REST_BUSINESS_HTTP_CODE = "REST_BUSINESS_HTTP_CODE";
     public static final int HTTP_SUCCESS_CODE = 201;
     public static final int HTTP_FAIL_CODE = 404;
     
-    //REST处理成功/失败
+    /**
+     * REST处理成功/失败
+     */
     public static final String REST_BUSINESS_STATUS = "REST_BUSINESS_STATUS";
     public static final int REST_BUSINESS_SUCCESS = 1;
     public static final int REST_BUSINESS_FAEL = 0;
     
-    //REST返回的OBJECT对象
+    /**
+     * REST返回的OBJECT对象
+     */
     public static final String REST_BUSINESS_OBJECT = "REST_BUSINESS_OBJECT";
     
-    //RESPONSE HEADERS存放的返回内容
+    /**
+     * RESPONSE HEADERS存放的返回内容
+     */
     public static final String RESPONSE_HEADER_CONTENT = "RESPONSE_HEADER_CONTENT";
-    //RESPONSE HEADERS存放的返回内容成功
+    /**
+     * RESPONSE HEADERS存放的返回内容成功
+     */
     public static final String RESPONSE_HEADER_CONTENT_SUCCESS = "SUCCESS";
     public static final String REQUEST_HEAD_TIME_VALID_FAILED = "REQUEST_HEAD_TIME_VALID_FAILED";
-    //REQUEST信息中加密微信ID,经销商CODE
+    /**
+     * REQUEST信息中加密微信ID,经销商CODE
+     */
     public static final String REQUEST_HEADER_WECHAT_ID = "WE_CHAT_ID";
     public static final String REQUEST_HEADER_DEALER_CODE = "DEALER_CODE";
     public static final String REQUEST_HEADER_TIME_STAMP = "SECURE_TIME_STAMP";

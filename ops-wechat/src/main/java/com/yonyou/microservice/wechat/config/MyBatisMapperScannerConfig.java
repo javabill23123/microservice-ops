@@ -8,8 +8,12 @@ import org.springframework.context.annotation.Configuration;
 
 import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 
+/**
+ * 注意，由于MapperScannerConfigurer执行的比较早，所以必须有下面的注解
+ * @author joy
+ *
+ */
 @Configuration
-//注意，由于MapperScannerConfigurer执行的比较早，所以必须有下面的注解
 @AutoConfigureAfter(DatasourceConfig.class)
 public class MyBatisMapperScannerConfig {
 	 	@Bean

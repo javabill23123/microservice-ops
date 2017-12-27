@@ -14,8 +14,9 @@ import com.yonyou.microservice.wechat.common.ApiVersionConsts;
 import com.yonyou.microservice.wechat.service.MenuUrlService;
 import com.yonyou.microservice.wechat.service.TokenService;
 
-/*
+/**
  * 统一微信菜单格式，代理转发到配置的页面
+ * @author joy
  */
 @Controller
 @RequestMapping(value ="/wechat" )
@@ -27,16 +28,6 @@ public class WechatMenuProxyController {
 	private TokenService tokenService;
     @Autowired
     private MenuUrlService menuUrlService;
-//
-//	@RequestMapping("/portalredirect/{id}")
-//	public String portalredirect(@PathVariable("id") String id) {
-//		logger.info("----------------portalredirect");
-//		String dm = env.getProperty("wechat.domain");
-//		String appid = env.getProperty("wechat.appid");
-//		String u = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid + "&redirect_uri=http://" + dm
-//				+ "/wx/portal/" + id + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
-//		return "redirect:" + u;
-//	}
 
 	@RequestMapping("/proxy/{serviceNo}/{id}")
     public String proxy(@PathVariable("serviceNo") String serviceNo,@PathVariable("id") String id,

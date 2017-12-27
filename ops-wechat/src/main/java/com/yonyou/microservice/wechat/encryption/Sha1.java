@@ -16,7 +16,8 @@ import java.util.Arrays;
  *
  * 计算公众平台的消息签名接口.
  */
-class SHA1 {
+class Sha1 {
+	private static final int CONST_4=4;
 
 	/**
 	 * 用SHA1算法生成安全签名
@@ -34,7 +35,7 @@ class SHA1 {
 			StringBuffer sb = new StringBuffer();
 			// 字符串排序
 			Arrays.sort(array);
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < CONST_4; i++) {
 				sb.append(array[i]);
 			}
 			String str = sb.toString();
@@ -55,7 +56,7 @@ class SHA1 {
 			return hexstr.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new AesException(AesException.ComputeSignatureError);
+			throw new AesException(AesException.COMPUTE_SIGNATURE_ERROR);
 		}
 	}
 }

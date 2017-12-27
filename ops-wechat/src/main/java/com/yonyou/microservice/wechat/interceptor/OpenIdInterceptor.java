@@ -44,7 +44,7 @@ import com.yonyou.microservice.gate.common.vo.wechat.MenuUrlInfo;
 import com.yonyou.microservice.wechat.exception.WechatException;
 import com.yonyou.microservice.wechat.service.MenuUrlService;
 import com.yonyou.microservice.wechat.service.TokenService;
-import com.yonyou.microservice.wechat.util.copy.CookieUtil;
+import com.yonyou.microservice.wechat.util.CookieUtil;
 
 
 /**
@@ -54,6 +54,10 @@ import com.yonyou.microservice.wechat.util.copy.CookieUtil;
 * @date 2016年12月7日
 */
 public class OpenIdInterceptor implements HandlerInterceptor{
+	private static final String CONST_ERROR="/error";
+	private static final String PARSE_TOKEN="parsetoken";
+	private static final String CONST_REDIRECT="redirect";
+	private static final String CONST_CALLBACK="wechat/callback";
     
     private Logger logger=Logger.getLogger(OpenIdInterceptor.class);
     @Value("${jwt.expire:30}")
@@ -76,16 +80,20 @@ public class OpenIdInterceptor implements HandlerInterceptor{
         String code  = request.getParameter("code");
 //        String appid  = request.getParameter("appid");
         logger.info("------receivecode:"+code+",url="+request.getRequestURL()+",uri="+request.getRequestURI());
-        if(request.getRequestURI().contains("/error"))
+        if(request.getRequestURI().contains(CONST_ERROR)){
         	return true;
+        }
         //测试token工具url
-        if(request.getRequestURI().contains("parsetoken"))
+        if(request.getRequestURI().contains(PARSE_TOKEN)){
         	return true;
-        if(request.getRequestURI().contains("redirect"))
+        }
+        if(request.getRequestURI().contains(CONST_REDIRECT)){
         	return true;
+        }
         //微信验证、事件回调接口
-        if(request.getRequestURI().contains("wechat/callback"))
+        if(request.getRequestURI().contains(CONST_CALLBACK)){
             	return true;
+        }
         //网关做认证页面，把认证信息写入cookie
         if(!StringHelper.isNullOrEmpty(code)){
         	writeWechatCookiesInfo(code,"",request,response);
@@ -148,8 +156,9 @@ public class OpenIdInterceptor implements HandlerInterceptor{
 			throw WechatException.WECHAT_OPENID_NOT_FIND;
     	}
 		MenuUrlInfo m=menuUrlService.getMenuUrl(userMapCode);
-		if(m==null)
+		if(m==null){
 			throw WechatException.WECHAT_USER_URL_NOT_FIND;
+		}
 		String url=m.getUrl()+"?openid="+openId;
 		ResponseEntity<UserInfo> r=restTemplate.getForEntity(url, UserInfo.class);
 		String remark=serviceNo+","+openId;

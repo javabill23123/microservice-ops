@@ -6,8 +6,13 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class CookieSecurityUtil {
+	private static final int CONST_2=2;
     /** 加密、解密key. */
 	public  static final  String CRYPT_KEY = "kEHrDooxWHCWtfeSxvDvgqZq";
     
@@ -106,25 +111,28 @@ public class CookieSecurityUtil {
         return cipher.doFinal(data);
     }
     public static byte[] hex2byte(byte[] b) {
-        if ((b.length % 2) != 0)
+        if ((b.length % CONST_2) != 0){
             throw new IllegalArgumentException("长度不是偶数");
+        }
         byte[] b2 = new byte[b.length / 2];
-        for (int n = 0; n < b.length; n += 2) {
+        for (int n = 0; n < b.length; n += CONST_2) {
             String item = new String(b, n, 2);
             b2[n / 2] = (byte) Integer.parseInt(item, 16);
         }
         return b2;
     }
     public static String byte2hex(byte[] b) {
-        String hs = "";
         String stmp = "";
+        StringBuilder hs = new StringBuilder();
         for (int n = 0; n < b.length; n++) {
             stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
-            if (stmp.length() == 1)
-                hs = hs + "0" + stmp;
-            else
-                hs = hs + stmp;
+            if (stmp.length() == 1){
+                hs.append("0" + stmp);
+            }
+            else{
+                hs.append(stmp);
+            }
         }
-        return hs.toUpperCase();
+        return hs.toString().toUpperCase();
     }
 }

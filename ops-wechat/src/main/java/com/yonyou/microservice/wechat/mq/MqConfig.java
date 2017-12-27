@@ -18,13 +18,21 @@ import com.yonyou.cloud.mom.client.impl.MqSenderDefaultImpl;
 import com.yonyou.cloud.mom.core.store.ProducerMsgStore;
 import com.yonyou.cloud.mom.core.store.impl.DbStoreProducerMsg;
 import com.yonyou.cloud.mom.core.util.SpringUtil;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Configuration
 @ComponentScan(basePackages = "com.yonyou.cloud.mom")
 public class MqConfig {
 	
 	
-	//初始化生产者相关实现类
+	/**
+	 * 初始化生产者相关实现类
+	 * @param rabbitOperations
+	 * @return
+	 */
 	@Bean
 	public MqSenderDefaultImpl mqSenderDefaultImpl(RabbitOperations rabbitOperations) {
 		MqSenderDefaultImpl mqSenderDefaultImpl = new MqSenderDefaultImpl();
@@ -39,16 +47,23 @@ public class MqConfig {
  
 	@Bean
 	public Queue attentionQueue() {
-		return new Queue("attention", true); // 队列持久
+		// 队列持久
+		return new Queue("attention", true); 
 	}
 
-	//设定交换机类型
+	/**
+	 * 设定交换机类型
+	 * @return
+	 */
 	@Bean
 	public DirectExchange eventExchange() {
 		return new DirectExchange("event-wechat");
 	}
 
-	//交换机和队列绑定
+	/**
+	 * 交换机和队列绑定
+	 * @return
+	 */
 	@Bean
 	public Binding wechatBindingAttention() {
 		return BindingBuilder.bind(attentionQueue()).to(eventExchange()).with("attention");
@@ -58,11 +73,15 @@ public class MqConfig {
 	 
 	@Bean
 	public Queue unAttentionQueue() {
-		return new Queue("unAttention", true); // 队列持久
+		// 队列持久
+		return new Queue("unAttention", true); 
 	}
 
 
-	//交换机和队列绑定
+	/**
+	 * 交换机和队列绑定
+	 * @return
+	 */
 	@Bean
 	public Binding wechatBindingUnAttention() {
 		return BindingBuilder.bind(unAttentionQueue()).to(eventExchange()).with("unAttention");

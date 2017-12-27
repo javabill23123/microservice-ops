@@ -15,9 +15,13 @@ import com.yonyou.cloud.mom.core.dto.ProducerDto;
 import com.yonyou.cloud.mom.core.store.StoreStatusEnum;
 import com.yonyou.cloud.mom.core.store.callback.ProducerStoreDBCallback;
 import com.yonyou.cloud.mom.core.store.callback.exception.StoreDBCallbackException;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Service
-@Transactional
+@Transactional(rollbackFor={Exception.class})
 public class MsgProducerCallBack implements ProducerStoreDBCallback {
 	Logger log=LoggerFactory.getLogger(MsgProducerCallBack.class);
 	

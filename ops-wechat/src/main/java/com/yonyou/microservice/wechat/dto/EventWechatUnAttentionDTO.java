@@ -1,7 +1,11 @@
 package com.yonyou.microservice.wechat.dto;
 
 import java.util.Date;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class EventWechatUnAttentionDTO {
     private Integer status;
 
@@ -52,5 +56,8 @@ public class EventWechatUnAttentionDTO {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
-    
+	@Override
+    public String toString() {
+        return super.toString() ;
+    }
 }

@@ -3,7 +3,11 @@ package com.yonyou.microservice.wechat.entity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class TtWoMassSendExample {
     protected String orderByClause;
 
@@ -64,10 +68,10 @@ public class TtWoMassSendExample {
         distinct = false;
     }
 
-    protected abstract static class GeneratedCriteria {
+    protected abstract static class AbstractGeneratedCriteria {
         protected List<Criterion> criteria;
 
-        protected GeneratedCriteria() {
+        protected AbstractGeneratedCriteria() {
             super();
             criteria = new ArrayList<Criterion>();
         }
@@ -906,7 +910,7 @@ public class TtWoMassSendExample {
         }
     }
 
-    public static class Criteria extends GeneratedCriteria {
+    public static class Criteria extends AbstractGeneratedCriteria {
 
         protected Criteria() {
             super();

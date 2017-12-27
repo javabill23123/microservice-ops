@@ -14,7 +14,8 @@ import java.util.Arrays;
 /**
  * 提供基于PKCS7算法的加解密接口.
  */
-class PKCS7Encoder {
+class Pkcs7Encoder {
+	private static final int CONST_32=32;
 	static Charset CHARSET = Charset.forName("utf-8");
 	static int BLOCK_SIZE = 32;
 
@@ -47,7 +48,7 @@ class PKCS7Encoder {
 	 */
 	static byte[] decode(byte[] decrypted) {
 		int pad = (int) decrypted[decrypted.length - 1];
-		if (pad < 1 || pad > 32) {
+		if (pad < 1 || pad > CONST_32) {
 			pad = 0;
 		}
 		return Arrays.copyOfRange(decrypted, 0, decrypted.length - pad);

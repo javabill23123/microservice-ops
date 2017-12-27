@@ -72,15 +72,17 @@ import okhttp3.Response;
 */
 @Service
 public class WechatLocalMassPublishService {
+	private static final String CONST_ERROR="errcode";
+	private static final String CONST_ERROR_MSG="errmsg";
+	private static final int CONST_2=2;
+	private static final int CONST_20=20;
     private Logger logger=Logger.getLogger(WechatLocalMassPublishService.class);
     @Autowired
     private WechatLocalPublistDao wechatLocalPublistDao;
     @Autowired
     private TtWoMassSendMapper ttWoMassSendMapper;
 
-//	@Value("${image.src.ip}")
 	private String srcIp;
-//	@Value("${image.tgt.ip}")
 	private String tgtIp;
     
     public Map<String, Object> treatWechatMessages(String accessToken) {
@@ -93,26 +95,30 @@ public class WechatLocalMassPublishService {
     	List<TtWoMassSend> listd=ttWoMassSendMapper.selectUnSend();
     	String curOpenid="";
     	List<PicTxtSendDto> picTxtDtos=new ArrayList<>();
-    	PicTxtSendDto picTxtSendDto=null;//picTxtSendDto存储一个openid下多个objectId
+    	//picTxtSendDto存储一个openid下多个objectId
+    	PicTxtSendDto picTxtSendDto=null;
     	for(TtWoMassSend o:listd){
             if(!curOpenid.equals(o.getOpenId())){
             	curOpenid=o.getOpenId();
-            	if(picTxtSendDto!=null && !existsAndUpdateComposite(picTxtDtos,picTxtSendDto))
+            	if(picTxtSendDto!=null && !existsAndUpdateComposite(picTxtDtos,picTxtSendDto)){
             		picTxtDtos.add(picTxtSendDto);
+            	}
             	picTxtSendDto=new PicTxtSendDto();
                 picTxtSendDto.getOpenIds().add(o.getOpenId());
                 picTxtSendDto.getObjectIds().add(o.getObjectId());
             }
     	}
-    	if(picTxtSendDto!=null && !existsAndUpdateComposite(picTxtDtos,picTxtSendDto))
+    	if(picTxtSendDto!=null && !existsAndUpdateComposite(picTxtDtos,picTxtSendDto)){
     		picTxtDtos.add(picTxtSendDto);
+    	}
     	//上传活动组合的素材到微信，并群发给相关用户
     	sendPicAndTextMessages(picTxtDtos,listd,accessToken);
         return null;
     }
     private boolean existsAndUpdateComposite(List<PicTxtSendDto> picTxtDtos,PicTxtSendDto picTxtSendDto){
-    	if(picTxtSendDto==null)
+    	if(picTxtSendDto==null){
     		return false;
+    	}
     	for(PicTxtSendDto o :picTxtDtos){
     		if(o.getObjectIds().toString().equals(picTxtSendDto.getObjectIds().toString())){
     			o.getOpenIds().add(picTxtSendDto.getOpenIds().get(0));
@@ -134,7 +140,7 @@ public class WechatLocalMassPublishService {
             String resultBody = HttpFileUtil.postMedia(upLoadingUrl, fileUrl);
             
             logger.info("uploadMultiFile() response=" + resultBody);
-            if (resultBody.contains("errcode") && resultBody.contains("errmsg")) {
+            if (resultBody.contains(CONST_ERROR) && resultBody.contains(CONST_ERROR_MSG)) {
             	logger.info("---uploadMultiFile() error");
                 //上传图片业务异常，记录LOG到数据库，后续可以重处理
                 String logStr = resultBody.length() > WechatLocalSendLogDto.LOG_WORD_MAX? resultBody.substring(WechatLocalSendLogDto.LOG_WORD_MIN, WechatLocalSendLogDto.LOG_WORD_MAX): resultBody;
@@ -146,7 +152,7 @@ public class WechatLocalMassPublishService {
             //生成图文信息
             WcArticlesResultDto articleResultDto = (WcArticlesResultDto)RestServiceUtil.jsonToObj(resultBody,WcArticlesResultDto.class) ;
             String mediaId = articleResultDto.getMediaId();
-            Map<String,String> map=new HashMap<>();
+            Map<String,String> map=new HashMap<>(10);
             map.put("mediaId", mediaId);
             map.put("objectId", objectId);
             ttWoMassSendMapper.updateMediaId(map);
@@ -165,27 +171,30 @@ public class WechatLocalMassPublishService {
     	return null;
     }
     private String getContidion(PicTxtSendDto dto){
-		String condition="";
-		for(Long id:dto.getObjectIds()){//遍历一个组合下所有的objectid
-			condition=condition+"(object_id="+id.toString()+" and (";
+        StringBuilder condition = new StringBuilder();
+      //遍历一个组合下所有的objectid
+		for(Long id:dto.getObjectIds()){
+			condition.append("(object_id="+id.toString()+" and (");
     		for(String s:dto.getOpenIds()){
-    			condition=condition+"open_id='"+s+"' or ";
+    			condition.append("open_id='"+s+"' or ");
     		}
-    		condition=condition.substring(0, condition.length()-4);
-    		condition=condition+") ) or ";
+    		condition.delete(condition.length()-4, condition.length());
+    		condition.append(") ) or ");
 		}
-		condition=condition.substring(0, condition.length()-4);
-		return condition;
+		condition.delete(condition.length()-4, condition.length());
+		return condition.toString();
     }
     public void sendPicAndTextMessages(List<PicTxtSendDto> picTxtDtos,List<TtWoMassSend> unSends, String accessToken) {
         //替换URL中的变量ACCESS_TOKEN
-    	for(PicTxtSendDto item :picTxtDtos){ //PicTxtSendDto一个对象代表一个组合，内含objectId列表、openId列表
+    	//PicTxtSendDto一个对象代表一个组合，内含objectId列表、openId列表
+    	for(PicTxtSendDto item :picTxtDtos){ 
             //批量发送图文信息给用户
             WcArticlesParamDto articleParamDto = new WcArticlesParamDto();
             List<Article> articleList = new ArrayList<>();
             articleParamDto.setArticles(articleList);
             String mediaIds="";
-    		for(Long id:item.getObjectIds()){//遍历一个组合下所有的objectid
+          //遍历一个组合下所有的objectid
+    		for(Long id:item.getObjectIds()){
     			TtWoMassSend ms=this.getMassSend(unSends, id);
     			String mediaId=ms.getMediaId();
     			String url=ms.getContentUrl();
@@ -210,7 +219,7 @@ public class WechatLocalMassPublishService {
             try {
                 //上传图文消息素材
                 picTextMediaId = postPicTextInfo(articleParamDto, accessToken);
-                Map<String,String> map=new HashMap<>();
+                Map<String,String> map=new HashMap<>(10);
                 map.put("condition", this.getContidion(item));
                 map.put("picTxtId", picTextMediaId);
                 ttWoMassSendMapper.updatePicTextMediaId(map);
@@ -311,7 +320,7 @@ public class WechatLocalMassPublishService {
             public void onResponse(Call call, Response response) throws IOException {
                 String resultBody = response.body().string();
                 logger.info("uploadMultiFile() response=" + resultBody);
-                if (resultBody.contains("errcode") && resultBody.contains("errmsg")) {
+                if (resultBody.contains(CONST_ERROR) && resultBody.contains(CONST_ERROR_MSG)) {
                 	logger.info("---uploadMultiFile() error");
                     //上传图片业务异常，记录LOG到数据库，后续可以重处理
                     String logStr = resultBody.length() > WechatLocalSendLogDto.LOG_WORD_MAX? resultBody.substring(WechatLocalSendLogDto.LOG_WORD_MIN, WechatLocalSendLogDto.LOG_WORD_MAX): resultBody;
@@ -341,7 +350,7 @@ public class WechatLocalMassPublishService {
                 articleDto.setContentSourceUrl("");
                 //文章简要说明
                 String digest = "";
-                if (content.length() > 20) {
+                if (content.length() > CONST_20) {
                     digest = content.substring(0, 20);
                 }
                 articleDto.setDigest(digest);
@@ -377,7 +386,7 @@ public class WechatLocalMassPublishService {
                     	toUserList.add(u);
                     }
                     String logStr = "";
-                    if (toUserList.size() >= 2) {
+                    if (toUserList.size() >= CONST_2) {
                         //发送用户数不为空
                         batchParamDto.setTouser(toUserList);
                         RestServiceResultDto resultDto = postBatchInfo(batchParamDto, accessToken);
@@ -404,7 +413,7 @@ public class WechatLocalMassPublishService {
 
             }
         });
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>(10);
         resultMap.put("STATUS", "1");
         resultMap.put("MESSAGE", "已经推送给微信，等待微信发送");
         return resultMap;
@@ -431,7 +440,7 @@ public class WechatLocalMassPublishService {
             if (resultDto != null) {
                 String resultBody = resultDto.getResultBody();
                 logger.info("群发返回结果 response=" + resultBody);
-                if (resultBody.contains("errcode") && resultBody.contains("errmsg")) {
+                if (resultBody.contains(CONST_ERROR) && resultBody.contains(CONST_ERROR_MSG)) {
                     logger.info("postPicTextInfo error:" + resultBody);
                 }
                 WcArticlesResultDto articleResDto = (WcArticlesResultDto)RestServiceUtil.jsonToObj(resultBody,WcArticlesResultDto.class) ;
@@ -516,7 +525,7 @@ public class WechatLocalMassPublishService {
             public void onResponse(Call call, Response response) throws IOException {
                 String resultBody = response.body().string();
                 logger.info("uploadMultiFile() response=" + resultBody);
-                if (resultBody.contains("errcode") && resultBody.contains("errmsg")) {
+                if (resultBody.contains(CONST_ERROR) && resultBody.contains(CONST_ERROR_MSG)) {
                 	logger.info("---uploadMultiFile() error");
                     //上传图片业务异常，记录LOG到数据库，后续可以重处理
                     String logStr = resultBody.length() > WechatLocalSendLogDto.LOG_WORD_MAX? resultBody.substring(WechatLocalSendLogDto.LOG_WORD_MIN, WechatLocalSendLogDto.LOG_WORD_MAX): resultBody;
@@ -527,7 +536,7 @@ public class WechatLocalMassPublishService {
                 
                 //生成图文信息
                 String mediaId =((Double)(Math.random()*1000)).toString();
-                Map<String,String> map=new HashMap<>();
+                Map<String,String> map=new HashMap<>(10);
                 map.put("mediaId", mediaId);
                 map.put("objectId", objectId);
                 ttWoMassSendMapper.updateMediaId(map);

@@ -1,10 +1,22 @@
 package com.yonyou.microservice.wechat.entity;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class WechatToken {
-
-	private String accessToken; // 获取到的凭证
-	private String expiresIn; // 凭证有效时间，单位：秒
-	private String ticket; // jsapi_ticket
+	/**
+	 * // 获取到的凭证
+	 */
+	private String accessToken; 
+	/**
+	 * // 凭证有效时间，单位：秒
+	 */
+	private String expiresIn; 
+	/**
+	 * // jsapi_ticket
+	 */
+	private String ticket; 
 	public String getAccessToken() {
 		return accessToken;
 	}

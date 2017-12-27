@@ -35,13 +35,21 @@ import java.util.Map;
 */
 
 public class RestServiceParamDto {
-    //发送消息的对方地址URL
+    /**
+     * 发送消息的对方地址URL
+     */
     private String url;
-    //发送消息的JSON内容
+    /**
+     * 发送消息的JSON内容
+     */
     private String json;
-    //消息头
+    /**
+     * 消息头
+     */
     private Map<String, String> headersParams;
-    //URL参数 放置在URL的后面，譬如 ?aaa=1&bbb=2
+    /**
+     * URL参数 放置在URL的后面，譬如 ?aaa=1&bbb=2
+     */
     private Map<String, String> urlParams;
     
     public RestServiceParamDto() {

@@ -13,11 +13,15 @@ import com.yonyou.microservice.gate.common.vo.wechat.OfficeAccountSettingInfo;
 /**
  * ${DESCRIPTION}
  *
- * @author wanghaobin
+ * @author joy
  * @create 2017-06-21 8:11
  */
 @FeignClient(value = "ops-admin")
 public interface IOfficeAccountSettingService {
+	/**
+	 * 获取微信服务号配置信息
+	 * @return
+	 */
   @RequestMapping(value = "/api/officeAccountSetting/all", method = RequestMethod.GET)
   public RestResultResponse<List<OfficeAccountSettingInfo>> getOfficeAccountSettingAll();
 }

@@ -38,18 +38,21 @@ public class BusinessConstant {
      */
     public static final int SOURCE_TYPE_WECHAT = 10011001;
     public static final int SOURCE_TYPE_APP = 10011002;
-    
-    //潜在用户状态 10011001-关注 10011002-取消关注
+    /**
+     * 潜在用户状态 10011001-关注 10011002-取消关注
+     */
     public static final int POTENTIAL_USER_STATUS_SUBSCRIBE = 10011001;
     public static final int POTENTIAL_USER_STATUS_CANCEL = 10011002;
-    
-    //车主默认密码
+    /**
+     * 车主默认密码
+     */
     public static final String CAROWNER_DEFAULT_PASS = "123456";
-    
-    //车辆与车主关系表状态0：启用1：禁用(删除)
+    /**
+     * 车辆与车主关系表状态0：启用1：禁用(删除)
+     */
     public static final int OWNER_CAR_RELATION_STATUS_NORMAL = 0;
     public static final int OWNER_CAR_RELATION_STATUS_DELETE = 1;
-    /*
+    /**
      * 分页
      */
     public static final int PAGE_SIZE = 10;
@@ -63,24 +66,29 @@ public class BusinessConstant {
     
     /**
      * 微信模板消息类别
+     * 测试模板
      */
-    //测试模板
     public static final String WECHAT_TEMPLATE_TYPE_TEST = "OPENTM201331503";
-    
-    //试驾预约已确认通知
+    /**
+     * 试驾预约已确认通知
+     */
     public static final String WECHAT_TEMPLATE_TYPE_TESTDRIVE_CONFIRMED_NOTIFICATION = "TM00629";
-    
-    //试驾已完成
+    /**
+     * 试驾已完成
+     */
     public static final String WECHAT_TEMPLATE_TYPE_TESTDRIVE_FINISHED= "TM00628";
-    
-    //保养预约已确认通知
+    /**
+     * 保养预约已确认通知
+     */
     public static final String WECHAT_TEMPLATE_TYPE_MAINTENANCE_CONFIRMED_NOTIFICATION = "TM00627";
-    
-    //报价提醒
+    /**
+     * 报价提醒
+     */
     public static final String WECHAT_TEMPLATE_TYPE_MAINTENANCE_ALERT= "OPENTM401181167";
     
-    
-    //发布给公众号模板列表-后期有新的可直接追加
+    /**
+     * 发布给公众号模板列表-后期有新的可直接追加
+     */
     private static final String[] WECHAT_TEMPALTES = {"TM00629","TM00627","OPENTM401181167","TM00628"};
     
 

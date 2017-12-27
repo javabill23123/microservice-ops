@@ -1,5 +1,10 @@
 package com.yonyou.microservice.wechat.common;
 
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class ApiVersionConsts {
     public static final String SERVICE_NAME = "wechat-push";
     public static final String VERSION = "v1";

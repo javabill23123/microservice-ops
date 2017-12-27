@@ -3,6 +3,7 @@ package com.yonyou.microservice.wechat.util;
 import java.security.MessageDigest;
 
 /**
+ * @author Richard
  * MD5加密
  */
 public class EncoderHandler {

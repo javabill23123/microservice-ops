@@ -34,9 +34,13 @@ package com.yonyou.microservice.wechat.dto.rest;
 */
 
 public class RestServiceDto {
-    //测试车系编号
+	/**
+	 * 测试车系编号
+	 */
     private String seriesCode;
-    //测试车系名称
+    /**
+     * 测试车系名称
+     */
     private String seriesName;
     
     /**

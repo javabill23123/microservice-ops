@@ -11,11 +11,10 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 
 /**
  * 启动类
+ * @author Richard
  */
 @SpringBootApplication
-//@EnableTransactionManagement
 @EnableFeignClients
-//@EnableConfigurationProperties
 @EnableDiscoveryClient
 public class WeChatPushApplication {
 

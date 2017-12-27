@@ -10,7 +10,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.yonyou.microservice.wechat.interceptor.OpenIdInterceptor;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Configuration
 public class WechatConfigurer extends WebMvcConfigurerAdapter{
 

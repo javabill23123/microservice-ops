@@ -20,7 +20,11 @@ import com.yonyou.microservice.wechat.service.WechatMessageService;
 
 import net.sf.json.JSONObject;
 
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @RestController
 @RequestMapping(value = ApiVersionConsts.BASE_PATH+ApiVersionConsts.VERSION+"/wechatApiService" )
 public class WechatApiServiceController {
@@ -50,7 +54,7 @@ public class WechatApiServiceController {
 	@RequestMapping(value = "/genToken/{serviceNo}", method = RequestMethod.GET)
 	@ResponseBody
 	public String genToken(@PathVariable("serviceNo") String serviceNo) {
-		Map<String,String> map =new HashMap();
+		Map<String,String> map =new HashMap(10);
 		String tmp=tokenService.genAccessToken(1,serviceNo);
 		map.put("token", tmp);
 		map.put("name", "success");

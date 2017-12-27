@@ -19,7 +19,11 @@ import com.yonyou.microservice.wechat.entity.WechatToken;
 import com.yonyou.microservice.wechat.util.EncoderHandler;
 
 import net.sf.json.JSONObject;
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 @Service
 public class TokenService {
 
@@ -48,8 +52,8 @@ public class TokenService {
 
 	/**
 	 * 读取token
+	 * //@Cacheable(value = "wechatAccessToken",key="#wechatAccessToken + 'wechatAccessToken'")//,keyGenerator = "wechatAccessTokenGenerator"
 	 */
-	//@Cacheable(value = "wechatAccessToken",key="#wechatAccessToken + 'wechatAccessToken'")//,keyGenerator = "wechatAccessTokenGenerator"
 	public String getAccessToken(String serviceNo){
 		logger.info("----------------get wechatAccessToken");
 		WechatToken tmp=tokens.get(serviceNo);
@@ -60,16 +64,17 @@ public class TokenService {
 	}
 	/**
 	 * 产生token，存入缓存
+	 * //@CachePut(value = "wechatAccessToken",key="#wechatAccessToken + 'wechatAccessToken'")//,keyGenerator = "wechatKeyGenerator"
 	 */
-	//@CachePut(value = "wechatAccessToken",key="#wechatAccessToken + 'wechatAccessToken'")//,keyGenerator = "wechatKeyGenerator"
 	public String genAccessToken(int i,String serviceNo) {
 		logger.info("----------------gen wechatAccessToken");
         OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
 		String appid = oa.getAppid();
 		String secret = oa.getAppsecret();
-		if (StringUtils.isEmpty(appid) || StringUtils.isEmpty(secret))
+		if (StringUtils.isEmpty(appid) || StringUtils.isEmpty(secret)){
 			return "";
-		String reqUrl = WechatDict.getAccessTokenUrl;
+		}
+		String reqUrl = WechatDict.GET_ACCESS_TOKENURL;
 		reqUrl = reqUrl.replace("APPID", appid).replace("APPSECRET", secret);
 		System.out.println(reqUrl);
 		
@@ -92,21 +97,21 @@ public class TokenService {
 	 * @throws NoSuchAlgorithmException 
 	 */
 	public Map<String, Object> sign(String serviceNo,String url) throws Exception {
-        Map<String, Object> ret = new HashMap<String, Object>();
-        String jsapi_ticket = tokens.get(serviceNo).getTicket();
-        String nonce_str = UUID.randomUUID().toString();
+        Map<String, Object> ret = new HashMap<String, Object>(10);
+        String jsapiTicket = tokens.get(serviceNo).getTicket();
+        String nonceStr = UUID.randomUUID().toString();
         String timestamp = System.currentTimeMillis() / 1000 + "";
         String bigStr;
         String signature = "";
         // 注意这里参数名必须全部小写，且必须有序
-        bigStr = "jsapi_ticket=" + jsapi_ticket + "&noncestr=" + nonce_str + "&timestamp=" + timestamp + "&url=" + url;
+        bigStr = "jsapi_ticket=" + jsapiTicket + "&noncestr=" + nonceStr + "&timestamp=" + timestamp + "&url=" + url;
         System.out.println(bigStr);
         signature = EncoderHandler.encode("SHA1", bigStr).toLowerCase();
         System.out.println(signature);
         ret.put("appId", WechatDict.appid);
         ret.put("url", url);
-        ret.put("jsapi_ticket", jsapi_ticket);
-        ret.put("nonceStr", nonce_str);
+        ret.put("jsapi_ticket", jsapiTicket);
+        ret.put("nonceStr", nonceStr);
         ret.put("timestamp", timestamp);
         ret.put("signature", signature);
         return ret;
@@ -119,7 +124,7 @@ public class TokenService {
 	 */
 	public String getCodeRequestUrl(String serviceNo,String url) {
 		OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
-		String getCodeUrl = WechatDict.getCodeUrl;
+		String getCodeUrl = WechatDict.GET_CODE_URL;
 		getCodeUrl = getCodeUrl.replace("APPID", urlEnodeUTF8(oa.getAppid()));
 		getCodeUrl = getCodeUrl.replace("REDIRECT_URI", urlEnodeUTF8(url));
 		getCodeUrl = getCodeUrl.replace("SCOPE", "snsapi_base");
@@ -133,7 +138,7 @@ public class TokenService {
 	 */
 	public String getOpenIdRequestUrl(String serviceNo,String code) {
 		OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
-		String url = WechatDict.getOpenIdUrl;
+		String url = WechatDict.GET_OPENID_URL;
 		url = url.replace("APPID", oa.getAppid());
 		url = url.replace("SECRET", oa.getAppsecret());
 		url = url.replace("CODE", code);
@@ -146,7 +151,7 @@ public class TokenService {
 	 */
 	public String getRefreshTokenRequestUrl(String serviceNo,String refreshToken) {
 		OfficeAccountSettingInfo oa=settingService.getOfficeAccount(serviceNo);
-		String url = WechatDict.getRefreshTokenUrl;
+		String url = WechatDict.GET_REFRESH_TOKEN_URL;
 		url = url.replace("APPID", oa.getAppid());
 		url = url.replace("SECRET", oa.getAppsecret());
 		url = url.replace("REFRESH_TOKEN", refreshToken);

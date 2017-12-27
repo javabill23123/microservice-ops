@@ -37,10 +37,9 @@ import com.yonyou.microservice.wechat.dto.WechatLocalSendLogDto;
 * @date 2016年12月20日
 */
 
-//@OracleDb
 public interface WechatLocalPublistDao {
     /**
-     * 
+     * 记录日志
     *
     * @author sangdeliang
     * @ description 记录微信发送的结果日志
@@ -50,21 +49,16 @@ public interface WechatLocalPublistDao {
     public void wechatSaveResultLog(WechatLocalSendLogDto logDto);
     
     /**
-     * 
-    *
-    * @author sangdeliang
-    * @ description 获得需要批量推送的用户OPEN ID
-    * @date 2016年12月20日
-    * @return
+     * 获得需要批量推送的用户OPEN ID
+     * @param dealerCode
+     * @return
      */
     public List<String> getWechatSendOpenIdList(String dealerCode);
     
     /**
-     * 
-    * 更新图片的URL
-    * @author sangdeliang
-    * TODO description
-    * @date 2016年12月26日
+     * 更新图片的URL
+     * @param picUrl
+     * @param navId
      */
     public void modifyWechatImageUrl( String picUrl, Long navId);
 }

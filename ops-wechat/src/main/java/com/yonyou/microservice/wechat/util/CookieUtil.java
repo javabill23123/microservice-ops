@@ -10,7 +10,11 @@ import org.apache.log4j.Logger;
 
 import com.yonyou.microservice.wechat.common.CookieConstant;
 
-
+/**
+ * 
+ * @author Richard
+ *
+ */
 public class CookieUtil {
 	private static Logger logger=Logger.getLogger(CookieUtil.class);
 
@@ -44,7 +48,8 @@ public class CookieUtil {
 
     private static void reponseCookies(String key, String value, HttpServletResponse response) throws Exception {
         Cookie cookies = new Cookie(key,CookieSecurityUtil.encrypt(value));
-		cookies.setMaxAge(6*60*60);//6小时有效期
+      //6小时有效期
+		cookies.setMaxAge(6*60*60);
         cookies.setPath("/");
         response.addCookie(cookies);
     }

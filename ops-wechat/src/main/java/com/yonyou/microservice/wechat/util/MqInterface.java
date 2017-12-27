@@ -17,7 +17,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 */
 @FeignClient(name="service-mqcenter")
 public interface MqInterface {
-    
+    /**
+     * 发送事件到MQ
+     * @param channel
+     * @param appid
+     * @param sign
+     * @param occurtime
+     * @param nonce
+     * @param body
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="/message/exchange",method = RequestMethod.POST)
     public String sendEvent2MQ(
     		@RequestParam("channel") String channel,
