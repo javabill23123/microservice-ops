@@ -3,13 +3,13 @@ package com.yonyou.cloud.ops.mq.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import com.yonyou.cloud.common.service.EsBaseService;
+import com.yonyou.cloud.common.service.BaseEsService;
 import com.yonyou.cloud.ops.mq.common.MqOpsConstant;
 import com.yonyou.cloud.ops.mq.entity.MqConsumeDetailInfo;
 import com.yonyou.cloud.ops.mq.entity.MqConsumer;
 
 @Service
-public class MqConsumeDetailInfoService extends EsBaseService<MqConsumeDetailInfo>{
+public class MqConsumeDetailInfoService extends BaseEsService<MqConsumeDetailInfo>{
 	
 //	private Logger logger = LoggerFactory.getLogger(this.getClass());
 

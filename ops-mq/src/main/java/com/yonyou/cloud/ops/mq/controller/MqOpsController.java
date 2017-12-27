@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
 import com.yonyou.cloud.common.annotation.YcApi;
 import com.yonyou.cloud.common.beans.PageResultResponse;
 import com.yonyou.cloud.common.beans.RestResultResponse;
-import com.yonyou.cloud.common.service.utils.ESPageQuery;
+import com.yonyou.cloud.common.service.utils.EsPageQuery;
 import com.yonyou.cloud.ops.mq.common.MqMessageStatus;
 import com.yonyou.cloud.ops.mq.common.MqOpsConstant;
 import com.yonyou.cloud.ops.mq.dto.MqConsumerDto;
@@ -90,7 +90,7 @@ public class MqOpsController {
 	@YcApi
 	public PageResultResponse<MqMessageResponseDto> queryByPage(@RequestBody MqQueryRequestDto request){
 		PageResultResponse<MqMessageResponseDto> pageResultResponse = new PageResultResponse<MqMessageResponseDto>();
-		ESPageQuery query = new ESPageQuery();
+		EsPageQuery query = new EsPageQuery();
 		BeanUtils.copyProperties(request, query);
 		String[] fuzzyFields = {"host", "msgKey", "exchangeName", "sender"};
 		String[] ignoreFields = {"occurStartTime", "occurEndTime"};

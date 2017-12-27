@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.yonyou.cloud.common.jwt.JWTInfo;
+import com.yonyou.cloud.common.jwt.JwtInfo;
 import com.yonyou.microservice.gate.common.constant.CommonConstants;
 import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 import com.yonyou.microservice.gate.common.vo.user.UserInfo;
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         UserInfo info = userService.getUserByUsername(username);
         String token = "";
         if (encoder.matches(password, info.getPassword())) {
-            token = jwtTokenUtil.generateToken(new JWTInfo(info.getUsername(), info.getId() + "", info.getName()));
+            token = jwtTokenUtil.generateToken(new JwtInfo(info.getUsername(), info.getId() + "", info.getName()));
         }
         return token;
     }
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         UserInfo info = userService.getUserByPhone(phone);
         String token = "";
         if (info!=null&& TEST_CAPTCHA.equals(captcha)) {
-            token = jwtTokenUtil.generateToken(new JWTInfo(info.getUsername(), info.getId() + "", info.getName()));
+            token = jwtTokenUtil.generateToken(new JwtInfo(info.getUsername(), info.getId() + "", info.getName()));
         }
         return token;
     }

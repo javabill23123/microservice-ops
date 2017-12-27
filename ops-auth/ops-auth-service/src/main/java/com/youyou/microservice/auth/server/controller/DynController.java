@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import com.xiaoleilu.hutool.json.JSONObject;
 import com.yonyou.cloud.common.beans.RestResultResponse;
-import com.yonyou.cloud.common.jwt.JWTInfo;
+import com.yonyou.cloud.common.jwt.JwtInfo;
 import com.youyou.microservice.auth.server.entity.AuthProvider;
 import com.youyou.microservice.auth.server.util.user.JwtAuthenticationDataResponse;
 import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
@@ -127,10 +127,10 @@ public class DynController implements Controller{
 	        }
 			if(ACCEPT_USER.equals(pInfo.getAcceptType())){
 		        if (encoder.matches(passWord, passWord)) {
-		            jwt = jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
+		            jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name));
 		        }
 			}else{
-				jwt = jwtTokenUtil.generateToken(new JWTInfo(username, userId, name));
+				jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name));
 			}
 			restResponse.setData(new JwtAuthenticationDataResponse(jwt,repBody));
 			JSONObject result=new JSONObject(restResponse);

@@ -9,8 +9,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import com.yonyou.cloud.common.beans.RestResultResponse;
-import com.yonyou.cloud.common.jwt.IJWTInfo;
-import com.yonyou.cloud.common.jwt.JWTHelper;
+import com.yonyou.cloud.common.jwt.IJwtInfo;
+import com.yonyou.cloud.common.jwt.JwtHelper;
 import com.yonyou.microservice.auth.client.config.ServiceAuthConfig;
 import com.yonyou.microservice.auth.client.exception.JwtIllegalArgumentException;
 import com.yonyou.microservice.auth.client.exception.JwtSignatureException;
@@ -37,9 +37,9 @@ public class ServiceAuthUtil {
     private String clientToken;
 
 
-    public IJWTInfo getInfoFromToken(String token) throws Exception {
+    public IJwtInfo getInfoFromToken(String token) throws Exception {
         try {
-            return JWTHelper.getInfoFromToken(token, serviceAuthConfig.getPubKeyPath());
+            return JwtHelper.getInfoFromToken(token, serviceAuthConfig.getPubKeyPath());
         } catch (ExpiredJwtException ex) {
             throw new JwtTokenExpiredException("Client token expired!");
         } catch (SignatureException ex) {

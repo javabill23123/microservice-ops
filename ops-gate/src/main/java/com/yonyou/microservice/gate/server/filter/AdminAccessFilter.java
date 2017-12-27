@@ -21,7 +21,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.yonyou.cloud.common.jwt.IJWTInfo;
+import com.yonyou.cloud.common.jwt.IJwtInfo;
 import com.yonyou.cloud.common.service.utils.ClientUtil;
 import com.yonyou.microservice.auth.client.config.ServiceAuthConfig;
 import com.yonyou.microservice.auth.client.config.UserAuthConfig;
@@ -123,7 +123,7 @@ public class AdminAccessFilter extends ZuulFilter {
         if (isStartWith(requestUri)) {
             return null;
         }
-        IJWTInfo user = null;
+        IJwtInfo user = null;
         try {
         	//从JWT中解析出用户信息
             user = getJWTUser(request,ctx);
@@ -191,7 +191,7 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param ctx
      * @return
      */
-    private IJWTInfo getJWTUser(HttpServletRequest request,RequestContext ctx) throws Exception {
+    private IJwtInfo getJWTUser(HttpServletRequest request,RequestContext ctx) throws Exception {
         String authToken = request.getHeader(userAuthConfig.getTokenHeader());
         if(StringUtils.isBlank(authToken)){
             authToken = request.getParameter("token");

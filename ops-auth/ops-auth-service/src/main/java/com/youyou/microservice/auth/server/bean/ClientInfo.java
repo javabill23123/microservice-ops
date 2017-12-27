@@ -1,12 +1,12 @@
 package com.youyou.microservice.auth.server.bean;
 
 
-import com.yonyou.cloud.common.jwt.IJWTInfo;
+import com.yonyou.cloud.common.jwt.IJwtInfo;
 
 /**
  *  @author joy
  */
-public class ClientInfo implements IJWTInfo {
+public class ClientInfo implements IJwtInfo {
     String clientId;
     String name;
     String remark;
