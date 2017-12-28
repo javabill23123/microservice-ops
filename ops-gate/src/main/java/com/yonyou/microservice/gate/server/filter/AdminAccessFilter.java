@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -132,7 +133,7 @@ public class AdminAccessFilter extends ZuulFilter {
             setFailedRequest(JSON.toJSONString(new TokenErrorResponse(e.getMessage())),200);
             return null;
         }
-        List<PermissionInfo> permissionInfos = userService.getAllPermissionInfo();
+        List<PermissionInfo> permissionInfos = this.getAllPermissionInfo();
         // 判断资源是否启用权限约束
         Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
         if(result.size()>0){
@@ -152,8 +153,9 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param requestUri
      * @param method
      * @param serviceInfo
-     * @return
+     * @return cache
      */
+    @Cacheable(value = "gate",key="'gate.permission.'+#requestUri+#method")
     private Collection<PermissionInfo> getPermissionInfos(final String requestUri, final String method, List<PermissionInfo> serviceInfo) {
         return Collections2.filter(serviceInfo, new Predicate<PermissionInfo>() {
                 @Override
@@ -194,12 +196,12 @@ public class AdminAccessFilter extends ZuulFilter {
     private IJwtInfo getJWTUser(HttpServletRequest request,RequestContext ctx) throws Exception {
         String authToken = request.getHeader(userAuthConfig.getTokenHeader());
         if(StringUtils.isBlank(authToken)){
-            authToken = request.getParameter("token");
+            authToken = request.getParameter("Authorization");
         }
         ctx.addZuulRequestHeader(userAuthConfig.getTokenHeader(),authToken);
         //将token放到threadlocal中
         BaseContextHandler.setToken(authToken);
-        return userAuthUtil.getInfoFromToken(authToken);
+        return this.getInfoFromToken(authToken);
     }
 
     /**
@@ -211,7 +213,7 @@ public class AdminAccessFilter extends ZuulFilter {
     private List<PermissionInfo> getPermissionInfos(HttpServletRequest request, String username) {
         List<PermissionInfo> permissionInfos;
         if (request.getSession().getAttribute(PERMISSION) == null) {
-            permissionInfos = userService.getPermissionByUsername(username);
+            permissionInfos = this.getPermissionByUsername(username);
             request.getSession().setAttribute("permission", permissionInfos);
         } else {
             permissionInfos = (List<PermissionInfo>) request.getSession().getAttribute("permission");
@@ -223,9 +225,9 @@ public class AdminAccessFilter extends ZuulFilter {
      * 权限校验
      * @param requestUri
      * @param method
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
-    private void checkAllow(final String requestUri, final String method ,RequestContext ctx,String username) {
+    private boolean checkAllow(final String requestUri, final String method ,RequestContext ctx,String username) {
         log.debug("uri：" + requestUri + "----method：" + method);
         List<PermissionInfo> permissionInfos = getPermissionInfos(ctx.getRequest(), username) ;
         Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
@@ -238,14 +240,16 @@ public class AdminAccessFilter extends ZuulFilter {
                 setCurrentUserInfoAndLog(ctx, username, pm);
             }
         }
+        return true;
     }
 
 
     /**
      * URI是否以什么打头
      * @param requestUri
-     * @return
+     * @return cache
      */
+    @Cacheable(value = "gate",key="'gate.ignoreurl.'+#requestUri")
     private boolean isStartWith(String requestUri) {
         boolean flag = false;
         if(startWithList==null){
@@ -258,7 +262,28 @@ public class AdminAccessFilter extends ZuulFilter {
         }
         return flag;
     }
-    
+    /**
+     * 获取所有授权信息
+     * @return cache
+     */
+    @Cacheable(value = "gate",key="gate.allpermission")
+    private List<PermissionInfo> getAllPermissionInfo(){
+    	return userService.getAllPermissionInfo();
+    }
+    /**
+     * 根据jwt解析用户信息
+     * @param authToken
+     * @return cache
+     * @throws Exception
+     */
+    @Cacheable(value = "gate",key="'gate.jwt.'+#authToken")
+    private IJwtInfo getInfoFromToken(String authToken) throws Exception{
+    	return userAuthUtil.getInfoFromToken(authToken);
+    }
+    @Cacheable(value = "gate",key="'gate.permission.user.'+#username")
+    private List<PermissionInfo> getPermissionByUsername(String username){
+    	return userService.getPermissionByUsername(username);
+    }
     /**
      * Reports an error message given a response body and code.
      *

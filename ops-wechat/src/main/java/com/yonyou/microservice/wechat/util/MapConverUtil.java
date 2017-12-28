@@ -28,7 +28,7 @@ public class MapConverUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<String, Object> Po2Map(Object o) {
+	public static Map<String, Object> po2Map(Object o) {
 		Map<String, Object> map = new HashMap<>(100);
 		String clzName = o.getClass().getSimpleName();
 		log.info("类：" + o.getClass().getName());

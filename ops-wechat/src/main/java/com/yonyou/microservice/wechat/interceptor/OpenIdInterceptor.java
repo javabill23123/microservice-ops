@@ -36,8 +36,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.yonyou.cloud.common.jwt.JWTHelper;
-import com.yonyou.cloud.common.jwt.JWTInfo;
+import com.yonyou.cloud.common.jwt.JwtHelper;
+import com.yonyou.cloud.common.jwt.JwtInfo;
 import com.yonyou.cloud.common.jwt.StringHelper;
 import com.yonyou.cloud.common.vo.user.UserInfo;
 import com.yonyou.microservice.gate.common.vo.wechat.MenuUrlInfo;
@@ -162,9 +162,9 @@ public class OpenIdInterceptor implements HandlerInterceptor{
 		String url=m.getUrl()+"?openid="+openId;
 		ResponseEntity<UserInfo> r=restTemplate.getForEntity(url, UserInfo.class);
 		String remark=serviceNo+","+openId;
-    	JWTInfo jwtInfo=new JWTInfo(r.getBody().getUsername(), r.getBody().getId() + "", 
+    	JwtInfo jwtInfo=new JwtInfo(r.getBody().getUsername(), r.getBody().getId() + "", 
     			r.getBody().getName(),remark);
-    	String jwt=JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
+    	String jwt=JwtHelper.generateToken(jwtInfo,priKeyPath,expire);
     	logger.info("--gateway-wechat,openid="+openId);
 		logger.info("--write cookie jwt="+jwt);
 		CookieUtil.writeOpenid(jwt, response);

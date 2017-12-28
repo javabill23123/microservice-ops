@@ -274,7 +274,7 @@ public class WechatMessageService {
             	et.setEventBizType(EventBizType.WECHAT_RELATION);
             	et.setEventBizStep(EventBizStep.WECHAT_USER_ATTENTION);
             	et.setEventKey("");
-            	et.setEventData(MapConverUtil.Po2Map(attentionDto));
+            	et.setEventData(MapConverUtil.po2Map(attentionDto));
             	mqSender.send("event-wechat", "attention", et);
             	logger.info("-----user info="+body);
                 logger.info("handleSubscribeEvent-saveOrUpdatePotentialUser is success");
@@ -387,7 +387,7 @@ public class WechatMessageService {
             	BizEvent et=new BizEvent();
             	et.setEventBizType(EventBizType.WECHAT_RELATION);
             	et.setEventBizStep(EventBizStep.WECHAT_USER_UNATTENTION);
-            	et.setEventData(MapConverUtil.Po2Map(attentionDto));
+            	et.setEventData(MapConverUtil.po2Map(attentionDto));
             	mqSender.send("event-wechat", "unAttention", et);
             }catch (Exception e) {
                 logger.error(e.getMessage(),e);
