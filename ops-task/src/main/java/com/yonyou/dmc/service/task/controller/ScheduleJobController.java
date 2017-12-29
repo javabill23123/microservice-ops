@@ -11,15 +11,19 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dexcoder.commons.pager.Pager;
 import com.yonyou.dmc.service.task.entity.ScheduleEntity;
 import com.yonyou.dmc.service.task.service.ScheduleJobService;
 
-@Controller
+@RestController
 @RequestMapping("/task")
 public class ScheduleJobController {
 	
@@ -28,18 +32,6 @@ public class ScheduleJobController {
     @Autowired
     private ScheduleJobService scheduleJobService;
 
-    /**
-     * 任务列表
-     *
-     * @return
-     */
-
-    @RequestMapping("/index")
-    public String list() {
-    	logger.info("----------------task,index");
-        return "/task/static/html/index.html";
-    }
-    
     
     @RequestMapping("/apilogs")
     public String logs() {
@@ -73,7 +65,7 @@ public class ScheduleJobController {
         return map;
     }
 
-    @ResponseBody
+     
     @RequestMapping("list.json")
     public Map<String, Object> getAllJobs(){
         List<ScheduleEntity> scheduleEntities = scheduleJobService.getAllScheduleJob();
@@ -82,14 +74,10 @@ public class ScheduleJobController {
     	logger.info("----------------task,list.json,"+scheduleEntities.size());
         return map;
     }
-    @RequestMapping("add")
-    public String add() {
-        return "/task/static/html/add.html";
-    }
+ 
 
-    @RequestMapping(value="/save.json")
-    @ResponseBody
-    public Object create( ScheduleEntity scheduleEntity) {
+    @RequestMapping(value="/save.json",method=RequestMethod.POST) 
+    public Object create(@RequestBody ScheduleEntity scheduleEntity) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("status", -1);
         // 判断表达式
@@ -127,9 +115,9 @@ public class ScheduleJobController {
      * 暂停任务
      */
 
-    @ResponseBody
-    @RequestMapping("/stopJob")
-    public Object stop(String jobName, String jobGroup) {
+    @ResponseBody 
+    @RequestMapping(value="/stopJob" ,method=RequestMethod.GET)
+    public Object stop(@RequestParam String jobName, @RequestParam String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("status", -1);
         try {
@@ -144,8 +132,8 @@ public class ScheduleJobController {
     }
 
     @ResponseBody
-    @RequestMapping("/delete")
-    public Object delete(String jobName, String jobGroup) {
+    @RequestMapping(value="/delete/{jobName}/{jobGroup}" ,method=RequestMethod.DELETE)
+    public Object delete(@PathVariable String jobName, @PathVariable String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("status", -1);
         try {
@@ -210,10 +198,9 @@ public class ScheduleJobController {
     /**
      * 恢复
      */
-
     @ResponseBody
-    @RequestMapping("/resume")
-    public Object resume(String jobName, String jobGroup) {
+    @RequestMapping(value="/resume" ,method=RequestMethod.GET)
+    public Object resume(@RequestParam String jobName, @RequestParam String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("status", -1);
         try {
