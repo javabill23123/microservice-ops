@@ -7,9 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
-
-import com.xiaoleilu.hutool.json.JSONObject;
-import com.yonyou.cloud.common.vo.user.UserInfo;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  *  @author joy
@@ -19,6 +17,7 @@ import com.yonyou.cloud.common.vo.user.UserInfo;
 @EnableFeignClients
 @EnableDiscoveryClient
 @MapperScan("com.youyou.microservice.auth.server.mapper")
+@ComponentScan("com.yonyou.cloud.mom.client.config")
 public class AuthBootstrap {
     public static void main(String[] args) {
         SpringApplication.run(AuthBootstrap.class, args);

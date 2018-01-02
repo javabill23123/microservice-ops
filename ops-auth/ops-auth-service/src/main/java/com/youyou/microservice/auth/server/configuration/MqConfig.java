@@ -11,12 +11,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.yonyou.cloud.mom.client.impl.MqSenderSimpleImpl;
+import com.yonyou.cloud.track.Track;
 
 @Configuration
 public class MqConfig {
+
 	@Bean
 	public MqSenderSimpleImpl mqSenderDefaultImpl(RabbitOperations rabbitOperations) {
 		MqSenderSimpleImpl mqSenderDefaultImpl = new MqSenderSimpleImpl();
+//		mqSenderDefaultImpl.setTack(tack);
 		mqSenderDefaultImpl.setRabbitOperations(rabbitOperations);
 		return mqSenderDefaultImpl;
 	}
