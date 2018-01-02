@@ -17,7 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableFeignClients
 @EnableDiscoveryClient
 @MapperScan("com.youyou.microservice.auth.server.mapper")
-@ComponentScan("com.yonyou.cloud.mom.client.config")
+@ComponentScan({"com.yonyou.cloud.mom.client.config","com.youyou.microservice.auth.server"})
 public class AuthBootstrap {
     public static void main(String[] args) {
         SpringApplication.run(AuthBootstrap.class, args);
