@@ -1,6 +1,9 @@
 package com.youyou.microservice.auth.server.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -11,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.yonyou.cloud.common.jwt.JwtInfo;
+import com.yonyou.cloud.mom.client.MqSender;
 import com.yonyou.microservice.gate.common.constant.CommonConstants;
 import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 import com.yonyou.microservice.gate.common.vo.user.UserInfo;
@@ -29,7 +33,9 @@ public class AuthServiceImpl implements AuthService {
     private JwtTokenUtil jwtTokenUtil;
     private IUserService userService;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-
+    
+    @Autowired
+	 MqSender mqSender;
     @Autowired
     public AuthServiceImpl(
             JwtTokenUtil jwtTokenUtil,
@@ -40,6 +46,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(String username, String password) throws Exception {
+    	Map<String,String> msg = new HashMap();
+		msg.put("username", username);
+		msg.put("loginTime",new Date().toString());
+		
+		mqSender.justSend("auth-user", "login", msg);
         UserInfo info = userService.getUserByUsername(username);
         String token = "";
         if (encoder.matches(password, info.getPassword())) {

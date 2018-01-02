@@ -31,6 +31,11 @@ spring:
       testOnReturn: false
       poolPreparedStatements: true
       maxOpenPreparedStatements: 20
+    rabbitmq:
+      host: 10.180.4.221
+      port: 5672
+      username: mqadmin
+      password: Pass1234
 
 mybatis:
     basepackage: com.youyou.microservice.auth.server.mapper
@@ -92,6 +97,8 @@ client:
     path: client/pri.key
   pub-key:
     path: client/pub.key
-
+track:
+  isTacks: true 
+  LoggingUrl: /home/yonyou/logs/track.log
 
   
