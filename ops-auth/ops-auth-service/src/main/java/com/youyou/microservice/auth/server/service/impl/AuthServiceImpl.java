@@ -22,6 +22,8 @@ import com.youyou.microservice.auth.server.feign.IUserService;
 import com.youyou.microservice.auth.server.service.AuthService;
 import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
 import com.youyou.microservice.auth.server.vo.FrontUser;
+
+import net.sf.json.JSONObject;
 /**
  *  @author joy
  */
@@ -49,8 +51,8 @@ public class AuthServiceImpl implements AuthService {
     	Map<String,String> msg = new HashMap();
 		msg.put("username", username);
 		msg.put("loginTime",new Date().toString());
-		
-		mqSender.justSend("auth-user", "login", msg);
+		JSONObject json=JSONObject.fromObject(msg);
+		mqSender.justSend("auth-user", "login", json.toString());
         UserInfo info = userService.getUserByUsername(username);
         String token = "";
         if (encoder.matches(password, info.getPassword())) {
