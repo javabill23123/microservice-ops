@@ -64,12 +64,13 @@ public class MqMsgListener implements ChannelAwareMessageListener{
 		MqMessage mqMessage = new MqMessage();
 		properties.toBean(mqMessage);
 		mqMessage.setHost(host);
+		mqMessage.setData(properties.getJSONObject("data").toString());
 		mqMessage.setOccurTime(Long.parseLong(time));
 		
 		mqMessageService.save(mqMessage, mqMessageType);
 		
 		switch (mqMessageType) {
-		case SEND:
+		case PRODUCER:
 			MqProducer producer = new MqProducer();
 			BeanUtils.copyProperties(mqMessage, producer);
 			mqProducerService.save(producer);
