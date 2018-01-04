@@ -17,7 +17,7 @@ public class MqMessageService extends BaseEsService<MqMessage>{
 
 	public void save (MqMessage mqMessage, MqMessageType mqMessageType) throws Exception{
 		switch (mqMessageType) {
-		case SEND:
+		case PRODUCER:
 			if(Boolean.valueOf(mqMessage.getSuccess())){
 				mqMessage.setProduceSuccessTime(mqMessage.getOccurTime());
 				mqMessage.setStatus(MqMessageStatus.PRODUCED.name());
@@ -45,7 +45,7 @@ public class MqMessageService extends BaseEsService<MqMessage>{
 		
 		if(oldMessage == null){
 			insert(MqOpsConstant.INDEX, mqMessage);
-		} else if((MqMessageStatus.CONSUMED.name().equals(oldMessage.getStatus()) && MqMessageType.SEND == mqMessageType)
+		} else if((MqMessageStatus.CONSUMED.name().equals(oldMessage.getStatus()) && MqMessageType.PRODUCER == mqMessageType)
 				||(MqMessageStatus.PRODUCED.name().equals(oldMessage.getStatus()) && MqMessageType.CONSUMER == mqMessageType)){
 			logger.error("this message status is success,msgkey:{}", mqMessage.getMsgKey());
 		} else {

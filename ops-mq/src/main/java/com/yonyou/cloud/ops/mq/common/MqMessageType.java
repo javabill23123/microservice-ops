@@ -1,7 +1,7 @@
 package com.yonyou.cloud.ops.mq.common;
 
 public enum MqMessageType {
-	SEND(100,"生产者"), CONSUMER(200,"生产者");
+	PRODUCER(100,"生产者"), CONSUMER(200,"生产者");
 
 	private Integer code;
 	private String name;
