@@ -4,7 +4,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.X509TrustManager;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 public class MyX509TrustManager implements X509TrustManager{
 
 	@Override

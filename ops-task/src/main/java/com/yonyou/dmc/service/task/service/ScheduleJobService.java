@@ -31,14 +31,17 @@ import com.yonyou.dmc.service.task.entity.ExecuteType;
 import com.yonyou.dmc.service.task.entity.ScheduleEntity;
 import com.yonyou.dmc.service.task.job.ScheduledJob;
 import com.yonyou.dmc.service.task.job.ScheduledJobForMsg;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 @Service
 public class ScheduleJobService {
     @Autowired
     private Scheduler scheduler;
 
-   // @Autowired
-    //ScheduleDao scheduleDao;
+  
     @Autowired
     JdbcDao jdbcDao;
 
@@ -224,10 +227,10 @@ public class ScheduleJobService {
     public List<ScheduleEntity> getTriggersInfo() {
         try {
             GroupMatcher<TriggerKey> matcher = GroupMatcher.anyTriggerGroup();
-            Set<TriggerKey> Keys = scheduler.getTriggerKeys(matcher);
+            Set<TriggerKey> keys = scheduler.getTriggerKeys(matcher);
             List<ScheduleEntity> triggers = new ArrayList<ScheduleEntity>();
 
-            for (TriggerKey key : Keys) {
+            for (TriggerKey key : keys) {
                 Trigger trigger = scheduler.getTrigger(key);
                 ScheduleEntity scheduleEntity = new ScheduleEntity();
                 scheduleEntity.setJobName(trigger.getJobKey().getName());

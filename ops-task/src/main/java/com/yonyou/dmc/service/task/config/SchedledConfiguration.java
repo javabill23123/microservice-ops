@@ -13,37 +13,42 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
+/**
+ * 
+ * @author daniell
+ *
+ */
 @Configuration
-@ComponentScan(basePackages="com.yonyou.dmc")
+@ComponentScan(basePackages = "com.yonyou.dmc")
 public class SchedledConfiguration {
 
-    @Autowired
-    private DataSource dataSource;
+	@Autowired
+	private DataSource dataSource;
 
-    /**
-     * config Scheduler
-     *
-     * @return
-     */
-    @Bean
-    public SchedulerFactoryBean getSchedulerFactoryBean() {
+	/**
+	 * config Scheduler
+	 *
+	 * @return
+	 */
+	@Bean
+	public SchedulerFactoryBean getSchedulerFactoryBean() {
 
-        SchedulerFactoryBean factoryBean = new SchedulerFactoryBean();
-        factoryBean.setQuartzProperties(quartzProperties());
-        factoryBean.setDataSource(dataSource);
-        //factoryBean.setApplicationContextSchedulerContextKey("");
-        return factoryBean;
-    }
+		SchedulerFactoryBean factoryBean = new SchedulerFactoryBean();
+		factoryBean.setQuartzProperties(quartzProperties());
+		factoryBean.setDataSource(dataSource);
+		// factoryBean.setApplicationContextSchedulerContextKey("");
+		return factoryBean;
+	}
 
-    public Properties quartzProperties(){
-        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-        propertiesFactoryBean.setLocation(new ClassPathResource("classpath:quartz.properties"));
-        try {
-            propertiesFactoryBean.afterPropertiesSet();
-            return propertiesFactoryBean.getObject();
-        } catch (IOException e) {
-//            e.printStackTrace();
-        }
-        return null;
-    }
+	public Properties quartzProperties() {
+		PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
+		propertiesFactoryBean.setLocation(new ClassPathResource("classpath:quartz.properties"));
+		try {
+			propertiesFactoryBean.afterPropertiesSet();
+			return propertiesFactoryBean.getObject();
+		} catch (IOException e) {
+			// e.printStackTrace();
+		}
+		return null;
+	}
 }

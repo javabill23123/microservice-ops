@@ -10,21 +10,39 @@ import java.io.Serializable;
 public class ScheduleEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String jobName; // 任务名
-
-	private String jobGroup; // 任务组
-
-	private String cronExpression; // cron表达式
-
-	private String status; // 状态
-
-	private String description; // 描述
-
-	private String url;// 执行的接口url
 	
-	private ExecuteType executeType;//任务类型
-	
-	private String beanName;//执行类的名称
+	/**
+	 *  任务名
+	 */
+	private String jobName; 
+	/**
+	 *  任务组
+	 */
+	private String jobGroup; 
+	/**
+	 *  cron表达式
+	 */
+	private String cronExpression; 
+	/**
+	 * 状态
+	 */
+	private String status; 
+	/**
+	 * 描述
+	 */
+	private String description; 
+	/**
+	 *  执行的接口url
+	 */
+	private String url;
+	/**
+	 * 任务类型
+	 */
+	private ExecuteType executeType;
+	/**
+	 * 执行类的名称
+	 */
+	private String beanName;
 
 	public String getUrl() {
 		return url;

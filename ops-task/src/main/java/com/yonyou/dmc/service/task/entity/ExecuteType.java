@@ -16,9 +16,13 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ExecuteType {
-
+	/**
+	 * http类型
+	 */
 	executeUrl("http类型"),
-
+	/**
+	 * Bean类型
+	 */
 	executeBean("消息类型"),
 
 	UNKNOWN("未知");
