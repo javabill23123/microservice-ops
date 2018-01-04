@@ -16,40 +16,44 @@ public class MqMessageService extends BaseEsService<MqMessage>{
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public void save (MqMessage mqMessage, MqMessageType mqMessageType) throws Exception{
+		
+		MqMessage oldMessage = selectOne(MqOpsConstant.INDEX, "msgKey:" + mqMessage.getMsgKey());
+		
 		switch (mqMessageType) {
 		case PRODUCER:
 			if(Boolean.valueOf(mqMessage.getSuccess())){
 				mqMessage.setProduceSuccessTime(mqMessage.getOccurTime());
-				mqMessage.setStatus(MqMessageStatus.PRODUCED.name());
+				mqMessage.setProduceStatus(MqMessageStatus.PRODUCED.name());
 			}else{
 				mqMessage.setProduceFailTimes(mqMessage.getConsumeFailTimes() + 1);
-				mqMessage.setStatus(MqMessageStatus.PRODUCE_FAIL.name());
+				mqMessage.setProduceStatus(MqMessageStatus.PRODUCE_FAIL.name());
+				mqMessage.setProduceFailTimes(oldMessage == null ? 1 : oldMessage.getProduceFailTimes() + 1);
 			}
 			break;
 			
 		case CONSUMER:
 			if(Boolean.valueOf(mqMessage.getSuccess())){
 				mqMessage.setConsumeSuccessTime(mqMessage.getOccurTime());
-				mqMessage.setStatus(MqMessageStatus.CONSUMED.name());
+				mqMessage.setConsumeStatus(MqMessageStatus.CONSUMED.name());
 			}else{
 				mqMessage.setConsumeFailTimes(mqMessage.getConsumeFailTimes() + 1);
-				mqMessage.setStatus(MqMessageStatus.CONSUME_FAIL.name());
+				mqMessage.setConsumeStatus(MqMessageStatus.CONSUME_FAIL.name());
+				mqMessage.setConsumeFailTimes(oldMessage == null ? 1 : oldMessage.getConsumeFailTimes() + 1);
 			}
 			break;
-
+			
 		default:
 			break;
 		}
 		
-		MqMessage oldMessage = selectOne(MqOpsConstant.INDEX, "msgKey:" + mqMessage.getMsgKey());
-		
 		if(oldMessage == null){
+			
 			insert(MqOpsConstant.INDEX, mqMessage);
-		} else if((MqMessageStatus.CONSUMED.name().equals(oldMessage.getStatus()) && MqMessageType.PRODUCER == mqMessageType)
-				||(MqMessageStatus.PRODUCED.name().equals(oldMessage.getStatus()) && MqMessageType.CONSUMER == mqMessageType)){
-			logger.error("this message status is success,msgkey:{}", mqMessage.getMsgKey());
+//		} else if((MqMessageStatus.CONSUMED.name().equals(oldMessage.getConsumeStatus()) && MqMessageType.CONSUMER == mqMessageType)
+//				||(MqMessageStatus.PRODUCED.name().equals(oldMessage.getProduceStatus()) && MqMessageType.PRODUCER == mqMessageType)){
+//			logger.error("this message status is success,msgkey:{}", mqMessage.getMsgKey());
 		} else {
-			update(MqOpsConstant.INDEX, mqMessage, oldMessage.getEsId());
+			update(MqOpsConstant.INDEX, mqMessage, oldMessage.getId());
 		}
 	}
 } 

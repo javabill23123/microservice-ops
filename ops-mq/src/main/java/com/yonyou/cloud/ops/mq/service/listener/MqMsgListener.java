@@ -50,10 +50,9 @@ public class MqMsgListener implements ChannelAwareMessageListener{
 		
 		JSONObject j = JSONUtil.parseObj(convert.fromMessage(message));
 		
-		String type = j.get("type").toString().toUpperCase();
-		String host = j.get("host").toString();
 		String time = j.get("time").toString();
 		JSONObject properties =j.getJSONObject("properties");
+		String type = properties.get("type").toString();
 		
 		MqMessageType mqMessageType = MqMessageType.of(type);
 		if(mqMessageType == null){
@@ -63,7 +62,6 @@ public class MqMsgListener implements ChannelAwareMessageListener{
 		
 		MqMessage mqMessage = new MqMessage();
 		properties.toBean(mqMessage);
-		mqMessage.setHost(host);
 		mqMessage.setData(properties.getJSONObject("data").toString());
 		mqMessage.setOccurTime(Long.parseLong(time));
 		
@@ -78,8 +76,6 @@ public class MqMsgListener implements ChannelAwareMessageListener{
 		case CONSUMER:
 			MqConsumer consumer = new MqConsumer();
 			BeanUtils.copyProperties(mqMessage, consumer);
-			consumer.setConsumerId(String.valueOf(new Random().nextInt(10)));
-			consumer.setMsgKey("TEST");
 			mqConsumerService.save(consumer);
 			mqConsumeDetailInfoService.save(consumer);
 			break;

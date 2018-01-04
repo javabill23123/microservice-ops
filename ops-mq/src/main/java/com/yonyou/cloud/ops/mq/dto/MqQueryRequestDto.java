@@ -1,7 +1,6 @@
 package com.yonyou.cloud.ops.mq.dto;
 
 import com.yonyou.cloud.common.service.utils.EsPageQuery;
-import com.yonyou.cloud.ops.mq.common.MqMessageStatus;
 
 public class MqQueryRequestDto extends EsPageQuery {
 	
@@ -11,7 +10,9 @@ public class MqQueryRequestDto extends EsPageQuery {
 	
 	private String data;
 	
-	private MqMessageStatus status;
+	private String produceStatus;
+	
+	private String consumeStatus;
 	
 	private String success;
 	
@@ -51,14 +52,6 @@ public class MqQueryRequestDto extends EsPageQuery {
 
 	public void setData(String data) {
 		this.data = data;
-	}
-
-	public MqMessageStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(MqMessageStatus status) {
-		this.status = status;
 	}
 
 	public String getSuccess() {
@@ -123,6 +116,22 @@ public class MqQueryRequestDto extends EsPageQuery {
 
 	public void setProduceFailTimes(Integer produceFailTimes) {
 		this.produceFailTimes = produceFailTimes;
+	}
+
+	public String getProduceStatus() {
+		return produceStatus;
+	}
+
+	public void setProduceStatus(String produceStatus) {
+		this.produceStatus = produceStatus;
+	}
+
+	public String getConsumeStatus() {
+		return consumeStatus;
+	}
+
+	public void setConsumeStatus(String consumeStatus) {
+		this.consumeStatus = consumeStatus;
 	}
 	
 }
