@@ -25,6 +25,9 @@ public class Filter {
 	@Column(name="service_name")
 	private String serviceName;
 
+	private String createBy;
+	private Date createDate;
+	private String updateBy;
 	public Integer getId() {
 		return id;
 	}
@@ -103,6 +106,30 @@ public class Filter {
 
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(String updateBy) {
+		this.updateBy = updateBy;
 	}
 
 }

@@ -68,16 +68,4 @@ public class GateBootstrap {
         return new UserPrincipal();
     }
 }
- class TestController implements Controller{//implements Controller
-
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) throws Exception {
-		System.out.println("--x");
-		Map<String, String> map=new HashMap(10);
-		map.put("ab", "value");
-		
-		p1.getOutputStream().write(map.toString().getBytes());
-		return null;
-	}
-	
-}
+ 

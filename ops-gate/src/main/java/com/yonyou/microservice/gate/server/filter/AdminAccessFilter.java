@@ -236,9 +236,9 @@ public class AdminAccessFilter extends ZuulFilter {
         } else{
             PermissionInfo[] pms =  result.toArray(new PermissionInfo[]{});
             PermissionInfo pm = pms[0];
-            if(!HTTP_GET.equals(method)){
+            //if(!HTTP_GET.equals(method)){
                 setCurrentUserInfoAndLog(ctx, username, pm);
-            }
+            //}
         }
         return true;
     }
@@ -249,18 +249,21 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param requestUri
      * @return cache
      */
-    @Cacheable(value = "gate",key="'gate.ignoreurl.'+#requestUri")
+    @Cacheable(value = "gate.ignorerequest",key="'gate.ignorerequest.'+#requestUri")
     private boolean isStartWith(String requestUri) {
         boolean flag = false;
-        if(startWithList==null){
-        	startWithList=this.iIgnoreUriService.getIgnoreUris();
-        }
+        startWithList=this.getIgnoreUris();
         for (IgnoreUriInfo s : startWithList) {
             if (requestUri.startsWith(s.getUri())) {
                 return true;
             }
         }
         return flag;
+    }
+    @Cacheable(value = "gate.ignoreuri",key="'gate.ignoreuri.'+#requestUri")
+    private List<IgnoreUriInfo> getIgnoreUris() {
+    	logger.info("--getIgnoreUris from db");
+        return this.iIgnoreUriService.getIgnoreUris();
     }
     /**
      * 获取所有授权信息
