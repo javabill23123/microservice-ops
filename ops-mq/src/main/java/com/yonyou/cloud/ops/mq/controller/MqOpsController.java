@@ -107,7 +107,7 @@ public class MqOpsController {
 	@YcApi
 	public RestResultResponse<List<MqConsumeDetailInfo>> queryConsumedInfos(@PathVariable("msgKey") String msgKey){
 		RestResultResponse<List<MqConsumeDetailInfo>> response = new RestResultResponse<List<MqConsumeDetailInfo>>();
-		List<MqConsumeDetailInfo> details = mqConsumeDetailInfoService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey);
+		List<MqConsumeDetailInfo> details = mqConsumeDetailInfoService.selectList(MqOpsConstant.INDEX, "msgKey:"+"\""+msgKey+"\"");
 		response.setData(details);
 		response.setSuccess(true);
 		return response;
