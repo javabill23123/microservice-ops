@@ -108,6 +108,7 @@ public class MqOpsController {
 	public RestResultResponse<List<MqConsumeDetailInfo>> queryConsumedInfos(@PathVariable("msgKey") String msgKey){
 		RestResultResponse<List<MqConsumeDetailInfo>> response = new RestResultResponse<List<MqConsumeDetailInfo>>();
 		List<MqConsumeDetailInfo> details = mqConsumeDetailInfoService.selectList(MqOpsConstant.INDEX, "msgKey:"+"\""+msgKey+"\"");
+		details.sort((m1, m2) -> (m1.getMsgKey() + m1.getConsumerId()).compareTo(m2.getMsgKey() + m2.getConsumerId()));
 		response.setData(details);
 		response.setSuccess(true);
 		return response;
