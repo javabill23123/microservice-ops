@@ -29,7 +29,10 @@ public class Element {
 
     private String method;
 
-    private String description;
+    @Column(name="order_num")
+    private Integer orderNum;  
+    
+	private String description;
 
     @Column(name = "crt_time")
     private Date crtTime;
@@ -366,4 +369,12 @@ public class Element {
     public void setAttr8(String attr8) {
         this.attr8 = attr8;
     }
+    
+    public Integer getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(Integer orderNum) {
+		this.orderNum = orderNum;
+	}
 }

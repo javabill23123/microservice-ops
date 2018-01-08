@@ -41,6 +41,7 @@ public class ElementController extends BaseController<ElementBiz, Element> {
     if(StringUtils.isNotBlank(name)){
       criteria.andLike("name", "%" + name + "%");
     }
+    example.setOrderByClause("order_num ASC");
     List<Element> elements = baseService.selectByExample(example);
     return new PageResultResponse<Element>(elements.size(), elements);
   }
