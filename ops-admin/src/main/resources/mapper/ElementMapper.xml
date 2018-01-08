@@ -14,7 +14,7 @@
         <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
         <result column="path" jdbcType="VARCHAR" property="path"/>
         <result column="method" jdbcType="VARCHAR" property="method"/>
-        <result column="order_num" jdbcType="INTEGER" property="method"/> 
+        <result column="order_num" jdbcType="INTEGER" property="orderNum"/> 
         <result column="description" jdbcType="VARCHAR" property="description"/>
         <result column="crt_time" jdbcType="DATE" property="crtTime"/>
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser"/>
