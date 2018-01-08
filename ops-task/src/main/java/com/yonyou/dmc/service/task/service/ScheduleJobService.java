@@ -56,10 +56,10 @@ public class ScheduleJobService {
     public void add(ScheduleEntity scheduleEntity) throws ClassNotFoundException,
             SchedulerException {
     	JobDetail jobDetail;
-    	if(scheduleEntity.getExecuteType().equals(ExecuteType.executeBean)){
+    	if(scheduleEntity.getExecuteType().equals(ExecuteType.executeUrl)){
          jobDetail = JobBuilder.newJob(ScheduledJob.class)
                 .withIdentity(scheduleEntity.getJobName(), scheduleEntity.getJobGroup())
-                .usingJobData("url", scheduleEntity.getBeanName())
+                .usingJobData("url", scheduleEntity.getUrl())
                 .usingJobData("jobGroup", scheduleEntity.getJobGroup())
                 .usingJobData("jobName", scheduleEntity.getJobName())
                 .build();
@@ -67,7 +67,7 @@ public class ScheduleJobService {
     	}else{
     	 jobDetail = JobBuilder.newJob(ScheduledJobForMsg.class)
                     .withIdentity(scheduleEntity.getJobName(), scheduleEntity.getJobGroup())
-                    .usingJobData("url", scheduleEntity.getUrl())
+                    .usingJobData("url", scheduleEntity.getBeanName())
                     .usingJobData("jobGroup", scheduleEntity.getJobGroup())
                     .usingJobData("jobName", scheduleEntity.getJobName())
                     .build();
