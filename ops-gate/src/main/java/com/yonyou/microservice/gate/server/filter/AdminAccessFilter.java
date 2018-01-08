@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -58,6 +58,9 @@ public class AdminAccessFilter extends ZuulFilter {
 	private static final String USER_HEAD_REMARK="remark";
 	private static final String PERMISSION="permission";
 	private static final String HTTP_GET="GET";
+	private static final String LOG_OUT="autht/invalid";
+	private static final String SPEC_URI_INFO="/admin/user/front/info,/admin/menu/all,/admin/user/front/menus";
+	private static final String SPEC_URI_MENUS="admin/user/front/menus";
 	private static Logger logger=Logger.getLogger(AdminAccessFilter.class);
 
     @Autowired
@@ -124,6 +127,9 @@ public class AdminAccessFilter extends ZuulFilter {
         if (isStartWith(requestUri)) {
             return null;
         }
+        if(requestUri.contains(LOG_OUT)){
+        	cleanSession(request);
+        }
         IJwtInfo user = null;
         try {
         	//从JWT中解析出用户信息
@@ -133,11 +139,14 @@ public class AdminAccessFilter extends ZuulFilter {
             setFailedRequest(JSON.toJSONString(new TokenErrorResponse(e.getMessage())),200);
             return null;
         }
-        List<PermissionInfo> permissionInfos = this.getAllPermissionInfo();
-        // 判断资源是否启用权限约束
-        Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
-        if(result.size()>0){
-			checkAllow(requestUri, method, ctx, user.getUniqueName());
+//        if(!(requestUri.contains(SPEC_URI_INFO)||requestUri.contains(SPEC_URI_MENUS))){
+        if(!SPEC_URI_INFO.contains(requestUri)){
+            List<PermissionInfo> permissionInfos = this.getAllPermissionInfo();
+            // 判断资源是否启用权限约束
+            Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
+            if(result.size()>0){
+    			checkAllow(requestUri, method, ctx, user.getUniqueName());
+            }
         }
         // 申请客户端密钥头
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
@@ -155,7 +164,7 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param serviceInfo
      * @return cache
      */
-    @Cacheable(value = "gate",key="'gate.permission.'+#requestUri+#method")
+    //@Cacheable(value = "gate",key="'gate.permission.'+#requestUri+#method")
     private Collection<PermissionInfo> getPermissionInfos(final String requestUri, final String method, List<PermissionInfo> serviceInfo) {
         return Collections2.filter(serviceInfo, new Predicate<PermissionInfo>() {
                 @Override
@@ -163,8 +172,11 @@ public class AdminAccessFilter extends ZuulFilter {
                     String url = permissionInfo.getUri();
                     String uri = url.replaceAll("\\{\\*\\}", "[a-zA-Z\\\\d]+");
                     String regEx = "^" + uri + "$";
-                    return (Pattern.compile(regEx).matcher(requestUri).find() || requestUri.startsWith(url + "/"))
-                            && method.equals(permissionInfo.getMethod());
+                    boolean b1=Pattern.compile(regEx).matcher(requestUri).find();
+                    boolean b2=requestUri.startsWith(url + "/");
+                    boolean b3=method.equals(permissionInfo.getMethod());
+                    return (b1 || b2)
+                            && b3;
                 }
             });
     }
@@ -212,12 +224,12 @@ public class AdminAccessFilter extends ZuulFilter {
      */
     private List<PermissionInfo> getPermissionInfos(HttpServletRequest request, String username) {
         List<PermissionInfo> permissionInfos;
-        if (request.getSession().getAttribute(PERMISSION) == null) {
+//        if (request.getSession().getAttribute(PERMISSION) == null) {
             permissionInfos = this.getPermissionByUsername(username);
-            request.getSession().setAttribute("permission", permissionInfos);
-        } else {
-            permissionInfos = (List<PermissionInfo>) request.getSession().getAttribute("permission");
-        }
+//            request.getSession().setAttribute("permission", permissionInfos);
+//        } else {
+//            permissionInfos = (List<PermissionInfo>) request.getSession().getAttribute("permission");
+//        }
         return permissionInfos;
     }
 
@@ -232,7 +244,7 @@ public class AdminAccessFilter extends ZuulFilter {
         List<PermissionInfo> permissionInfos = getPermissionInfos(ctx.getRequest(), username) ;
         Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
         if (result.size() <= 0) {
-            setFailedRequest(JSON.toJSONString(new TokenForbiddenResponse("Token Forbidden!")), 200);
+            setFailedRequest(JSON.toJSONString(new TokenForbiddenResponse("access was denied!")), 200);
         } else{
             PermissionInfo[] pms =  result.toArray(new PermissionInfo[]{});
             PermissionInfo pm = pms[0];
@@ -249,7 +261,7 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param requestUri
      * @return cache
      */
-    @Cacheable(value = "gate.ignorerequest",key="'gate.ignorerequest.'+#requestUri")
+    //@Cacheable(value = "gate.ignorerequest",key="'gate.ignorerequest.'+#requestUri")
     private boolean isStartWith(String requestUri) {
         boolean flag = false;
         startWithList=this.getIgnoreUris();
@@ -260,7 +272,7 @@ public class AdminAccessFilter extends ZuulFilter {
         }
         return flag;
     }
-    @Cacheable(value = "gate.ignoreuri",key="'gate.ignoreuri.'+#requestUri")
+    //@Cacheable(value = "gate.ignoreuri",key="'gate.ignoreuri.'+#requestUri")
     private List<IgnoreUriInfo> getIgnoreUris() {
     	logger.info("--getIgnoreUris from db");
         return this.iIgnoreUriService.getIgnoreUris();
@@ -269,7 +281,7 @@ public class AdminAccessFilter extends ZuulFilter {
      * 获取所有授权信息
      * @return cache
      */
-    @Cacheable(value = "gate",key="gate.allpermission")
+    //@Cacheable(value = "gate",key="gate.allpermission")
     private List<PermissionInfo> getAllPermissionInfo(){
     	return userService.getAllPermissionInfo();
     }
@@ -279,11 +291,11 @@ public class AdminAccessFilter extends ZuulFilter {
      * @return cache
      * @throws Exception
      */
-    @Cacheable(value = "gate",key="'gate.jwt.'+#authToken")
+    //@Cacheable(value = "gate",key="'gate.jwt.'+#authToken")
     private IJwtInfo getInfoFromToken(String authToken) throws Exception{
     	return userAuthUtil.getInfoFromToken(authToken);
     }
-    @Cacheable(value = "gate",key="'gate.permission.user.'+#username")
+    //@Cacheable(value = "gate",key="'gate.permission.user.'+#username")
     private List<PermissionInfo> getPermissionByUsername(String username){
     	return userService.getPermissionByUsername(username);
     }
@@ -303,4 +315,10 @@ public class AdminAccessFilter extends ZuulFilter {
 //            throw new RuntimeException("Code: " + code + ", " + body); //optional
         }
     }
+    private void cleanSession(HttpServletRequest request){
+    	  Enumeration em = request.getSession().getAttributeNames();
+    	  while(em.hasMoreElements()){
+    	   request.getSession().removeAttribute(em.nextElement().toString());
+    	  }
+   }
 }

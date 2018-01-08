@@ -45,10 +45,12 @@ zuul:
     back:
       path: /admin/**
       serviceId: ops-admin
-
     auth:
       path: /auth/**
       serviceId: ops-auth
+    manager:
+      path: /manager/**
+      serviceId: ops-admin
     captcha:
       path: /captcha/**
       serviceId: ops-auth
