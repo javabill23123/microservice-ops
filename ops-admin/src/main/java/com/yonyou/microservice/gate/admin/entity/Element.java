@@ -27,10 +27,7 @@ public class Element {
 
     private String path;
 
-    private String method;
-
-    @Column(name="order_num")
-    private Integer orderNum;  
+    private String method; 
     
 	private String description;
 
@@ -369,12 +366,5 @@ public class Element {
     public void setAttr8(String attr8) {
         this.attr8 = attr8;
     }
-    
-    public Integer getOrderNum() {
-		return orderNum;
-	}
-
-	public void setOrderNum(Integer orderNum) {
-		this.orderNum = orderNum;
-	}
+     
 }
