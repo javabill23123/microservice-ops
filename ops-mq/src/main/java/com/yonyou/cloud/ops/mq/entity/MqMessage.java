@@ -12,6 +12,10 @@ public class MqMessage {
 	
 	private String status;
 	
+	private String produceStatus;
+	
+	private String consumeStatus;
+	
 	private String success;
 	
 	private Long occurTime;	
@@ -30,7 +34,7 @@ public class MqMessage {
 	
 	private Long consumeSuccessTime;
 	
-	private String esId;
+	private String id;
 
 	public String getHost() {
 		return host;
@@ -120,12 +124,12 @@ public class MqMessage {
 		this.success = success;
 	}
 
-	public String getEsId() {
-		return esId;
+	public String getId() {
+		return id;
 	}
 
-	public void setEsId(String esId) {
-		this.esId = esId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getExchangeName() {
@@ -150,6 +154,22 @@ public class MqMessage {
 
 	public void setSender(String sender) {
 		this.sender = sender;
+	}
+
+	public String getProduceStatus() {
+		return produceStatus;
+	}
+
+	public void setProduceStatus(String produceStatus) {
+		this.produceStatus = produceStatus;
+	}
+
+	public String getConsumeStatus() {
+		return consumeStatus;
+	}
+
+	public void setConsumeStatus(String consumeStatus) {
+		this.consumeStatus = consumeStatus;
 	}
 	
 }

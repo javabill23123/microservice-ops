@@ -1,13 +1,10 @@
 package com.yonyou.cloud.ops.mq.service.listener;
 
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,46 +44,48 @@ public class MqMsgListener implements ChannelAwareMessageListener{
 	
 	@Override
 	public void onMessage(Message message, Channel channel) throws Exception {
-		
-		JSONObject j = JSONUtil.parseObj(convert.fromMessage(message));
-		
-		String type = j.get("type").toString().toUpperCase();
-		String host = j.get("host").toString();
-		String time = j.get("time").toString();
-		JSONObject properties =j.getJSONObject("properties");
-		
-		MqMessageType mqMessageType = MqMessageType.of(type);
-		if(mqMessageType == null){
-			logger.error("Illegal message type.message:{}",j.toStringPretty());
-			return;
+		try {
+			JSONObject j = JSONUtil.parseObj(convert.fromMessage(message));
+			
+			String time = j.get("time").toString();
+			JSONObject properties =j.getJSONObject("properties");
+			String type = properties.get("type").toString();
+			
+			MqMessageType mqMessageType = MqMessageType.of(type);
+			if(mqMessageType == null){
+				logger.error("Illegal message type.message:{}", j.toStringPretty());
+				return;
+			}
+			
+			switch (mqMessageType) {
+			case PRODUCER:
+				MqProducer producer = new MqProducer();
+//				BeanUtils.copyProperties(mqMessage, producer);
+				properties.toBean(producer);
+				mqProducerService.save(producer);
+				break;
+			case CONSUMER:
+				MqConsumer consumer = new MqConsumer();
+				properties.toBean(consumer);
+				consumer.setOccurTime(Long.parseLong(time));
+				mqConsumerService.save(consumer);
+				mqConsumeDetailInfoService.save(consumer);
+				break;
+			default:
+				break;
+			}
+			
+			MqMessage mqMessage = new MqMessage();
+			properties.toBean(mqMessage);
+			mqMessage.setData(properties.getJSONObject("data").toString());
+			mqMessage.setOccurTime(Long.parseLong(time));
+			
+			mqMessageService.save(mqMessage, mqMessageType);
+		} catch (Exception e) {
+			logger.error("mqMsgListener onMessage Error! message:{}", message.toString());
+		} finally{
+			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		}
-		
-		MqMessage mqMessage = new MqMessage();
-		properties.toBean(mqMessage);
-		mqMessage.setHost(host);
-		mqMessage.setData(properties.getJSONObject("data").toString());
-		mqMessage.setOccurTime(Long.parseLong(time));
-		
-		mqMessageService.save(mqMessage, mqMessageType);
-		
-		switch (mqMessageType) {
-		case PRODUCER:
-			MqProducer producer = new MqProducer();
-			BeanUtils.copyProperties(mqMessage, producer);
-			mqProducerService.save(producer);
-			break;
-		case CONSUMER:
-			MqConsumer consumer = new MqConsumer();
-			BeanUtils.copyProperties(mqMessage, consumer);
-			consumer.setConsumerId(String.valueOf(new Random().nextInt(10)));
-			consumer.setMsgKey("TEST");
-			mqConsumerService.save(consumer);
-			mqConsumeDetailInfoService.save(consumer);
-			break;
-		default:
-			break;
-		}
-		
 	}
 	
 }

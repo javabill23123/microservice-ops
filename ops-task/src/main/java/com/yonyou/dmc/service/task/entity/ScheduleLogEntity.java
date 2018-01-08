@@ -1,7 +1,11 @@
 package com.yonyou.dmc.service.task.entity;
 
 import java.util.Date;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 public class ScheduleLogEntity {
 	public Long lonId;
 	public String schedledNam;

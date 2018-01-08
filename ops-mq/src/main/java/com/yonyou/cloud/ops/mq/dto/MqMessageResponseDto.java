@@ -14,9 +14,9 @@ public class MqMessageResponseDto {
 	
 	private String data;
 	
-	private String status;
+	private String produceStatus;
 	
-	private String success;
+	private String consumeStatus;
 	
 	private Long occurTime;	
 	
@@ -68,22 +68,6 @@ public class MqMessageResponseDto {
 
 	public void setData(String data) {
 		this.data = data;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getSuccess() {
-		return success;
-	}
-
-	public void setSuccess(String success) {
-		this.success = success;
 	}
 
 	public Long getOccurTime() {
@@ -164,6 +148,22 @@ public class MqMessageResponseDto {
 
 	public void setSender(String sender) {
 		this.sender = sender;
+	}
+
+	public String getProduceStatus() {
+		return produceStatus;
+	}
+
+	public void setProduceStatus(String produceStatus) {
+		this.produceStatus = produceStatus;
+	}
+
+	public String getConsumeStatus() {
+		return consumeStatus;
+	}
+
+	public void setConsumeStatus(String consumeStatus) {
+		this.consumeStatus = consumeStatus;
 	}
 
 }

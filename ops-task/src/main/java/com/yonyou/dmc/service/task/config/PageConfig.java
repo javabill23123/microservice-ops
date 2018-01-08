@@ -4,7 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.dexcoder.dal.spring.page.PageControl;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 @Configuration
 public class PageConfig {
 

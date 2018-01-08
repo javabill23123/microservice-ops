@@ -73,10 +73,10 @@ public class MqOpsController {
 		public MqMessageResponseDto apply(MqMessage message) {
 			MqMessageResponseDto response = new MqMessageResponseDto();
 			BeanUtils.copyProperties(message, response);
-			if(StringUtil.isNotEmpty(response.getSuccess()))
-				response.setSuccess(Boolean.valueOf(response.getSuccess())?"是":"否");
-			if(StringUtil.isNotEmpty(response.getStatus()))
-				response.setStatus(MqMessageStatus.valueOf(response.getStatus()).getName());
+			if(StringUtil.isNotEmpty(response.getProduceStatus()))
+				response.setProduceStatus(MqMessageStatus.valueOf(response.getProduceStatus()).getName());
+			if(StringUtil.isNotEmpty(response.getConsumeStatus()))
+				response.setConsumeStatus(MqMessageStatus.valueOf(response.getConsumeStatus()).getName());
 			return response;
 		}
 	};
@@ -92,7 +92,7 @@ public class MqOpsController {
 		PageResultResponse<MqMessageResponseDto> pageResultResponse = new PageResultResponse<MqMessageResponseDto>();
 		EsPageQuery query = new EsPageQuery();
 		BeanUtils.copyProperties(request, query);
-		String[] fuzzyFields = {"host", "msgKey", "exchangeName", "sender"};
+        String[] fuzzyFields = {"host", "msgKey", "exchangeName", "sender", "data"};
 		String[] ignoreFields = {"occurStartTime", "occurEndTime"};
 		query.setQueryString(toEsQueryString(request, ignoreFields, fuzzyFields));
 		RangeQueryBuilder filter = QueryBuilders.rangeQuery("occurTime").gte(request.getOccurStartTime()).lte(request.getOccurEndTime());
@@ -107,7 +107,8 @@ public class MqOpsController {
 	@YcApi
 	public RestResultResponse<List<MqConsumeDetailInfo>> queryConsumedInfos(@PathVariable("msgKey") String msgKey){
 		RestResultResponse<List<MqConsumeDetailInfo>> response = new RestResultResponse<List<MqConsumeDetailInfo>>();
-		List<MqConsumeDetailInfo> details = mqConsumeDetailInfoService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey);
+		List<MqConsumeDetailInfo> details = mqConsumeDetailInfoService.selectList(MqOpsConstant.INDEX, "msgKey:"+"\""+msgKey+"\"");
+		details.sort((m1, m2) -> (m1.getMsgKey() + m1.getConsumerId()).compareTo(m2.getMsgKey() + m2.getConsumerId()));
 		response.setData(details);
 		response.setSuccess(true);
 		return response;

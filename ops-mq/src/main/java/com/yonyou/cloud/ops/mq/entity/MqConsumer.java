@@ -23,6 +23,8 @@ public class MqConsumer {
 	private Integer failTimes = 0;
 	
 	private Long successTime;
+	
+	private String id;
 
 	public String getHost() {
 		return host;
@@ -110,6 +112,14 @@ public class MqConsumer {
 
 	public void setSuccessTime(Long successTime) {
 		this.successTime = successTime;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

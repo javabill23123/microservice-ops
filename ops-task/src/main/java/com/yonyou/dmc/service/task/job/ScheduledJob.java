@@ -54,8 +54,9 @@ public class ScheduledJob implements Job {
         	if(!"".equals(out)){
         		JSONObject ob=JSONUtil.parseObj(out);
             	String resultCode=ob.getStr("result");
-            	if("OK".equals(resultCode))
+            	if("OK".equals(resultCode)) {
             		returnFlag=1;
+            	}
             }
         	localAddr=InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {

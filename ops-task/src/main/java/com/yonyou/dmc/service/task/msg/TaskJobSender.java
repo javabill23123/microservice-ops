@@ -12,7 +12,11 @@ import com.xiaoleilu.hutool.util.RandomUtil;
 import com.yonyou.dmc.service.task.entity.JobMsg;
 
  
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 @Service
 @EnableBinding(TaskJob.class)
 public class TaskJobSender {  
@@ -22,7 +26,11 @@ public class TaskJobSender {
     @Autowired  
     private TaskJob taskJob;  
   
-    // 发送消息  
+    /**
+     * 发送消息  
+     * @param jobBean
+     * @return
+     */
     public String sendMessage(String jobBean){  
     	logger.info("发送任务消息到队列中");
         try{  

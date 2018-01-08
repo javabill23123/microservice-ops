@@ -27,7 +27,7 @@ public class MqConsumerService extends BaseEsService<MqConsumer>{
 		} else if(Boolean.valueOf(consumer.getSuccess())){
 			logger.error("this message has been consumed==========>>>>>>msgkey:{}  consmerId{}", consumer.getMsgKey(), consumer.getConsumerId());
 		}  else {
-			update(MqOpsConstant.INDEX, mqConsumer, mqConsumer.getMsgKey());
+			update(MqOpsConstant.INDEX, mqConsumer, consumer.getId());
 		}
 	}
 }

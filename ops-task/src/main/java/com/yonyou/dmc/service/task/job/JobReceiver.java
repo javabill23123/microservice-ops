@@ -10,7 +10,11 @@ import com.yonyou.dmc.service.task.entity.JobMsg;
 import com.yonyou.dmc.service.task.msg.TaskJob;
 import com.yonyou.dmc.service.task.service.AbstractJobRunner;
 import com.yonyou.dmc.service.task.utils.SpringUtil;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 @EnableBinding(TaskJob.class)
 public class JobReceiver {
 

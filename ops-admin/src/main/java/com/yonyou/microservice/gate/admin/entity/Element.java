@@ -27,9 +27,9 @@ public class Element {
 
     private String path;
 
-    private String method;
-
-    private String description;
+    private String method; 
+    
+	private String description;
 
     @Column(name = "crt_time")
     private Date crtTime;
@@ -366,4 +366,5 @@ public class Element {
     public void setAttr8(String attr8) {
         this.attr8 = attr8;
     }
+     
 }

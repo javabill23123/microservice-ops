@@ -1,5 +1,9 @@
 package com.yonyou.dmc.service.task.entity;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 public class JobMsg {
 	
 	private String msgId;

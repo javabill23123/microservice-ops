@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dexcoder.commons.pager.Pager;
 import com.yonyou.dmc.service.task.entity.ScheduleEntity;
 import com.yonyou.dmc.service.task.service.ScheduleJobService;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 @RestController
 @RequestMapping("/task")
 public class ScheduleJobController {
@@ -47,7 +51,7 @@ public class ScheduleJobController {
     @RequestMapping("apilogs.json")
     public Map<String, Object> getApiLogs(Integer page,Integer pageSize,String qry) throws Exception{
         Pager logpage = scheduleJobService.getAllLogs(page==null?1:page,pageSize==null?10:pageSize,qry);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(3);
         map.put("page", logpage);
         map.put("pages", logpage.getPages());
         return map;
@@ -56,10 +60,10 @@ public class ScheduleJobController {
     @ResponseBody
     @RequestMapping("tasklogs.json")
     public Map<String, Object> tasklogs(Integer page,Integer pageSize,String taskName) throws Exception{
-    	Map<String, Object> querymap = new HashMap<String, Object>();
+    	Map<String, Object> querymap = new HashMap<String, Object>(4);
     	querymap.put("taskName", taskName);
         Pager logpage = scheduleJobService.getAllTaskLogs(page==null?1:page,pageSize==null?10:pageSize,querymap);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(3);
         map.put("page", logpage);
         map.put("pages", logpage.getPages());
         return map;
@@ -69,7 +73,7 @@ public class ScheduleJobController {
     @RequestMapping("list.json")
     public Map<String, Object> getAllJobs(){
         List<ScheduleEntity> scheduleEntities = scheduleJobService.getAllScheduleJob();
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(2);
         map.put("page", scheduleEntities);
     	logger.info("----------------task,list.json,"+scheduleEntities.size());
         return map;
@@ -78,7 +82,7 @@ public class ScheduleJobController {
 
     @RequestMapping(value="/save.json",method=RequestMethod.POST) 
     public Object create(@RequestBody ScheduleEntity scheduleEntity) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(10);
         map.put("status", -1);
         // 判断表达式
         boolean f = CronExpression.isValidExpression(scheduleEntity
@@ -118,7 +122,7 @@ public class ScheduleJobController {
     @ResponseBody 
     @RequestMapping(value="/stopJob" ,method=RequestMethod.GET)
     public Object stop(@RequestParam String jobName, @RequestParam String jobGroup) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
         try {
             scheduleJobService.stopJob(jobName, jobGroup);
@@ -134,7 +138,7 @@ public class ScheduleJobController {
     @ResponseBody
     @RequestMapping(value="/delete/{jobName}/{jobGroup}" ,method=RequestMethod.DELETE)
     public Object delete(@PathVariable String jobName, @PathVariable String jobGroup) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
         try {
             scheduleJobService.delJob(jobName, jobGroup);
@@ -154,7 +158,7 @@ public class ScheduleJobController {
     @ResponseBody
     @RequestMapping("/update")
     public Object update(ScheduleEntity scheduleEntity) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
         // 验证cron表达式
 
@@ -183,7 +187,7 @@ public class ScheduleJobController {
     @ResponseBody
     @RequestMapping("/startNow")
     public Object stratNow(String jobName, String jobGroup) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
         try {
             scheduleJobService.startNowJob(jobName, jobGroup);
@@ -201,7 +205,7 @@ public class ScheduleJobController {
     @ResponseBody
     @RequestMapping(value="/resume" ,method=RequestMethod.GET)
     public Object resume(@RequestParam String jobName, @RequestParam String jobGroup) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
         try {
             scheduleJobService.restartJob(jobName, jobGroup);
@@ -218,7 +222,7 @@ public class ScheduleJobController {
     @RequestMapping("/call")
     @ResponseBody
     public Object call()  {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>(2);
         map.put("result", "OK");
         return map;
     }
