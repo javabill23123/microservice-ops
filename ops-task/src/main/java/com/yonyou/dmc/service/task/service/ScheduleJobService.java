@@ -1,6 +1,8 @@
 package com.yonyou.dmc.service.task.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +27,14 @@ import org.springframework.stereotype.Service;
 
 import com.dexcoder.commons.pager.Pager;
 import com.dexcoder.dal.JdbcDao;
+import com.dexcoder.dal.build.Criteria;
 import com.dexcoder.dal.spring.page.PageControl;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yonyou.dmc.service.task.entity.ExecuteType;
 import com.yonyou.dmc.service.task.entity.ScheduleEntity;
 import com.yonyou.dmc.service.task.job.ScheduledJob;
 import com.yonyou.dmc.service.task.job.ScheduledJobForMsg;
+import com.yonyou.dmc.service.task.utils.DateTimeUtils;
 /**
  * 
  * @author daniell
@@ -363,19 +367,34 @@ public class ScheduleJobService {
      * @throws Exception
      */
     public Pager getAllTaskLogs(int currindex,int size,Map queryMap) throws Exception {
-     
+    	 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
+         
       List qList = new LinkedList<Object>();
       StringBuilder s = new StringBuilder("select * from TS_SCHEDLED_LOG where 1=1\n");
       
       if(!StrUtil.isBlank((String)queryMap.get("taskName"))){
     	  s.append(" and SCHEDLED_NAME like ? \n");
-    	  qList.add("%"+queryMap.get("taskName")+"%");
+    	  qList.add("%"+queryMap.get("taskName")+"%"); 
+      }
+      if((Long)queryMap.get("startTime")!=null){
+    	  s.append(" and CREATE_DATE >? \n");  
+    	  qList.add(DateTimeUtils.stampToDate(String.valueOf(queryMap.get("startTime"))));
+      }
+      if((Long)queryMap.get("endTime")!=null){
+    	  s.append(" and CREATE_DATE <? \n");  
+    	  qList.add(DateTimeUtils.stampToDate(String.valueOf(queryMap.get("endTime"))));
+      }
+      if(!StrUtil.isBlank((String)queryMap.get("responseInfo"))){
+    	  s.append(" and RESPONSE_INFO like ? \n"); 
+    	  qList.add("%"+queryMap.get("responseInfo")+"%");
       }
       s.append("order by id desc");
       
       
       PageControl.performPage(currindex, size);
-      jdbcDao.queryListForSql(s.toString(),qList.toArray());
+      jdbcDao.queryListForSql(s.toString(),qList.toArray()); 
+	  
       return PageControl.getPager();
     	
     }

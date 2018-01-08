@@ -59,9 +59,13 @@ public class ScheduleJobController {
     
     @ResponseBody
     @RequestMapping("tasklogs.json")
-    public Map<String, Object> tasklogs(Integer page,Integer pageSize,String taskName) throws Exception{
+    public Map<String, Object> tasklogs(Integer page,Integer pageSize,String taskName,Long startTime,Long endTime,String responseInfo) throws Exception{
     	Map<String, Object> querymap = new HashMap<String, Object>(4);
     	querymap.put("taskName", taskName);
+    	querymap.put("startTime", startTime);
+    	querymap.put("endTime", endTime);
+    	querymap.put("responseInfo",responseInfo);
+    	
         Pager logpage = scheduleJobService.getAllTaskLogs(page==null?1:page,pageSize==null?10:pageSize,querymap);
         Map<String, Object> map = new HashMap<String, Object>(3);
         map.put("page", logpage);
