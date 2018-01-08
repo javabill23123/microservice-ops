@@ -75,8 +75,8 @@ public class ScheduleJobController {
 
      
     @RequestMapping("list.json")
-    public Map<String, Object> getAllJobs(){
-        List<ScheduleEntity> scheduleEntities = scheduleJobService.getAllScheduleJob();
+    public Map<String, Object> getAllJobs(String jobName){
+        List<ScheduleEntity> scheduleEntities = scheduleJobService.getAllScheduleJob(jobName);
         Map<String, Object> map = new HashMap<String, Object>(2);
         map.put("page", scheduleEntities);
     	logger.info("----------------task,list.json,"+scheduleEntities.size());

@@ -7,7 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -27,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import com.dexcoder.commons.pager.Pager;
 import com.dexcoder.dal.JdbcDao;
-import com.dexcoder.dal.build.Criteria;
 import com.dexcoder.dal.spring.page.PageControl;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.yonyou.dmc.service.task.entity.ExecuteType;
@@ -119,56 +121,64 @@ public class ScheduleJobService {
      *
      * @return 结果集合
      */
-    public List<ScheduleEntity> getAllScheduleJob() {
-        List<ScheduleEntity> scheduleEntityList = new ArrayList<ScheduleEntity>();
-        GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
-        try {
-            Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
-            for (JobKey jobKey : jobKeys) {
-                List<? extends Trigger> triggers = scheduler
-                        .getTriggersOfJob(jobKey);
-                for (Trigger trigger : triggers) {
-                    ScheduleEntity scheduleEntity = new ScheduleEntity();
-                    scheduleEntity.setJobName(jobKey.getName());
-                    scheduleEntity.setJobGroup(jobKey.getGroup());
-                    Trigger.TriggerState triggerState = scheduler
-                            .getTriggerState(trigger.getKey());
-                    scheduleEntity.setStatus(triggerState.name());
-                    // 获取要执行的定时任务类名
+	public List<ScheduleEntity> getAllScheduleJob(String jobName) {
+		List<ScheduleEntity> scheduleEntityList = new ArrayList<ScheduleEntity>();
+		GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
+		try {
+			Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
+			for (JobKey jobKey : jobKeys) {
+				List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+				for (Trigger trigger : triggers) {
+					ScheduleEntity scheduleEntity = new ScheduleEntity();
+					scheduleEntity.setJobName(jobKey.getName());
+					scheduleEntity.setJobGroup(jobKey.getGroup());
+					Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+					scheduleEntity.setStatus(triggerState.name());
+					// 获取要执行的定时任务类名
 
+					JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+					// 获取class及method
+					JobDataMap dataMap = jobDetail.getJobDataMap();
+					// scheduleEntity.setClassName(dataMap.getString("className"));
+					// scheduleEntity.setMethodName(dataMap.getString("methodName"));
+					scheduleEntity.setUrl(dataMap.getString("url"));
+					// scheduleEntity.setClassName(jobDetail.getJobClass().getName());
+					// 判断trigger
 
-                    JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                    //获取class及method
-                    JobDataMap dataMap = jobDetail.getJobDataMap();
-                    //scheduleEntity.setClassName(dataMap.getString("className"));
-                    //scheduleEntity.setMethodName(dataMap.getString("methodName"));
-                    scheduleEntity.setUrl(dataMap.getString("url"));
-                    //scheduleEntity.setClassName(jobDetail.getJobClass().getName());
-                    // 判断trigger
+					if (trigger instanceof SimpleTrigger) {
+						SimpleTrigger simple = (SimpleTrigger) trigger;
+						scheduleEntity.setCronExpression(
+								"重复次数:" + (simple.getRepeatCount() == -1 ? "无限" : simple.getRepeatCount()) + ",重复间隔:"
+										+ (simple.getRepeatInterval() / 1000L));
+						scheduleEntity.setDescription(simple.getDescription());
+					}
+					if (trigger instanceof CronTrigger) {
+						CronTrigger cron = (CronTrigger) trigger;
+						scheduleEntity.setCronExpression(cron.getCronExpression());
+						scheduleEntity.setDescription(
+								cron.getDescription() == null ? ("触发器:" + trigger.getKey()) : cron.getDescription());
+					}
+					scheduleEntityList.add(scheduleEntity);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-                    if (trigger instanceof SimpleTrigger) {
-                        SimpleTrigger simple = (SimpleTrigger) trigger;
-                        scheduleEntity.setCronExpression("重复次数:"
-                                + (simple.getRepeatCount() == -1 ? "无限"
-                                : simple.getRepeatCount()) + ",重复间隔:"
-                                + (simple.getRepeatInterval() / 1000L));
-                        scheduleEntity.setDescription(simple.getDescription());
-                    }
-                    if (trigger instanceof CronTrigger) {
-                        CronTrigger cron = (CronTrigger) trigger;
-                        scheduleEntity.setCronExpression(cron.getCronExpression());
-                        scheduleEntity
-                                .setDescription(cron.getDescription() == null ? ("触发器:" + trigger
-                                        .getKey()) : cron.getDescription());
-                    }
-                    scheduleEntityList.add(scheduleEntity);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return scheduleEntityList;
-    }
+		List<ScheduleEntity> results = new ArrayList<ScheduleEntity>();
+		if (StringUtils.isNotBlank(jobName)) {
+			Pattern pattern = Pattern.compile(jobName);
+			for (int i = 0; i < scheduleEntityList.size(); i++) {
+				Matcher matcheritem = pattern.matcher(((ScheduleEntity) scheduleEntityList.get(i)).getJobName());
+				if (matcheritem.find()) {
+					results.add(scheduleEntityList.get(i));
+				}
+			}
+			return results;
+		}
+
+		return scheduleEntityList;
+	}
 
     /**
      * 获取所有运行中的任务
