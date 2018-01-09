@@ -12,7 +12,7 @@
 	<logger name="org.springframework.jdbc" level="INFO"
 		additivity="true"></logger>
 
-	<logger name="com.yonyou" level="INFO" />
+	<logger name="com.yonyou" level="debug" />
 
 
 	<!-- 控制台打印 -->

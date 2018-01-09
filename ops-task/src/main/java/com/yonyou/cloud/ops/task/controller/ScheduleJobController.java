@@ -28,7 +28,7 @@ import com.yonyou.cloud.ops.task.service.ScheduleJobService;
  *
  */
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/taskManager")
 public class ScheduleJobController {
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
