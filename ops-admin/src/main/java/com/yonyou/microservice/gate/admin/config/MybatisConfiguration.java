@@ -57,7 +57,6 @@ public class MybatisConfiguration implements EnvironmentAware {
     private String testOnReturn;
     private String poolPreparedStatements;
     private String maxOpenPreparedStatements;
-    //////////////////////////////////////////////////////////////////////////
 
     @Bean
     public DataSource druidDataSource() {
