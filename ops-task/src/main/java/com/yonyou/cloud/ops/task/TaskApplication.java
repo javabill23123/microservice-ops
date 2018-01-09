@@ -12,9 +12,9 @@ import com.spring4all.swagger.EnableSwagger2Doc;
 @SpringBootApplication
 @EnableSwagger2Doc
 @EnableDiscoveryClient
-public class DmcServiceTaskApplication {
+public class TaskApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DmcServiceTaskApplication.class, args);
+		SpringApplication.run(TaskApplication.class, args);
 	}
 }

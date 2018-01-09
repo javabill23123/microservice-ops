@@ -18,8 +18,5 @@ public class DateTimeUtils {
         res = simpleDateFormat.format(date);
         System.out.println(res);
         return res;
-    }
-	 public static void main(String[] args) {
-		 stampToDate("1517329353000");
-	}
+    } 
 }
