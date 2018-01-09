@@ -27,7 +27,6 @@ import com.yonyou.cloud.common.service.utils.ClientUtil;
 import com.yonyou.microservice.auth.client.config.ServiceAuthConfig;
 import com.yonyou.microservice.auth.client.config.UserAuthConfig;
 import com.yonyou.microservice.auth.client.jwt.ServiceAuthUtil;
-import com.yonyou.microservice.auth.client.jwt.UserAuthUtil;
 import com.yonyou.microservice.gate.common.context.BaseContextHandler;
 import com.yonyou.microservice.gate.common.msg.TokenErrorResponse;
 import com.yonyou.microservice.gate.common.msg.TokenForbiddenResponse;
@@ -37,7 +36,7 @@ import com.yonyou.microservice.gate.common.vo.log.LogInfo;
 import com.yonyou.microservice.gate.common.vo.user.UserInfo;
 import com.yonyou.microservice.gate.server.feign.IIgnoreUriService;
 import com.yonyou.microservice.gate.server.feign.ILogService;
-import com.yonyou.microservice.gate.server.feign.IUserService;
+import com.yonyou.microservice.gate.server.service.CacheService;
 import com.yonyou.microservice.gate.server.utils.DbLog;
 
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +61,6 @@ public class AdminAccessFilter extends ZuulFilter {
 	private static final String SPEC_URI_INFO="/admin/user/front/info,/admin/menu/all,/admin/user/front/menus";
 	private static final String SPEC_URI_MENUS="admin/user/front/menus";
 	private static Logger logger=Logger.getLogger(AdminAccessFilter.class);
-
-    @Autowired
-    private IUserService userService;
     
     @Autowired
     private ILogService logService;
@@ -74,9 +70,6 @@ public class AdminAccessFilter extends ZuulFilter {
 
     @Value("${zuul.prefix}")
     private String zuulPrefix;
-    
-    @Autowired
-    private UserAuthUtil userAuthUtil;
 
     @Autowired
     private ServiceAuthConfig serviceAuthConfig;
@@ -92,6 +85,8 @@ public class AdminAccessFilter extends ZuulFilter {
     
     @Autowired
     IIgnoreUriService iIgnoreUriService;
+    @Autowired
+    CacheService cacheService;
     
     private List<IgnoreUriInfo> startWithList;
     
@@ -141,7 +136,7 @@ public class AdminAccessFilter extends ZuulFilter {
         }
 //        if(!(requestUri.contains(SPEC_URI_INFO)||requestUri.contains(SPEC_URI_MENUS))){
         if(!SPEC_URI_INFO.contains(requestUri)){
-            List<PermissionInfo> permissionInfos = this.getAllPermissionInfo();
+            List<PermissionInfo> permissionInfos = cacheService.getAllPermissionInfo();
             // 判断资源是否启用权限约束
             Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
             if(result.size()>0){
@@ -164,7 +159,6 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param serviceInfo
      * @return cache
      */
-    //@Cacheable(value = "gate",key="'gate.permission.'+#requestUri+#method")
     private Collection<PermissionInfo> getPermissionInfos(final String requestUri, final String method, List<PermissionInfo> serviceInfo) {
         return Collections2.filter(serviceInfo, new Predicate<PermissionInfo>() {
                 @Override
@@ -182,7 +176,7 @@ public class AdminAccessFilter extends ZuulFilter {
     }
 
     private void setCurrentUserInfoAndLog(RequestContext ctx, String username, PermissionInfo pm) {
-        UserInfo info = userService.getUserByUsername(username);
+        UserInfo info = cacheService.getUserByUsername(username);
         String host =  ClientUtil.getClientIp(ctx.getRequest());
         ctx.addZuulRequestHeader("userId", info.getId());
         try {
@@ -213,7 +207,7 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(userAuthConfig.getTokenHeader(),authToken);
         //将token放到threadlocal中
         BaseContextHandler.setToken(authToken);
-        return this.getInfoFromToken(authToken);
+        return cacheService.getInfoFromToken(authToken);
     }
 
     /**
@@ -225,7 +219,7 @@ public class AdminAccessFilter extends ZuulFilter {
     private List<PermissionInfo> getPermissionInfos(HttpServletRequest request, String username) {
         List<PermissionInfo> permissionInfos;
 //        if (request.getSession().getAttribute(PERMISSION) == null) {
-            permissionInfos = this.getPermissionByUsername(username);
+            permissionInfos = cacheService.getPermissionByUsername(username);
 //            request.getSession().setAttribute("permission", permissionInfos);
 //        } else {
 //            permissionInfos = (List<PermissionInfo>) request.getSession().getAttribute("permission");
@@ -261,43 +255,15 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param requestUri
      * @return cache
      */
-    //@Cacheable(value = "gate.ignorerequest",key="'gate.ignorerequest.'+#requestUri")
-    private boolean isStartWith(String requestUri) {
+    public boolean isStartWith(String requestUri) {
         boolean flag = false;
-        startWithList=this.getIgnoreUris();
+        startWithList=cacheService.getIgnoreUris();
         for (IgnoreUriInfo s : startWithList) {
             if (requestUri.startsWith(s.getUri())) {
                 return true;
             }
         }
         return flag;
-    }
-    //@Cacheable(value = "gate.ignoreuri",key="'gate.ignoreuri.'+#requestUri")
-    private List<IgnoreUriInfo> getIgnoreUris() {
-    	logger.info("--getIgnoreUris from db");
-        return this.iIgnoreUriService.getIgnoreUris();
-    }
-    /**
-     * 获取所有授权信息
-     * @return cache
-     */
-    //@Cacheable(value = "gate",key="gate.allpermission")
-    private List<PermissionInfo> getAllPermissionInfo(){
-    	return userService.getAllPermissionInfo();
-    }
-    /**
-     * 根据jwt解析用户信息
-     * @param authToken
-     * @return cache
-     * @throws Exception
-     */
-    //@Cacheable(value = "gate",key="'gate.jwt.'+#authToken")
-    private IJwtInfo getInfoFromToken(String authToken) throws Exception{
-    	return userAuthUtil.getInfoFromToken(authToken);
-    }
-    //@Cacheable(value = "gate",key="'gate.permission.user.'+#username")
-    private List<PermissionInfo> getPermissionByUsername(String username){
-    	return userService.getPermissionByUsername(username);
     }
     /**
      * Reports an error message given a response body and code.
