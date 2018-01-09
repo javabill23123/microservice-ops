@@ -63,7 +63,11 @@ zuul:
       serviceId: ops-mq
     service:
       path: /service/**
-      serviceId: ops-service
+      serviceId: ops-service 
+    task:
+      path: /task/**
+      serviceId: ops-task
+      
   store:
     mysql:
       enabled: true
