@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.google.common.collect.Lists;
 import com.yonyou.cloud.ops.mq.common.MqMessageStatus;
 import com.yonyou.cloud.ops.mq.entity.MqMessage;
 import com.yonyou.cloud.ops.mq.repository.MqMessageRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class MqDataMongoDbTest {
 	
 	@Autowired
@@ -35,7 +35,7 @@ public class MqDataMongoDbTest {
 	@Test
 	public void insert(){
 		List<MqMessage> l = new ArrayList<MqMessage>();
-		for(int i = 0;i<5000000;i++){
+		for(int i = 0;i<1000000;i++){
 			MqMessage mqMessage = new MqMessage();
 			mqMessage.setMsgKey(UUID.randomUUID().toString());
 			mqMessage.setOccurTime(System.currentTimeMillis());

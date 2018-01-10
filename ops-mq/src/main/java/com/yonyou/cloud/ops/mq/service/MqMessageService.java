@@ -58,7 +58,10 @@ public class MqMessageService extends BaseEsService<MqMessage>{
 	        Query query=new Query(Criteria.where("msgKey").is(oldMessage.getMsgKey()));
 	        Update update= new Update().set("produceSuccessTime", oldMessage.getProduceSuccessTime())
 	        						   .set("produceStatus", oldMessage.getProduceStatus())
-	        						   .set("produceFailTimes", oldMessage.getProduceFailTimes());
+	        						   .set("produceFailTimes", oldMessage.getProduceFailTimes())
+	        						   .set("consumeSuccessTime", oldMessage.getConsumeSuccessTime())
+	        						   .set("consumeStatus", oldMessage.getConsumeStatus())
+	        						   .set("consumeFailTimes", oldMessage.getConsumeFailTimes());
 			mongoTemplate.updateMulti(query, update, MqMessage.class);
 //			update(MqOpsConstant.INDEX, oldMessage, oldMessage.getId());
 		}
