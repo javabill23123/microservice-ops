@@ -109,20 +109,30 @@ public class MqMessageService extends BaseEsService<MqMessage>{
 
 	public PageResultResponse<MqMessage> queryByCondition(PageQuery request) {
         Query query = new Query();
+        
         if(request.get("orderBy") != null && request.get("orderType") != null) {
         	query.with(new Sort(new Order(Direction.valueOf(request.get("orderType").toString().toUpperCase()),request.get("orderBy").toString())));
-        	request.remove("orderBy");
-        	request.remove("orderType");
-        }        
+        }
+        
+        if(request.get("occurStartTime") != null && request.get("occurEndTime") != null){
+    		query.addCriteria(Criteria.where("occurTime").gte(request.get("occurStartTime")).lte(request.get("occurEndTime")));
+        } else if (request.get("occurStartTime") != null) {
+    		query.addCriteria(Criteria.where("occurTime").gte(request.get("occurStartTime")));  
+        } else if (request.get("occurEndTime") != null) {
+        	query.addCriteria(Criteria.where("occurTime").lte(request.get("occurEndTime")));  
+        }
+        
+        request.remove("orderBy");
+        request.remove("orderType");
+        request.remove("occurStartTime");
+        request.remove("occurEndTime");
+        
         for (Map.Entry<String, Object> entry : request.entrySet()) {
-        	if(entry.getKey().equals("occurStartTime")){
-        		query.addCriteria(Criteria.where("occurTime").gte(entry.getValue()));  
-        	} else if(entry.getKey().equals("occurEndTime")){
-        		query.addCriteria(Criteria.where("occurTime").lte(entry.getValue()));  
-        	} else if(!StringUtils.isEmpty(entry.getValue())) {
+        	if(!StringUtils.isEmpty(entry.getValue())) {
         		query.addCriteria(Criteria.where(entry.getKey()).regex(".*?" + entry.getValue().toString()+ ".*"));  
         	}
         }
+        
         query.skip((request.getPage() -1) * request.getLimit());
         query.limit(request.getLimit());
         List<MqMessage> l = mongoTemplate.find(query, MqMessage.class);
