@@ -34,21 +34,9 @@ public class ScheduleJobController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
     @Autowired
-    private ScheduleJobService scheduleJobService;
-
+    private ScheduleJobService scheduleJobService; 
     
-    @RequestMapping("/apilogs")
-    public String logs() {
-        return "/task/static/html/apilog.html";
-    }
-    
-    @RequestMapping("/tasklogs")
-    public String tasklogs() {
-        return "/task/static/html/tasklog.html";
-    }
-    
-    @ResponseBody
-    @RequestMapping("apilogs.json")
+    @RequestMapping(value="/apilogs",method=RequestMethod.GET)
     public Map<String, Object> getApiLogs(Integer page,Integer pageSize,String qry) throws Exception{
         Pager logpage = scheduleJobService.getAllLogs(page==null?1:page,pageSize==null?10:pageSize,qry);
         Map<String, Object> map = new HashMap<String, Object>(3);
@@ -57,8 +45,7 @@ public class ScheduleJobController {
         return map;
     }
     
-    @ResponseBody
-    @RequestMapping("tasklogs.json")
+    @RequestMapping(value="/tasklogs",method=RequestMethod.GET)
     public Map<String, Object> tasklogs(Integer page,Integer pageSize,String taskName,Long startTime,Long endTime,String responseInfo) throws Exception{
     	Map<String, Object> querymap = new HashMap<String, Object>(4);
     	querymap.put("taskName", taskName);
@@ -74,7 +61,8 @@ public class ScheduleJobController {
     }
 
      
-    @RequestMapping("list.json")
+    
+    @RequestMapping(value="/list",method=RequestMethod.GET)
     public Map<String, Object> getAllJobs(String jobName){
         List<ScheduleEntity> scheduleEntities = scheduleJobService.getAllScheduleJob(jobName);
         Map<String, Object> map = new HashMap<String, Object>(2);
@@ -84,7 +72,7 @@ public class ScheduleJobController {
     }
  
 
-    @RequestMapping(value="/save.json",method=RequestMethod.POST) 
+    @RequestMapping(value="/save",method=RequestMethod.POST) 
     public Object create(@RequestBody ScheduleEntity scheduleEntity) {
         Map<String, Object> map = new HashMap<String, Object>(10);
         map.put("status", -1);
@@ -123,7 +111,6 @@ public class ScheduleJobController {
      * 暂停任务
      */
 
-    @ResponseBody 
     @RequestMapping(value="/stopJob" ,method=RequestMethod.GET)
     public Object stop(@RequestParam String jobName, @RequestParam String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>(5);
@@ -139,7 +126,6 @@ public class ScheduleJobController {
         return map;
     }
 
-    @ResponseBody
     @RequestMapping(value="/delete/{jobName}/{jobGroup}" ,method=RequestMethod.DELETE)
     public Object delete(@PathVariable String jobName, @PathVariable String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>(5);
@@ -159,14 +145,11 @@ public class ScheduleJobController {
      * 修改表达式
      */
 
-    @ResponseBody
-    @RequestMapping("/update")
+    @RequestMapping(value="/stopJob" ,method=RequestMethod.PUT)
     public Object update(ScheduleEntity scheduleEntity) {
         Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
-        // 验证cron表达式
-
-
+        // 验证cron表达式 
         boolean f = CronExpression.isValidExpression(scheduleEntity
                 .getCronExpression());
         if (!f) {
@@ -188,8 +171,7 @@ public class ScheduleJobController {
      * 立即运行一次
      */
 
-    @ResponseBody
-    @RequestMapping("/startNow")
+    @RequestMapping(value="/stopJob" ,method=RequestMethod.POST)
     public Object stratNow(String jobName, String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
@@ -206,7 +188,6 @@ public class ScheduleJobController {
     /**
      * 恢复
      */
-    @ResponseBody
     @RequestMapping(value="/resume" ,method=RequestMethod.GET)
     public Object resume(@RequestParam String jobName, @RequestParam String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>(5);
@@ -223,8 +204,7 @@ public class ScheduleJobController {
     }
     
     
-    @RequestMapping("/call")
-    @ResponseBody
+    @RequestMapping(value="/call" ,method=RequestMethod.PUT)
     public Object call()  {
         Map<String, Object> map = new HashMap<String, Object>(2);
         map.put("result", "OK");

@@ -19,7 +19,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
  *
  */
 @Configuration
-@ComponentScan(basePackages = "com.yonyou.dmc")
+@ComponentScan(basePackages = "com.yonyou.cloud.ops.task")
 public class SchedledConfiguration {
 
 	@Autowired
