@@ -16,7 +16,7 @@ public class IgnoreUriController {
 	
 	@ResponseBody
     @RequestMapping(value = "/ignoreuris/refresh", method = RequestMethod.GET)
-	@CacheEvict(value="gate.ignoreuri", allEntries=true)
+	@CacheEvict(value="gate", allEntries=true)
     public Map cleanIgnoreUriCache() {
     	logger.info("--IgnoreUriController cleanIgnoreUriCache was called");
     	Map<String,String> map=new HashMap();

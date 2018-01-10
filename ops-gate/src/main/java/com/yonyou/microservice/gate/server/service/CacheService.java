@@ -25,7 +25,7 @@ public class CacheService {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
-    @Cacheable(value = "gate.ignoreuri",key="'gate.ignoreuri'")
+    @Cacheable(value = "gate",key="'gate.ignoreuri'")
     public List<IgnoreUriInfo> getIgnoreUris() {
     	logger.info("--getIgnoreUris from db");
         return this.iIgnoreUriService.getIgnoreUris();
