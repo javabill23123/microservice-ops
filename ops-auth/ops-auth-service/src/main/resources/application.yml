@@ -5,11 +5,11 @@ spring:
         date-format: yyyy-MM-dd HH:mm:ss
         time-zone: GMT+8
         default-property-inclusion: non_null
-    redis:
-        database: 1
-        host: ${redis.host:10.180.8.220}
-        pool:
-            max-active: 20
+#    redis:
+#        database: 1
+#        host: ${redis.host:10.180.8.220}
+#        pool:
+#            max-active: 20
     datasource:
       name: test
       url: ${db.yc_base.url:jdbc:mysql://10.180.8.205:3306/yc_base?useUnicode=true&amp;characterEncoding=utf8mb4}
@@ -31,11 +31,11 @@ spring:
       testOnReturn: false
       poolPreparedStatements: true
       maxOpenPreparedStatements: 20
-    rabbitmq:
-      host: 10.180.4.221
-      port: 5672
-      username: mqadmin
-      password: Pass1234
+#    rabbitmq:
+#      host: 10.180.4.221
+#      port: 5672
+#      username: mqadmin
+#      password: Pass1234
 
 mybatis:
     basepackage: com.youyou.microservice.auth.server.mapper
