@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.util.StringUtil;
@@ -34,6 +35,7 @@ import com.yonyou.cloud.ops.mq.entity.MqData;
 import com.yonyou.cloud.ops.mq.entity.MqMessage;
 import com.yonyou.cloud.ops.mq.entity.MqProducer;
 import com.yonyou.cloud.ops.mq.repository.MqConsumeDetailInfoRepository;
+import com.yonyou.cloud.ops.mq.service.MessageResendService;
 import com.yonyou.cloud.ops.mq.service.MqConsumeDetailInfoService;
 import com.yonyou.cloud.ops.mq.service.MqConsumerService;
 import com.yonyou.cloud.ops.mq.service.MqMessageService;
@@ -61,6 +63,9 @@ public class MqOpsController {
 	
 	@Autowired
 	MqOpsService mqOpsService;
+	
+	@Autowired
+	MessageResendService messageResendService;
 	
 	Function<MqConsumer, MqConsumerDto> mqConsumer2Dto = new Function<MqConsumer, MqConsumerDto>(){
 		@Override
@@ -120,6 +125,15 @@ public class MqOpsController {
 		details.sort((m1, m2) -> (m1.getMsgKey() + m1.getConsumerId()).compareTo(m2.getMsgKey() + m2.getConsumerId()));
 		response.setData(details);
 		response.setSuccess(true);
+		return response;
+	}
+	
+	@RequestMapping(value="/resendMessage/{msgKey}/{type}",method=RequestMethod.POST)
+	@YcApi
+	public RestResultResponse<Boolean> resendMessage(@PathVariable("msgKey") String msgKey, @PathVariable("type") String type, @RequestParam(value="serviceUrl", required=false) String serviceUrl){
+		RestResultResponse<Boolean> response = new RestResultResponse<Boolean>();
+		boolean result = messageResendService.resendMessage(msgKey, type, serviceUrl);
+		response.setSuccess(result);
 		return response;
 	}
 	
