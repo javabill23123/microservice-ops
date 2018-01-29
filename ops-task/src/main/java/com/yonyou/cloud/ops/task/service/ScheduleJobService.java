@@ -31,10 +31,8 @@ import com.dexcoder.commons.pager.Pager;
 import com.dexcoder.dal.JdbcDao;
 import com.dexcoder.dal.spring.page.PageControl;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.yonyou.cloud.ops.task.entity.ExecuteType;
 import com.yonyou.cloud.ops.task.entity.ScheduleEntity;
 import com.yonyou.cloud.ops.task.job.ScheduledJob;
-import com.yonyou.cloud.ops.task.job.ScheduledJobForMsg;
 import com.yonyou.cloud.ops.task.utils.DateTimeUtils;
 /**
  * 
@@ -60,23 +58,14 @@ public class ScheduleJobService {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void add(ScheduleEntity scheduleEntity) throws ClassNotFoundException,
             SchedulerException {
-    	JobDetail jobDetail;
-    	if(scheduleEntity.getExecuteType().equals(ExecuteType.executeUrl)){
-         jobDetail = JobBuilder.newJob(ScheduledJob.class)
+    	JobDetail jobDetail =JobBuilder.newJob(ScheduledJob.class)
                 .withIdentity(scheduleEntity.getJobName(), scheduleEntity.getJobGroup())
                 .usingJobData("url", scheduleEntity.getUrl())
                 .usingJobData("jobGroup", scheduleEntity.getJobGroup())
                 .usingJobData("jobName", scheduleEntity.getJobName())
                 .build();
         
-    	}else{
-    	 jobDetail = JobBuilder.newJob(ScheduledJobForMsg.class)
-                    .withIdentity(scheduleEntity.getJobName(), scheduleEntity.getJobGroup())
-                    .usingJobData("url", scheduleEntity.getBeanName())
-                    .usingJobData("jobGroup", scheduleEntity.getJobGroup())
-                    .usingJobData("jobName", scheduleEntity.getJobName())
-                    .build();
-    	}
+    	 
         jobDetail.getJobDataMap().put("scheduleEntity", scheduleEntity);
 
         
