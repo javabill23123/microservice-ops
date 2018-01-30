@@ -1,0 +1,1 @@
+CREATE DATABASE yc_gtmc_task default charset utf8  COLLATE utf8_general_ci; 
