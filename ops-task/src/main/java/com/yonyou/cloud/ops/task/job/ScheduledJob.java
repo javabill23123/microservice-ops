@@ -60,8 +60,7 @@ public class ScheduledJob implements Job {
                 		returnFlag=1;
                 	}
 				} catch (Exception e) {
-					 logger.info("返回的不是一个对象");
-					 out=out.substring(0, 2999).toString();
+					 logger.info("返回的不是一个对象"); 
 				}
             }
         	localAddr=InetAddress.getLocalHost().getHostAddress();
