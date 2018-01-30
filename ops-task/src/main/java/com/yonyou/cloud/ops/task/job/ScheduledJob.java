@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -51,7 +52,7 @@ public class ScheduledJob implements Job {
         int returnFlag=0;  
         String localAddr="";
         try {
-        	if(!"".equals(out)){
+        	if(!StringUtils.isBlank(out)){
         		JSONObject ob=JSONUtil.parseObj(out);
             	String resultCode=ob.getStr("result");
             	if("OK".equals(resultCode)) {
