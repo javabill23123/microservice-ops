@@ -53,11 +53,16 @@ public class ScheduledJob implements Job {
         String localAddr="";
         try {
         	if(!StringUtils.isBlank(out)){
-        		JSONObject ob=JSONUtil.parseObj(out);
-            	String resultCode=ob.getStr("result");
-            	if("OK".equals(resultCode)) {
-            		returnFlag=1;
-            	}
+        		try {
+        			JSONObject ob=JSONUtil.parseObj(out);
+        			String resultCode=ob.getStr("result");
+        			if("OK".equals(resultCode)) {
+                		returnFlag=1;
+                	}
+				} catch (Exception e) {
+					 logger.info("返回的不是一个对象");
+					 out=out.substring(0, 2999).toString();
+				}
             }
         	localAddr=InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
