@@ -1,5 +1,7 @@
 package com.youyou.microservice.auth.server.dynauth.handler.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +18,12 @@ import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
  * @author BENJAMIN
  *
  */
-@Service
+@Service("userAndPassword")
 @DynHttpAuthHandler(type = "userAndPassword")
 public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpResultHandler {
 
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	private static final String REPBODY_USERNAME = "username";
 	private static final String REPBODY_USERID = "userId";
 	private static final String REPBODY_NAME = "name";
@@ -29,6 +33,7 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 
 	@Override
 	public JwtAuthenticationDataResponse handlerHttpResult(String repBody, String authCode) {
+		logger.info("userAndPassword 逻辑处理http返回结果");
 		JSONObject sk = new JSONObject(repBody);
 		String jwt = "";
 		String username = (String) sk.get(REPBODY_USERNAME);
@@ -42,6 +47,7 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 			//直接根据用户信息返回jwt
 			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name));
 		} catch (Exception e) {
+			logger.error("生成jwt失败",e);
 			return new JwtAuthenticationDataResponse("", repBody);
 		}
 		return new JwtAuthenticationDataResponse(jwt, repBody);
