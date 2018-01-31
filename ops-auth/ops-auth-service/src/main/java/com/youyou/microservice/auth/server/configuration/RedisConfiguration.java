@@ -2,12 +2,6 @@ package com.youyou.microservice.auth.server.configuration;
 
 import org.springframework.context.annotation.Configuration;
 
-/**
- * ${DESCRIPTION}
- *
- * @author wanghaobin
- * @create 2017-06-21 8:39
- */
 
 @Configuration
 public class RedisConfiguration {

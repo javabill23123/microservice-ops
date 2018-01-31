@@ -1,6 +1,7 @@
 package com.youyou.microservice.auth.server.service.impl;
 
 import java.util.List;
+
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,6 +19,8 @@ import com.youyou.microservice.auth.server.feign.IUserService;
 import com.youyou.microservice.auth.server.service.AuthService;
 import com.youyou.microservice.auth.server.util.user.JwtTokenUtil;
 import com.youyou.microservice.auth.server.vo.FrontUser;
+
+
 /**
  *  @author joy
  */
@@ -30,8 +33,6 @@ public class AuthServiceImpl implements AuthService {
     private IUserService userService;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     
-//    @Autowired
-//	 MqSender mqSender;
     @Autowired
     public AuthServiceImpl(
             JwtTokenUtil jwtTokenUtil,
@@ -42,11 +43,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(String username, String password) throws Exception {
-//    	Map<String,String> msg = new HashMap();
-//		msg.put("username", username);
-//		msg.put("loginTime",new Date().toString());
-//		JSONObject json=JSONObject.fromObject(msg);
-//		mqSender.justSend("auth-user", "login", json.toString());
         UserInfo info = userService.getUserByUsername(username);
         String token = "";
         if (encoder.matches(password, info.getPassword())) {
