@@ -16,6 +16,8 @@ import com.youyou.microservice.auth.server.entity.AuthProvider;
 /**
  * 策略生成工厂
  * 
+ * 原来扫包的方式放弃 工厂直接取IOC中的bean
+ * 
  * @author BENJAMIN
  *
  */
