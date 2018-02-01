@@ -25,19 +25,25 @@ public class DynResetConfigController {
 	private SimpleUrlHandlerMapping mapping;
 	@Autowired
 	private AuthProviderMapper service;
+	@Autowired
+	DynController bean;
 
     @RequestMapping(value = "refresh", method = RequestMethod.GET)
 	public Map mapReset() {
 		List<AuthProvider> list = service.selectAuthProviders();
-		DynController bean = new DynController();
 		bean.setProviders(list);
 		Map<String, Object> urlMap = new HashMap<String,Object>(list.size());
+		Map<String, ?> oldMap=mapping.getUrlMap();
 		for (AuthProvider i : list) {
 			logger.debug("重新加载第三方认证代理的url:"+i.getSrcUrl()+" 类型:"+i.getAcceptType());
-			urlMap.put(i.getSrcUrl(), bean);
+			if(oldMap.get(i.getSrcUrl())==null){
+				urlMap.put(i.getSrcUrl(), bean);
+			}
 		}
-		mapping.setUrlMap(urlMap);
-		mapping.initApplicationContext();
+		if(urlMap.size()>0){
+			mapping.setUrlMap(urlMap);
+			mapping.initApplicationContext();
+		}
     	Map<String,String> map=new HashMap();
     	map.put("message", "ok");
 		return map;
