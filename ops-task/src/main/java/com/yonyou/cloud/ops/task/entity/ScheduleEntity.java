@@ -39,10 +39,6 @@ public class ScheduleEntity implements Serializable {
 	 * 任务类型
 	 */
 	private ExecuteType executeType;
-	/**
-	 * 执行类的名称
-	 */
-	private String beanName;
 
 	public String getUrl() {
 		return url;
@@ -104,17 +100,9 @@ public class ScheduleEntity implements Serializable {
 		this.executeType = executeType;
 	}
 
-	public String getBeanName() {
-		return beanName;
-	}
-
-	public void setBeanName(String beanName) {
-		this.beanName = beanName;
-	}
-
 	@Override
 	public String toString() {
 		return "ScheduleEntity [jobName=" + jobName + ", jobGroup=" + jobGroup + ", cronExpression=" + cronExpression
-				+ ", status=" + status + ", description=" + description + ", url=" + url +", executeType=" +executeType+", beanName= " +beanName+"]";
+				+ ", status=" + status + ", description=" + description + ", url=" + url +", executeType=" +executeType+"]";
 	}
 }
