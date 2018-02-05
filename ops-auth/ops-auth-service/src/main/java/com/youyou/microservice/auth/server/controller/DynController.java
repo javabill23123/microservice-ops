@@ -48,7 +48,7 @@ public class DynController implements Controller {
 	 * 处理动态配置的自定认证来的请求
 	 */
 	@Override
-	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) throws Exception {
+	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) {
 		logger.info("--DynController.handleRequest");
 		String uri = p0.getRequestURI();
 		logger.info("--DynController,uri=" + uri);
@@ -58,9 +58,14 @@ public class DynController implements Controller {
 		//判断是否在处理范围中
 		if (pInfo != null && !"".equals(pInfo.getAuthService())) {
 			logger.info("--DynController,service=" + pInfo.getAuthService());
-			JwtAuthenticationDataResponse jwtAuth =  dynAuthService.auth(p0, pInfo);
-			JSONObject json = new JSONObject(new RestResultResponse<JwtAuthenticationDataResponse>().data(jwtAuth));
-			p1.getOutputStream().write(json.toString().getBytes());
+			try {
+				JwtAuthenticationDataResponse jwtAuth =  dynAuthService.auth(p0, pInfo);
+				JSONObject json = new JSONObject(new RestResultResponse<JwtAuthenticationDataResponse>().data(jwtAuth));
+				p1.getOutputStream().write(json.toString().getBytes());
+			}catch (Exception e) {
+				logger.error("动态认证验证失败失败",e);
+				
+			}
 		}
 		return null;
 	}
