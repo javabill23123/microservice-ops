@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonyou.cloud.ops.alert.ops.alert.mapper.AlertInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.yonyou.cloud.ops.alert.ops.alert.entity.AlertInfo">
+
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="alert_detail" jdbcType="VARCHAR" property="alertDetail" />
+		<result column="group_id" jdbcType="INTEGER" property="groupId" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="group_name" jdbcType="VARCHAR" property="groupName" />
+	</resultMap>
+
+	<select id="selectAlertAndGroupByStatus" resultMap="BaseResultMap">
+		SELECT
+		rg.name as group_name,rg.desc,at.alert_detail,at.status FROM alert_info
+		at,rule_group rg WHERE at.group_id=rg.id and status=#{status}
+	</select>
+</mapper>
