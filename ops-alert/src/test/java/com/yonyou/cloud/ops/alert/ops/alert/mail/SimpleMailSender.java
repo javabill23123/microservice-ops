@@ -1,13 +1,10 @@
-package com.yonyou.cloud.ops.alert.ops.alert.alarm.mails;
+package com.yonyou.cloud.ops.alert.ops.alert.mail;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -17,9 +14,6 @@ import java.util.Properties;
  * 简单邮件（不带附件的邮件）发送器
  */
 public class SimpleMailSender {
-	
-	private static final Logger loger = LoggerFactory.getLogger(SimpleMailSender.class);
-
 	/**
 	 * 以文本格式发送邮件
 	 * 
@@ -32,7 +26,7 @@ public class SimpleMailSender {
 		Properties pro = mailInfo.getProperties();
 		if (mailInfo.isValidate()) {
 			// 如果需要身份认证，则创建一个密码验证器
-			authenticator = new MyAuthenticator(mailInfo.getUserName(), mailInfo.getPassword());
+			authenticator = new MyAuthenticator(mailInfo.getUserName(),mailInfo.getPassword());
 		}
 		// 根据邮件会话属性和密码验证器构造一个发送邮件的session
 		Session sendMailSession = Session.getDefaultInstance(pro, authenticator);
@@ -42,23 +36,19 @@ public class SimpleMailSender {
 			// 创建邮件发送者地址
 			Address from = new InternetAddress(mailInfo.getFromAddress());
 			// 设置邮件消息的发送者
-
-			String nick = "";
+			
+			String nick="";
 			try {
-				nick = javax.mail.internet.MimeUtility.encodeText("用友汽车服务化开发平台");
+				 nick=javax.mail.internet.MimeUtility.encodeText("用友汽车服务化开发平台");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
-			}
-
-			mailMessage.setFrom(new InternetAddress(nick + " <" + from + ">"));
-			// mailMessage.setFrom(from);
+			}  
+			 
+			mailMessage.setFrom(new InternetAddress(nick+" <"+from+">"));
+			//mailMessage.setFrom(from);
 			// 创建邮件的接收者地址，并设置到邮件消息中
-			InternetAddress[] sendTo = new InternetAddress[mailInfo.getToAddress().length];
-			for (int i = 0; i < mailInfo.getToAddress().length; i++) {
-				loger.info("发送到:" + mailInfo.getToAddress()[i]);
-				sendTo[i] = new InternetAddress(mailInfo.getToAddress()[i]);
-			}
-			mailMessage.setRecipients(Message.RecipientType.TO, sendTo);
+			Address[] to = {new InternetAddress("daniell_hu@163.com"),new InternetAddress("daniell2012@163.com")};
+			mailMessage.setRecipients(Message.RecipientType.TO, to);
 			// 设置邮件消息的主题
 			mailMessage.setSubject(mailInfo.getSubject());
 			// 设置邮件消息发送的时间
@@ -68,7 +58,7 @@ public class SimpleMailSender {
 			mailMessage.setText(mailContent);
 			// 发送邮件
 			Transport.send(mailMessage);
-			loger.info("邮件发送成功");
+			System.out.print("测试类发送成功");
 			return true;
 		} catch (MessagingException ex) {
 			ex.printStackTrace();
@@ -88,10 +78,12 @@ public class SimpleMailSender {
 		Properties pro = mailInfo.getProperties();
 		// 如果需要身份认证，则创建一个密码验证器
 		if (mailInfo.isValidate()) {
-			authenticator = new MyAuthenticator(mailInfo.getUserName(), mailInfo.getPassword());
+			authenticator = new MyAuthenticator(mailInfo.getUserName(),
+					mailInfo.getPassword());
 		}
 		// 根据邮件会话属性和密码验证器构造一个发送邮件的session
-		Session sendMailSession = Session.getDefaultInstance(pro, authenticator);
+		Session sendMailSession = Session
+				.getDefaultInstance(pro, authenticator);
 		try {
 			// 根据session创建一个邮件消息
 			Message mailMessage = new MimeMessage(sendMailSession);
@@ -100,14 +92,9 @@ public class SimpleMailSender {
 			// 设置邮件消息的发送者
 			mailMessage.setFrom(from);
 			// 创建邮件的接收者地址，并设置到邮件消息中
-			InternetAddress[] sendTo = new InternetAddress[mailInfo.getToAddress().length];
-			for (int i = 0; i < mailInfo.getToAddress().length; i++) {
-				System.out.println("发送到:" + mailInfo.getToAddress()[i]);
-				sendTo[i] = new InternetAddress(mailInfo.getToAddress()[i]);
-			}
+			Address to = new InternetAddress(mailInfo.getToAddress());
 			// Message.RecipientType.TO属性表示接收者的类型为TO
-			mailMessage.setRecipients(Message.RecipientType.TO, sendTo);
-			// mailMessage.setRecipient(Message.RecipientType.TO, to);
+			mailMessage.setRecipient(Message.RecipientType.TO, to);
 			// 设置邮件消息的主题
 			mailMessage.setSubject(mailInfo.getSubject());
 			// 设置邮件消息发送的时间

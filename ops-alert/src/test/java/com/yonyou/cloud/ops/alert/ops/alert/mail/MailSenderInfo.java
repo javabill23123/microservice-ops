@@ -1,4 +1,4 @@
-package com.yonyou.cloud.ops.alert.ops.alert.alarm.mails;
+package com.yonyou.cloud.ops.alert.ops.alert.mail;
 
 /**  
  * 发送邮件需要使用的基本信息  
@@ -35,7 +35,7 @@ public class MailSenderInfo {
 	/**
 	 *  邮件接收者的地址
 	 */
-	private String[] toAddress;
+	private String toAddress;
 
 	/**
 	 * 是否需要身份验证
@@ -113,6 +113,14 @@ public class MailSenderInfo {
 		this.password = password;
 	}
 
+	public String getToAddress() {
+		return toAddress;
+	}
+
+	public void setToAddress(String toAddress) {
+		this.toAddress = toAddress;
+	}
+
 	public String getUserName() {
 		return userName;
 	}
@@ -135,13 +143,5 @@ public class MailSenderInfo {
 
 	public void setContent(String textContent) {
 		this.content = textContent;
-	}
-
-	public String[] getToAddress() {
-		return toAddress;
-	}
-
-	public void setToAddress(String[] toAddress) {
-		this.toAddress = toAddress;
 	}
 }

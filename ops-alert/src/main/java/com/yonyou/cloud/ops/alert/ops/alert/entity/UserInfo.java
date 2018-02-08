@@ -13,6 +13,8 @@ public class UserInfo {
     private String phone;
 
     private String email;
+    
+    private String ruleGroupId;
 
     /**
      * @return id
@@ -69,4 +71,12 @@ public class UserInfo {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	public String getRuleGroupId() {
+		return ruleGroupId;
+	}
+
+	public void setRuleGroupId(String ruleGroupId) {
+		this.ruleGroupId = ruleGroupId;
+	}
 }

@@ -13,7 +13,7 @@
 
 	<select id="selectAlertAndGroupByStatus" resultMap="BaseResultMap">
 		SELECT
-		rg.name as group_name,rg.desc,at.alert_detail,at.status FROM alert_info
+		rg.name as group_name,rg.desc,at.alert_detail,at.status ,at.group_id FROM alert_info
 		at,rule_group rg WHERE at.group_id=rg.id and status=#{status}
 	</select>
 </mapper>

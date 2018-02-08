@@ -44,7 +44,7 @@ public class EmailMessage extends AlarmMessageSender {
 
 	@Override
 	public void sendMessage(List<MessageTemplate> msgTemplist) {
-		log.info("发送email 了 哈哈哈哈"); 
+		log.info("发送email 了 哈哈哈哈");
 		for (MessageTemplate msgTemp : msgTemplist) {
 			/*
 			 * 这个类主要是设置邮件 mailServerHost:邮箱服务器 userName:发送方邮件用户名 password:发送方邮件密码

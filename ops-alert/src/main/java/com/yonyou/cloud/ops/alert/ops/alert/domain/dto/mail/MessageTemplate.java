@@ -4,7 +4,7 @@ public class MessageTemplate {
 	/**
 	 * 邮件接收者的地址
 	 */
-	private String toAddress;
+	private String toAddress[];
 
 	/**
 	 * 是否需要身份验证
@@ -18,16 +18,16 @@ public class MessageTemplate {
 	 * 邮件的文本内容
 	 */
 	private String content;
+	public String[] getToAddress() {
+		return toAddress;
+	}
+	public void setToAddress(String[] toAddress) {
+		this.toAddress = toAddress;
+	}
 	/**
 	 * 邮件附件的文件名
 	 */
 	private String[] attachFileNames;
-	public String getToAddress() {
-		return toAddress;
-	}
-	public void setToAddress(String toAddress) {
-		this.toAddress = toAddress;
-	}
 	public boolean isValidate() {
 		return validate;
 	}

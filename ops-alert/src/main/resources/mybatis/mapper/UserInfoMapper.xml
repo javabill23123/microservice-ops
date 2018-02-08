@@ -9,5 +9,24 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="ruleGroupId" property="ruleGroupId" jdbcType="INTEGER" />
   </resultMap>
+  
+  	<select id="selectUserByRuleGroup" resultMap="BaseResultMap">
+		SELECT
+				*
+			FROM
+				user_info,
+				user_group_member
+			WHERE
+			    user_info.id=user_group_member.user_id AND
+				user_group_member.group_id IN (
+					SELECT
+						user_group_id
+					FROM
+						user_group_alert
+					WHERE
+						user_group_alert.rule_group__id = #{ruleGroupId}
+				)
+	</select> 
 </mapper>

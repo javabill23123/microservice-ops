@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +16,7 @@ import com.xiaoleilu.hutool.json.JSONObject;
 import com.xiaoleilu.hutool.json.JSONUtil;
 import com.yonyou.cloud.ops.alert.ops.alert.biz.AlertInfoBiz;
 import com.yonyou.cloud.ops.alert.ops.alert.biz.RuleInfoBiz;
+import com.yonyou.cloud.ops.alert.ops.alert.domain.constants.AlertStatus;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.MsgInfoVO;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.AlertInfo;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleInfo;
@@ -27,6 +30,8 @@ import com.yonyou.cloud.ops.alert.ops.alert.utils.FilterUtil;
  */
 @Component
 public class AlertInfoHandler {
+
+private static final Logger loger = LoggerFactory.getLogger(AlertInfoHandler.class);
 
 	@Value("${redis.listener.key}")
 	private String listenerKey;
@@ -69,9 +74,11 @@ public class AlertInfoHandler {
 						Long startValue = keylist.get(Integer.valueOf(rule.getCount() - 1));
 						if (lastvalue - startValue > rule.getTime()) {
 							redisTemplateLong.opsForList().trim(rule.getKeyword(), 0, keylength - 1);
-							System.out.println("可以报警了");
+							loger.info("触发报警规则，满足报警条件");
 							AlertInfo alertInfo = new AlertInfo();
+							alertInfo.setGroupId(rule.getGroupId());
 							alertInfo.setAlertDetail(msginfo);
+							alertInfo.setStatus(AlertStatus.Trigger.getValue());
 							alertInfoBiz.insertSelective(alertInfo);
 						}
 					}
