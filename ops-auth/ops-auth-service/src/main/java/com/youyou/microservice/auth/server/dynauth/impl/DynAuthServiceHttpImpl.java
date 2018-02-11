@@ -53,6 +53,7 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 		String body = this.getBody(request);
 		String authCode = request.getParameter(AUTH_CODE);
 		logger.info("--DynController,uri=" + uri);
+		logger.info("--authCode = {}",authCode);
 
 		// 组装 http 请求
 		// 1.charset

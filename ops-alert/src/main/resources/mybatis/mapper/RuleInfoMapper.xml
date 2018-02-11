@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yonyou.cloud.ops.alert.ops.alert.mapper.RuleInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.yonyou.cloud.ops.alert.ops.alert.entity.RuleInfo">
+		<!-- WARNING - @mbg.generated -->
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="rule_desc" property="ruleDesc" jdbcType="VARCHAR" />
+		<result column="keyword" property="keyword" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="selectRuleInfoByAppOrIp" resultMap="BaseResultMap">
+		SELECT
+			*
+		FROM
+			rule_info
+		WHERE
+			group_id IN (
+				SELECT
+					group_id
+				FROM
+					`rule_scope`
+				WHERE
+					ip_app = #{appName} or ip_app=#{hostIp}
+			);
+	</select> 
+</mapper>
