@@ -59,7 +59,7 @@ public class DynController implements Controller {
 		if (pInfo != null && !"".equals(pInfo.getAuthService())) {
 			logger.info("--DynController,service=" + pInfo.getAuthService());
 			JwtAuthenticationDataResponse jwtAuth =  dynAuthService.auth(p0, pInfo);
-			JSONObject json = new JSONObject(new RestResultResponse<JwtAuthenticationDataResponse>().data(jwtAuth));
+			JSONObject json = new JSONObject(new RestResultResponse<JwtAuthenticationDataResponse>().data(jwtAuth).success(true));
 			p1.getOutputStream().write(json.toString().getBytes());
 		}
 		return null;

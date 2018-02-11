@@ -1,5 +1,6 @@
 package com.youyou.microservice.auth.server.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 
 import com.youyou.microservice.auth.server.entity.AuthProvider;
 import com.youyou.microservice.auth.server.mapper.AuthProviderMapper;
+import com.youyou.microservice.auth.server.util.client.ReflectionUtils;
 
 @RestController
 @RequestMapping("dynController")
@@ -33,14 +35,24 @@ public class DynResetConfigController {
 		List<AuthProvider> list = service.selectAuthProviders();
 		bean.setProviders(list);
 		Map<String, Object> urlMap = new HashMap<String,Object>(list.size());
-		Map<String, ?> oldMap=mapping.getUrlMap();
+//		Map<String, ?> oldMap=mapping.getUrlMap();
 		for (AuthProvider i : list) {
 			logger.debug("重新加载第三方认证代理的url:"+i.getSrcUrl()+" 类型:"+i.getAcceptType());
-			if(oldMap.get(i.getSrcUrl())==null){
+//			if(oldMap.get(i.getSrcUrl())==null){
 				urlMap.put(i.getSrcUrl(), bean);
-			}
+//			}
 		}
 		if(urlMap.size()>0){
+			List<String> tl=new ArrayList();
+			Map<String, Object> map=(Map<String, Object>)ReflectionUtils.getFieldValue(mapping, "handlerMap");
+			map.keySet().forEach(key->{
+				if(map.get(key).toString().contains("DynController")){
+					tl.add(key);
+				}
+			});
+			for(String key:tl){
+				map.remove(key);
+			}
 			mapping.setUrlMap(urlMap);
 			mapping.initApplicationContext();
 		}
@@ -51,7 +63,7 @@ public class DynResetConfigController {
     
     @RequestMapping(value = "demoUser", method = RequestMethod.POST)
 	public String demoUser() {
-    	String data="{\"username\":\"test\",\"userId\":\"2005\",\"name\":\"testName\"}";
+    	String data="{\"username\":\"test\",\"userId\":\"1500\",\"name\":\"testName\"}";
     	logger.info("--demoUser,"+data);
     	return data;
     }
