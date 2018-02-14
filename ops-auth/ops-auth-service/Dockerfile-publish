@@ -1,0 +1,9 @@
+FROM 172.16.199.203/daocloud/java:latest
+
+COPY /project/target/ops-auth-service.jar /usr/src/myapp/ops-auth-service.jar
+
+WORKDIR /usr/src/myapp/
+
+EXPOSE 9001
+
+ENTRYPOINT java -jar ops-auth-service.jar
