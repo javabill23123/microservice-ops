@@ -4,6 +4,6 @@ COPY /project/target/ops-gate.jar /usr/src/myapp/ops-gate.jar
 
 WORKDIR /usr/src/myapp/
 
-EXPOSE 3001
+EXPOSE 9000
 
 ENTRYPOINT java -jar ops-gate.jar
