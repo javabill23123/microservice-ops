@@ -37,7 +37,7 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 		JSONObject sk = new JSONObject(repBody);
 		String jwt = "";
 		String username = (String) sk.get(REPBODY_USERNAME);
-		String userId = (String) sk.get(REPBODY_USERID);
+		Integer userId = (Integer) sk.get(REPBODY_USERID);
 		String name = (String) sk.get(REPBODY_NAME);
 		if (userId == null || "".equals(userId)) {
 			return new JwtAuthenticationDataResponse("", repBody);
@@ -45,7 +45,7 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 		
 		try {
 			//直接根据用户信息返回jwt
-			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name));
+			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId.toString(), name));
 		} catch (Exception e) {
 			logger.error("生成jwt失败",e);
 			return new JwtAuthenticationDataResponse("", repBody);
