@@ -40,9 +40,11 @@ public class AuthConfiguration {
 	 * @param mapping
 	 * @param service
 	 * @return
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
 	 */
 	@Bean
-	public DynController dynController(SimpleUrlHandlerMapping mapping, AuthProviderMapper service) {
+	public DynController dynController(SimpleUrlHandlerMapping mapping, AuthProviderMapper service) throws Exception {
 		List<AuthProvider> list = service.selectAuthProviders();
 		DynController bean = new DynController();
 		bean.setProviders(list);
