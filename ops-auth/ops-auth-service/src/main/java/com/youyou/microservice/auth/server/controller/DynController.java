@@ -1,5 +1,9 @@
 package com.youyou.microservice.auth.server.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import com.alibaba.fastjson.util.IOUtils;
 import com.xiaoleilu.hutool.json.JSONObject;
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.youyou.microservice.auth.server.dynauth.DynAuthService;
@@ -46,13 +51,16 @@ public class DynController implements Controller {
 	
 	/**
 	 * 处理动态配置的自定认证来的请求
+	 * @throws Exception 
 	 */
 	@Override
-	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) {
+	public ModelAndView handleRequest(HttpServletRequest p0, HttpServletResponse p1) throws Exception {
 		logger.info("--DynController.handleRequest");
 		String uri = p0.getRequestURI();
 		logger.info("--DynController,uri=" + uri);
-		
+//    	byte[] bytes = getRequestPostBytes(p0);
+//    	bytes.toString();
+//    	String s=new String(bytes, "UTF-8"); 
 		//对请求进行解析
 		AuthProvider pInfo = this.getService(uri);
 		//判断是否在处理范围中
@@ -77,5 +85,4 @@ public class DynController implements Controller {
 	public void setProviders(List<AuthProvider> providers) {
 		this.providers = providers;
 	}
-
 }

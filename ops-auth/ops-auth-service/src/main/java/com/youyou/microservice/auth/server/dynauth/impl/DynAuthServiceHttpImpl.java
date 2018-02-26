@@ -3,6 +3,7 @@ package com.youyou.microservice.auth.server.dynauth.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,13 +13,12 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.xiaoleilu.hutool.json.JSONObject;
-import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.youyou.microservice.auth.server.dynauth.DynAuth;
 import com.youyou.microservice.auth.server.dynauth.DynAuthService;
 import com.youyou.microservice.auth.server.dynauth.handler.DynAuthHttpResultHanderFactory;
@@ -54,6 +54,7 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 		String authCode = request.getParameter(AUTH_CODE);
 		logger.info("--DynController,uri=" + uri);
 		logger.info("--authCode = {}",authCode);
+		logger.info("--request body = {}",body);
 
 		// 组装 http 请求
 		// 1.charset
@@ -67,6 +68,9 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 		String param = "?" + queryString;
 		// 4. 请求body
 		HttpHeaders headers = new HttpHeaders();
+		if(request.getContentType().contains("-form")){
+		    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		}
 		HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 		// 5.exchage
 		ResponseEntity<String> rr = restTemplate.exchange(pInfo.getAuthService() + param, hm, entity, String.class);
@@ -83,19 +87,38 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 	 * 
 	 * @param request
 	 * @return
+	 * @throws IOException 
 	 */
 	private String getBody(HttpServletRequest request) {
-		BufferedReader br;
-		String str, wholeStr = "";
-		try {
-			br = request.getReader();
-			while ((str = br.readLine()) != null) {
-				wholeStr += str;
+	    String body="";
+		if(request.getContentType().contains("-form")){
+			String tmp="";
+			Enumeration<String> map=request.getParameterNames();
+			while ( map.hasMoreElements() ){
+				String name=map.nextElement();
+				String[] values=request.getParameterValues(name);
+				for(int i=0 ;i<values.length;i++){
+					body=body+tmp+name+"="+values[i];
+					tmp="&";
+				}
 			}
-		} catch (IOException e) {
-			logger.error(e.getMessage());
+//			body="------WebKitFormBoundaryJKsyTbeL1M0xQOXc\r\n"+
+//					"Content-Disposition: form-data; name=\"data\"\r\n\r\n"+
+//					body+"\r\n"+
+//					"------WebKitFormBoundaryJKsyTbeL1M0xQOXc--";
+		}else{
+			BufferedReader br;
+			String str;
+			try {
+				br = request.getReader();
+				while ((str = br.readLine()) != null) {
+					body += str;
+				}
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			}
 		}
-		return wholeStr;
+		return body;
 	}
 
 }
