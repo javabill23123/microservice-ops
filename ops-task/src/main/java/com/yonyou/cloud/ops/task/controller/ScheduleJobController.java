@@ -126,8 +126,8 @@ public class ScheduleJobController {
         return map;
     }
 
-    @RequestMapping(value="/delete/{jobName}/{jobGroup}" ,method=RequestMethod.DELETE)
-    public Object delete(@PathVariable String jobName, @PathVariable String jobGroup) {
+    @RequestMapping(value="/delete" ,method=RequestMethod.DELETE)
+    public Object delete(String jobName,String jobGroup) {
         Map<String, Object> map = new HashMap<String, Object>(5);
         map.put("status", -1);
         try {
