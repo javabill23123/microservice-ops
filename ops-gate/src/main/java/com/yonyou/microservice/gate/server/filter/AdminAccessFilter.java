@@ -55,6 +55,8 @@ public class AdminAccessFilter extends ZuulFilter {
 	private static final String USER_HEAD_ID="userId";
 	private static final String USER_HEAD_NAME="userName";
 	private static final String USER_HEAD_REMARK="remark";
+	private static final String REPBODY_DEALER_NAME = "dealerName";
+	private static final String REPBODY_DEALER_CODE = "dealerCode";
 	private static final String PERMISSION="permission";
 	private static final String HTTP_GET="GET";
 	private static final String LOG_OUT="autht/invalid";
@@ -148,6 +150,8 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(USER_HEAD_ID,user.getId());
         ctx.addZuulRequestHeader(USER_HEAD_NAME,user.getUniqueName());
         ctx.addZuulRequestHeader(USER_HEAD_REMARK,user.getRemark());
+        ctx.addZuulRequestHeader(REPBODY_DEALER_CODE,user.getDealerCode());
+        ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,user.getDealerName());
         BaseContextHandler.remove();
         return null;
     }
@@ -201,6 +205,7 @@ public class AdminAccessFilter extends ZuulFilter {
      */
     private IJwtInfo getJWTUser(HttpServletRequest request,RequestContext ctx) throws Exception {
         String authToken = request.getHeader(userAuthConfig.getTokenHeader());
+        logger.info("--Authorization:"+authToken);
         if(StringUtils.isBlank(authToken)){
             authToken = request.getParameter("Authorization");
         }

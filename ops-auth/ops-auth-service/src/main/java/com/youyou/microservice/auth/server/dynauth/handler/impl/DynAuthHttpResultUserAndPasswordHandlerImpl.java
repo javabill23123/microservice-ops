@@ -27,6 +27,8 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 	private static final String REPBODY_USERNAME = "username";
 	private static final String REPBODY_USERID = "userId";
 	private static final String REPBODY_NAME = "name";
+	private static final String REPBODY_DEALER_NAME = "dealerName";
+	private static final String REPBODY_DEALER_CODE = "dealerCode";
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -39,18 +41,20 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 		String username = (String) sk.get(REPBODY_USERNAME);
 		Integer userId = (Integer) sk.get(REPBODY_USERID);
 		String name = (String) sk.get(REPBODY_NAME);
+		String dealerName = (String) sk.get(REPBODY_DEALER_NAME);
+		String dealerCode = (String) sk.get(REPBODY_DEALER_CODE);
 		if (userId == null || "".equals(userId)) {
-			return new JwtAuthenticationDataResponse("", repBody);
+			return new JwtAuthenticationDataResponse("", sk);
 		}
 		
 		try {
 			//直接根据用户信息返回jwt
-			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId.toString(), name));
+			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId.toString(), name,dealerCode,dealerName));
 		} catch (Exception e) {
 			logger.error("生成jwt失败",e);
-			return new JwtAuthenticationDataResponse("", repBody);
+			return new JwtAuthenticationDataResponse("", sk);
 		}
-		return new JwtAuthenticationDataResponse(jwt, repBody);
+		return new JwtAuthenticationDataResponse(jwt, sk);
 	}
 
 }
