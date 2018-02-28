@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,19 +75,6 @@ public class DynResetConfigController {
     	byte[] bytes = getRequestPostBytes(p0);
     	bytes.toString();
     	String s=new String(bytes, "utf-8"); 
-//		logger.info("body="+body);
-//		BufferedReader br;
-//		try {
-//			br = p0.getReader();
-//			String str, wholeStr = "";
-//			while((str = br.readLine()) != null){
-//			  wholeStr += str;
-//			}
-//			logger.info(wholeStr);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
     	return data;
     }
     
@@ -94,6 +82,17 @@ public class DynResetConfigController {
 	public String demoUser2() {
     	String data="{\"username\":\"test\",\"userId\":15002345678912345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
     	logger.info("--demoUser,"+data);
+    	return data;
+    }
+    
+    @RequestMapping(value = "demoHeader", method = RequestMethod.GET)
+	public String demoUser3(HttpServletRequest p0) {
+    	String data="";
+    	Enumeration<String> heads=p0.getHeaderNames();
+    	while (heads.hasMoreElements()){
+    		String name=heads.nextElement();
+    		data=data+name+"="+p0.getHeader(name)+",";
+    	}
     	return data;
     }
 
