@@ -53,7 +53,7 @@ public class DynAuthHttpResultUserHandlerImpl implements DynAuthHttpResultHandle
 		// user类型 需要判断来的凭证和respbody中的password是否一致
 		if (encoder.matches(authCode, passWord)) {
 			try {
-				jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name,dealerCode,dealerName,telPhone));
+				jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name,dealerCode,dealerName,telPhone,""));
 			} catch (Exception e) {
 				return new JwtAuthenticationDataResponse("", sk);
 			}

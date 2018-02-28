@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         UserInfo info = userService.getUserByUsername(username);
         String token = "";
         if (encoder.matches(password, info.getPassword())) {
-            token = jwtTokenUtil.generateToken(new JwtInfo(info.getUsername(), info.getId() + "", info.getName(),"","",info.getTelPhone()));
+            token = jwtTokenUtil.generateToken(new JwtInfo(info.getUsername(), info.getId() + "", info.getName(),"","",info.getTelPhone(),""));
         }
         return token;
     }
@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         UserInfo info = userService.getUserByPhone(phone);
         String token = "";
         if (info!=null&& TEST_CAPTCHA.equals(captcha)) {
-            token = jwtTokenUtil.generateToken(new JwtInfo(info.getUsername(), info.getId() + "", info.getName(),"","",""));
+            token = jwtTokenUtil.generateToken(new JwtInfo(info.getUsername(), info.getId() + "", info.getName(),"","","",""));
         }
         return token;
     }

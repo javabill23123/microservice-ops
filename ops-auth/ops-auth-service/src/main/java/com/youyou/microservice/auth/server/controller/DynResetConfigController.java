@@ -69,7 +69,7 @@ public class DynResetConfigController {
     
     @RequestMapping(value = "demoUser", method = RequestMethod.POST)
 	public String demoUser(HttpServletRequest p0) throws IOException {//, @RequestBody String body
-    	String data="{\"username\":\"test\",\"userId\":1500,\"name\":\"testName\"}";
+    	String data="{\"username\":\"test\",\"userId\":15002345678912345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
     	logger.info("--demoUser,"+data);
     	byte[] bytes = getRequestPostBytes(p0);
     	bytes.toString();
@@ -92,7 +92,7 @@ public class DynResetConfigController {
     
     @RequestMapping(value = "demoUser", method = RequestMethod.GET)
 	public String demoUser2() {
-    	String data="{\"username\":\"test\",\"userId\":1500,\"name\":\"testName\"}";
+    	String data="{\"username\":\"test\",\"userId\":15002345678912345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
     	logger.info("--demoUser,"+data);
     	return data;
     }
