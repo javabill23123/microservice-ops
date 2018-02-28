@@ -29,6 +29,7 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 	private static final String REPBODY_NAME = "name";
 	private static final String REPBODY_DEALER_NAME = "dealerName";
 	private static final String REPBODY_DEALER_CODE = "dealerCode";
+	private static final String REPBODY_TELPHONE = "telPhone";
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -43,13 +44,14 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 		String name = (String) sk.get(REPBODY_NAME);
 		String dealerName = (String) sk.get(REPBODY_DEALER_NAME);
 		String dealerCode = (String) sk.get(REPBODY_DEALER_CODE);
+		String telPhone = (String) sk.get(REPBODY_TELPHONE);
 		if (userId == null || "".equals(userId)) {
 			return new JwtAuthenticationDataResponse("", sk);
 		}
 		
 		try {
 			//直接根据用户信息返回jwt
-			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId.toString(), name,dealerCode,dealerName));
+			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId.toString(), name,dealerCode,dealerName,telPhone));
 		} catch (Exception e) {
 			logger.error("生成jwt失败",e);
 			return new JwtAuthenticationDataResponse("", sk);

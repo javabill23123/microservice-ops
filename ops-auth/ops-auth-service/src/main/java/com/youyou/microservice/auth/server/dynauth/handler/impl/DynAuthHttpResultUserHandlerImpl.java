@@ -31,6 +31,7 @@ public class DynAuthHttpResultUserHandlerImpl implements DynAuthHttpResultHandle
 	private static final String REPBODY_NAME = "name";
 	private static final String REPBODY_DEALER_NAME = "dealerName";
 	private static final String REPBODY_DEALER_CODE = "dealerCode";
+	private static final String REPBODY_TELPHONE = "telPhone";
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -45,13 +46,14 @@ public class DynAuthHttpResultUserHandlerImpl implements DynAuthHttpResultHandle
 		String name = (String) sk.get(REPBODY_NAME);
 		String dealerName = (String) sk.get(REPBODY_DEALER_NAME);
 		String dealerCode = (String) sk.get(REPBODY_DEALER_CODE);
+		String telPhone = (String) sk.get(REPBODY_TELPHONE);
 		if (userId == null || "".equals(userId)) {
 			return new JwtAuthenticationDataResponse("", sk);
 		}
 		// user类型 需要判断来的凭证和respbody中的password是否一致
 		if (encoder.matches(authCode, passWord)) {
 			try {
-				jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name,dealerCode,dealerName));
+				jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId, name,dealerCode,dealerName,telPhone));
 			} catch (Exception e) {
 				return new JwtAuthenticationDataResponse("", sk);
 			}

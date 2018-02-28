@@ -57,6 +57,7 @@ public class AdminAccessFilter extends ZuulFilter {
 	private static final String USER_HEAD_REMARK="remark";
 	private static final String REPBODY_DEALER_NAME = "dealerName";
 	private static final String REPBODY_DEALER_CODE = "dealerCode";
+	private static final String REPBODY_TELPHONE = "telPhone";
 	private static final String PERMISSION="permission";
 	private static final String HTTP_GET="GET";
 	private static final String LOG_OUT="autht/invalid";
@@ -152,6 +153,7 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(USER_HEAD_REMARK,user.getRemark());
         ctx.addZuulRequestHeader(REPBODY_DEALER_CODE,user.getDealerCode());
         ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,user.getDealerName());
+        ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
         BaseContextHandler.remove();
         return null;
     }
