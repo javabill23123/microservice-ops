@@ -52,39 +52,32 @@ public class ClientInfo implements IJwtInfo {
         this.remark = remark;
     }
 
-    @Override
     public String getUniqueName() {
         return clientId;
     }
 
-    @Override
     public String getId() {
         return id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-	@Override
 	public String getRemark() {
 		return this.remark;
 	}
 
-	@Override
 	public String getDealerName() {
 		// TODO Auto-generated method stub
 		return dealerName;
 	}
 
-	@Override
 	public String getDealerCode() {
 		// TODO Auto-generated method stub
 		return dealerCode;
 	}
 
-	@Override
 	public String getTelPhone() {
 		// TODO Auto-generated method stub
 		return telPhone;
