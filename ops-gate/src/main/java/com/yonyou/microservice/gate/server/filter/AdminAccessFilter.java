@@ -158,7 +158,7 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(REPBODY_DEALER_CODE,user.getDealerCode());
         ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,user.getDealerName());
         ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
-    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+",username="+user.getUniqueName()+",dealercode="+user.getDealerCode()+
+    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+",username="+user.getName()+",dealercode="+user.getDealerCode()+
     			"dealername="+user.getDealerName()+",telphone="+user.getTelPhone());
         BaseContextHandler.remove();
         return null;
