@@ -40,7 +40,7 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 		JSONObject sk = new JSONObject(repBody);
 		String jwt = "";
 		String username = (String) sk.get(REPBODY_USERNAME);
-		Long userId = (Long) sk.get(REPBODY_USERID);
+		Integer userId = (Integer) sk.get(REPBODY_USERID);
 		String name = (String) sk.get(REPBODY_NAME);
 		String dealerName = (String) sk.get(REPBODY_DEALER_NAME);
 		String dealerCode = (String) sk.get(REPBODY_DEALER_CODE);
