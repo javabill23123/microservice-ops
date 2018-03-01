@@ -153,12 +153,12 @@ public class AdminAccessFilter extends ZuulFilter {
         // 申请客户端密钥头
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
         ctx.addZuulRequestHeader(USER_HEAD_ID,user.getId());
-        ctx.addZuulRequestHeader(USER_HEAD_NAME,user.getUniqueName());
+        ctx.addZuulRequestHeader(USER_HEAD_NAME,user.getName());
         ctx.addZuulRequestHeader(USER_HEAD_REMARK,user.getRemark());
         ctx.addZuulRequestHeader(REPBODY_DEALER_CODE,user.getDealerCode());
         ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,user.getDealerName());
         ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
-    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+",username="+user.getUniqueName()+",dealercode="+user.getDealerCode()+
+    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+",username="+user.getName()+",dealercode="+user.getDealerCode()+
     			"dealername="+user.getDealerName()+",telphone="+user.getTelPhone());
         BaseContextHandler.remove();
         return null;
