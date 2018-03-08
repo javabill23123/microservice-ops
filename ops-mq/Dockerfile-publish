@@ -6,4 +6,4 @@ WORKDIR /usr/src/myapp/
 
 EXPOSE 9003
 
-ENTRYPOINT java -jar ops-auth.jar
+ENTRYPOINT java -jar ops-mq.jar
