@@ -28,7 +28,7 @@ import com.yonyou.cloud.ops.mq.repository.MqConsumeDetailInfoRepository;
 import com.yonyou.cloud.ops.mq.repository.MqMessageRepository;
 
 @Service
-public class MqMessageService extends BaseEsService<MqMessage>{
+public class MqMessageService{
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	

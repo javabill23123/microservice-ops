@@ -10,7 +10,7 @@ import com.yonyou.cloud.ops.mq.entity.MqConsumer;
 import com.yonyou.cloud.ops.mq.repository.MqConsumeDetailInfoRepository;
 
 @Service
-public class MqConsumeDetailInfoService extends BaseEsService<MqConsumeDetailInfo>{
+public class MqConsumeDetailInfoService{
 	
 	@Autowired
 	private MqConsumeDetailInfoRepository mqConsumeDetailInfoRepository;

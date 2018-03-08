@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-@Configuration
+//@Configuration
 public class ElasticsearchConfiguration implements FactoryBean<TransportClient>, InitializingBean, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(ElasticsearchConfiguration.class);
     //由于项目从2.2.4配置的升级到 5.4.1版本 原配置文件不想动还是指定原来配置参数

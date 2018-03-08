@@ -8,7 +8,7 @@ import com.yonyou.cloud.ops.mq.entity.MqProducer;
 import com.yonyou.cloud.ops.mq.repository.MqProducerRepository;
 
 @Service
-public class MqProducerService extends BaseEsService<MqProducer>{
+public class MqProducerService{
 	@Autowired
 	private MqProducerRepository mqProducerRepository;
 	

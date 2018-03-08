@@ -137,46 +137,46 @@ public class MqOpsController {
 		return response;
 	}
 	
-	@RequestMapping(value="/list",method=RequestMethod.GET)
-	@YcApi
-	public RestResultResponse<MqProducer> getByList(String queryString,String index){
-		return new RestResultResponse<MqData>().success(true).data(mqProducerService.selectList(index, queryString));
-	}
+//	@RequestMapping(value="/list",method=RequestMethod.GET)
+//	@YcApi
+//	public RestResultResponse<MqProducer> getByList(String queryString,String index){
+//		return new RestResultResponse<MqData>().success(true).data(mqProducerService.selectList(index, queryString));
+//	}
 	
-	@RequestMapping(value="/mqMessage/{msgKey}",method=RequestMethod.GET)
-	public RestResultResponse<MqMessageResponseDto> queryByPage(@PathVariable("msgKey") String msgKey){
-		MqMessageResponseDto mqMessageResponseDto = new MqMessageResponseDto();
-		
-		MqMessage message = mqMessageService.selectOne(MqOpsConstant.INDEX, "msgKey:"+msgKey);
-		BeanUtils.copyProperties(message, mqMessageResponseDto);
-		List<MqProducer> producers = mqProducerService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey);
-		List<MqConsumer> consumers = mqConsumerService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey);
+//	@RequestMapping(value="/mqMessage/{msgKey}",method=RequestMethod.GET)
+//	public RestResultResponse<MqMessageResponseDto> queryByPage(@PathVariable("msgKey") String msgKey){
+//		MqMessageResponseDto mqMessageResponseDto = new MqMessageResponseDto();
+//		
+//		MqMessage message = mqMessageService.selectOne(MqOpsConstant.INDEX, "msgKey:"+msgKey);
+//		BeanUtils.copyProperties(message, mqMessageResponseDto);
+//		List<MqProducer> producers = mqProducerService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey);
+//		List<MqConsumer> consumers = mqConsumerService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey);
+//
+//		List<MqConsumerDto> consumersDto = Lists.transform(consumers, mqConsumer2Dto);
+//		for(MqConsumerDto c: consumersDto){
+//			List<MqConsumeDetailInfo> details = mqConsumeDetailInfoService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey + " AND " + "consumerId:" + c.getConsumerId());
+//			c.setConsumeDetailInfos(details);
+//		}
+//		mqMessageResponseDto.setProducers(producers);
+//		mqMessageResponseDto.setConsumers(consumersDto);
+//		
+//		RestResultResponse<MqMessageResponseDto> response = new RestResultResponse<MqMessageResponseDto>();
+//		response.setData(mqMessageResponseDto);
+//		response.setSuccess(true);
+//		
+//		return response;
+//	}
 
-		List<MqConsumerDto> consumersDto = Lists.transform(consumers, mqConsumer2Dto);
-		for(MqConsumerDto c: consumersDto){
-			List<MqConsumeDetailInfo> details = mqConsumeDetailInfoService.selectList(MqOpsConstant.INDEX, "msgKey:"+msgKey + " AND " + "consumerId:" + c.getConsumerId());
-			c.setConsumeDetailInfos(details);
-		}
-		mqMessageResponseDto.setProducers(producers);
-		mqMessageResponseDto.setConsumers(consumersDto);
-		
-		RestResultResponse<MqMessageResponseDto> response = new RestResultResponse<MqMessageResponseDto>();
-		response.setData(mqMessageResponseDto);
-		response.setSuccess(true);
-		
-		return response;
-	}
-
-	@RequestMapping(value="/messages",method=RequestMethod.POST)
-	public RestResultResponse<List<MqMessageResponseDto>> queryByCondition(@RequestBody MqQueryRequestDto request){
-		RestResultResponse<List<MqMessageResponseDto>> response = new RestResultResponse<List<MqMessageResponseDto>>();
-		String[] fieldNames = Arrays.asList(MqQueryRequestDto.class.getDeclaredFields()).stream().map(field -> field.getName()).collect(Collectors.toList()).toArray(new String[0]);
-		List<MqMessage> messages = mqMessageService.selectList(MqOpsConstant.INDEX, toEsQueryString(request,null,fieldNames));
-		List<MqMessageResponseDto> messagesDto = Lists.transform(messages, mqMessage2Dto);
-		response.setData(messagesDto);
-		response.setSuccess(true);
-		return response;
-	}
+//	@RequestMapping(value="/messages",method=RequestMethod.POST)
+//	public RestResultResponse<List<MqMessageResponseDto>> queryByCondition(@RequestBody MqQueryRequestDto request){
+//		RestResultResponse<List<MqMessageResponseDto>> response = new RestResultResponse<List<MqMessageResponseDto>>();
+//		String[] fieldNames = Arrays.asList(MqQueryRequestDto.class.getDeclaredFields()).stream().map(field -> field.getName()).collect(Collectors.toList()).toArray(new String[0]);
+//		List<MqMessage> messages = mqMessageService.selectList(MqOpsConstant.INDEX, toEsQueryString(request,null,fieldNames));
+//		List<MqMessageResponseDto> messagesDto = Lists.transform(messages, mqMessage2Dto);
+//		response.setData(messagesDto);
+//		response.setSuccess(true);
+//		return response;
+//	}
 	
 	private String toEsQueryString(Object o, String [] ignoreFields, String...fuzzyFileds) {
 		String queryString = "";

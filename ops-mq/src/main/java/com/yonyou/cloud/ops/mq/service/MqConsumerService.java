@@ -11,7 +11,7 @@ import com.yonyou.cloud.ops.mq.entity.MqConsumer;
 import com.yonyou.cloud.ops.mq.repository.MqConsumerRepository;
 
 @Service
-public class MqConsumerService extends BaseEsService<MqConsumer>{
+public class MqConsumerService{
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	

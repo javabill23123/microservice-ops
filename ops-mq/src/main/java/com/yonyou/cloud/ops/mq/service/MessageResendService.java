@@ -13,7 +13,7 @@ import com.yonyou.cloud.ops.mq.entity.MqMessage;
 import com.yonyou.cloud.ops.mq.repository.MqMessageRepository;
 
 @Service
-public class MessageResendService extends BaseEsService<MqMessage>{
+public class MessageResendService{
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
