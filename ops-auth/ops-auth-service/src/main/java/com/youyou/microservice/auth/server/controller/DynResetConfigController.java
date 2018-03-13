@@ -72,9 +72,6 @@ public class DynResetConfigController {
 	public String demoUser(HttpServletRequest p0) throws IOException {//, @RequestBody String body
     	String data="{\"username\":\"test\",\"userId\":15002345678912345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
     	logger.info("--demoUser,"+data);
-    	byte[] bytes = getRequestPostBytes(p0);
-    	bytes.toString();
-    	String s=new String(bytes, "utf-8"); 
     	return data;
     }
     
@@ -95,25 +92,28 @@ public class DynResetConfigController {
     	}
     	return data;
     }
-
-
-    public static byte[] getRequestPostBytes(HttpServletRequest request)  
-            throws IOException {  
-        int contentLength = request.getContentLength();  
-        /*当无请求参数时，request.getContentLength()返回-1 */  
-        if(contentLength<0){  
-            return null;  
-        }  
-        byte buffer[] = new byte[contentLength];  
-        for (int i = 0; i < contentLength;) {  
-  
-            int readlen = request.getInputStream().read(buffer, i,  
-                    contentLength - i);  
-            if (readlen == -1) {  
-                break;  
-            }  
-            i += readlen;  
-        }  
-        return buffer;  
-    }  
+    
+    @RequestMapping(value = "demoHeader", method = RequestMethod.POST)
+	public String demoUser4(HttpServletRequest p0) {
+    	String data="";
+    	Enumeration<String> heads=p0.getHeaderNames();
+    	while (heads.hasMoreElements()){
+    		String name=heads.nextElement();
+    		data=data+name+"="+p0.getHeader(name)+",";
+    	}
+    	logger.info(data);
+		String body="";
+		String tmp="";
+		Enumeration<String> map=p0.getParameterNames();
+		while ( map.hasMoreElements() ){
+			String name=map.nextElement();
+			String[] values=p0.getParameterValues(name);
+			for(int i=0 ;i<values.length;i++){
+				body=body+tmp+name+"="+values[i];
+				tmp="&";
+			}
+		}
+    	logger.info(body);
+    	return data;
+    }
 }
