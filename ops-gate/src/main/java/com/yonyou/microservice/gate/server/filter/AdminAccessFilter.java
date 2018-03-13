@@ -134,6 +134,10 @@ public class AdminAccessFilter extends ZuulFilter {
         try {
         	//从JWT中解析出用户信息
             user = getJWTUser(request,ctx);
+            if(user==null){
+                setFailedRequest(JSON.toJSONString(new TokenErrorResponse("用户被踢出")),200);
+            	logger.info("--user为空");
+            }
         } catch (Exception e) {
         	//如果jwt中的用户信息获取失败，这块返回信息可能要改成统一的response格式
             setFailedRequest(JSON.toJSONString(new TokenErrorResponse(e.getMessage())),200);
