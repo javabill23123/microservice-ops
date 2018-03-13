@@ -48,6 +48,7 @@ private static final Logger loger = LoggerFactory.getLogger(AlertInfoHandler.cla
 	@Autowired
 	private AlertInfoBiz alertInfoBiz;
 
+	
 	public void redisFile() throws IOException {
 
 		String msgInfos = redisTemplate.opsForList().leftPop(listenerKey);
@@ -66,14 +67,16 @@ private static final Logger loger = LoggerFactory.getLogger(AlertInfoHandler.cla
 					List<MsgInfoVO> list = new ArrayList<>();
 					list.add(vo);
 
-					Long keylength = redisTemplateLong.opsForList().leftPush(rule.getKeyword(),
+					//规则组+关键字作为队列的key/
+					String queueKey=rule.getGroupId()+rule.getKeyword();
+					Long keylength = redisTemplateLong.opsForList().leftPush(queueKey,
 							DateTimeUtils.parseDateTime(vo.getLogDate()));
-					List<Long> keylist = redisTemplateLong.opsForList().range(rule.getKeyword(), 0, keylength);
+					List<Long> keylist = redisTemplateLong.opsForList().range(queueKey, 0, keylength);
 					Long lastvalue = keylist.get(0);
 					if (keylength >= rule.getCount()) {
 						Long startValue = keylist.get(Integer.valueOf(rule.getCount() - 1));
 						if (lastvalue - startValue > rule.getTime()) {
-							redisTemplateLong.opsForList().trim(rule.getKeyword(), 0, keylength - 1);
+							redisTemplateLong.opsForList().trim(queueKey, 0, keylength - 1);
 							loger.info("触发报警规则，满足报警条件");
 							AlertInfo alertInfo = new AlertInfo();
 							alertInfo.setGroupId(rule.getGroupId());

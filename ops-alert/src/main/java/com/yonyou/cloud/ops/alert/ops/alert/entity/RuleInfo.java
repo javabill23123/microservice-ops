@@ -16,10 +16,19 @@ public class RuleInfo {
     private Integer time;
 
     private Integer count;
+    
+    private String name;
 
     @Column(name = "group_id")
     private Integer groupId;
- 
+    
+    @Transient
+    private RuleGroup ruleGroup;
+    
+    /**
+     * 规则状态{1：启用，0：禁用}
+     */
+    private Boolean status;
 	/**
      * @return id
      */
@@ -103,4 +112,29 @@ public class RuleInfo {
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
+
+	public RuleGroup getRuleGroup() {
+		return ruleGroup;
+	}
+
+	public void setRuleGroup(RuleGroup ruleGroup) {
+		this.ruleGroup = ruleGroup;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+ 
 }
