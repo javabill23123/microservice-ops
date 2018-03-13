@@ -144,11 +144,11 @@ redis:
   password: ${redis.yc_base.password:Pass1234}
   timeout: ${redis.yc_base.timeout:10000}
   testWhileIdle: true 
-  maxIdle: 300  
-  maxTotal: 1000  
-  maxWaitMillis: 1000  
-  minEvictableIdleTimeMillis: 300000  
-  numTestsPerEvictionRun: 1024  
-  timeBetweenEvictionRunsMillis: 30000  
-  testOnBorrow: true  
+  maxIdle: ${redis.yc_base.maxIdle:300}  
+  maxTotal: ${redis.yc_base.maxTotal:1000}  
+  maxWaitMillis: ${redis.yc_base.maxWaitMillis:1000}  
+  minEvictableIdleTimeMillis: ${redis.yc_base.minEvictableIdleTimeMillis:300000}  
+  numTestsPerEvictionRun: ${redis.yc_base.numTestsPerEvictionRun:1024}  
+  timeBetweenEvictionRunsMillis: ${redis.yc_base.timeBetweenEvictionRunsMillis:30000}  
+  testOnBorrow: ${redis.yc_base.testOnBorrow:true}  
   expire: 2592000
