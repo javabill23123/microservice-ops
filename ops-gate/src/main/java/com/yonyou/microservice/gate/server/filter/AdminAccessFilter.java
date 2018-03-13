@@ -30,6 +30,7 @@ import com.yonyou.microservice.auth.client.jwt.ServiceAuthUtil;
 import com.yonyou.microservice.gate.common.context.BaseContextHandler;
 import com.yonyou.microservice.gate.common.msg.TokenErrorResponse;
 import com.yonyou.microservice.gate.common.msg.TokenForbiddenResponse;
+import com.yonyou.microservice.gate.common.msg.TokenKickOutResponse;
 import com.yonyou.microservice.gate.common.vo.authority.IgnoreUriInfo;
 import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 import com.yonyou.microservice.gate.common.vo.log.LogInfo;
@@ -135,8 +136,8 @@ public class AdminAccessFilter extends ZuulFilter {
         	//从JWT中解析出用户信息
             user = getJWTUser(request,ctx);
             if(user==null){
-                setFailedRequest(JSON.toJSONString(new TokenErrorResponse("用户被踢出")),200);
-            	logger.info("--user为空");
+                setFailedRequest(JSON.toJSONString(new TokenKickOutResponse("user was kicked out")),200);
+            	logger.info("--user为空，退出网关");
                 return null;
             }
         } catch (Exception e) {
