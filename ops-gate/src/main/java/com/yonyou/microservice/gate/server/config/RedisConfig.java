@@ -17,28 +17,28 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisConfig {
    // <!--最大空闲数-->    
 	@Value("${redis.maxIdle}")
-    private String maxIdle;
+    private int maxIdle;
     //<!--连接池的最大数据库连接数  -->  
 	@Value("${redis.maxTotal}")
-    private String maxTotal;
+    private int maxTotal;
     //<!--最大建立连接等待时间-->    
 	@Value("${redis.maxWaitMillis}")
-    private String maxWaitMillis;
+    private int maxWaitMillis;
     //<!--逐出连接的最小空闲时间 默认1800000毫秒(30分钟)-->  
 	@Value("${redis.minEvictableIdleTimeMillis}")
-    private String minEvictableIdleTimeMillis;
+    private int minEvictableIdleTimeMillis;
     //<!--每次逐出检查时 逐出的最大数目 如果为负数就是 : 1/abs(n), 默认3-->  
 	@Value("${redis.numTestsPerEvictionRun}")
-    private String numTestsPerEvictionRun;
+    private int numTestsPerEvictionRun;
     //<!--逐出扫描的时间间隔(毫秒) 如果为负数,则不运行逐出线程, 默认-1-->  
 	@Value("${redis.timeBetweenEvictionRunsMillis}")
-    private String timeBetweenEvictionRunsMillis;
+    private int timeBetweenEvictionRunsMillis;
     //<!--是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个-->  
 	@Value("${redis.testOnBorrow}")  
-    private String testOnBorrow;
+    private boolean testOnBorrow;
     //<!--在空闲时检查有效性, 默认false  -->  
 	@Value("${redis.testWhileIdle}")
-    private String testWhileIdle;
+    private boolean testWhileIdle;
 
 	@Value("${redis.hostName}")
 	private String hostName;
@@ -52,6 +52,14 @@ public class RedisConfig {
 	@Bean
 	public JedisPoolConfig jedisPoolConfig(){
 		JedisPoolConfig redis=new JedisPoolConfig();
+		redis.setMaxIdle(this.maxIdle);
+		redis.setMaxTotal(this.maxTotal);
+		redis.setMaxWaitMillis(this.maxWaitMillis);
+		redis.setMinEvictableIdleTimeMillis(this.minEvictableIdleTimeMillis);
+		redis.setNumTestsPerEvictionRun(this.numTestsPerEvictionRun);
+		redis.setTimeBetweenEvictionRunsMillis(this.timeBetweenEvictionRunsMillis);
+		redis.setTestOnBorrow(this.testOnBorrow);
+		redis.setTestWhileIdle(this.testWhileIdle);
 		return redis;
 	}
 	@Bean
