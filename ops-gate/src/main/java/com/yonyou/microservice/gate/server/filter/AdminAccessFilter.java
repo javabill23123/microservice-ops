@@ -220,6 +220,9 @@ public class AdminAccessFilter extends ZuulFilter {
     private IJwtInfo getJWTUser(HttpServletRequest request,RequestContext ctx) throws Exception {
         String authToken = request.getHeader(userAuthConfig.getTokenHeader());
         logger.info("--Authorization:"+authToken);
+        if(authToken==null || "".equals(authToken)){
+        	throw new Exception("jwt is null");
+        }
         if(StringUtils.isBlank(authToken)){
             authToken = request.getParameter("Authorization");
         }
