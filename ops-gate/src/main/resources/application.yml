@@ -138,3 +138,17 @@ groovy:
     driver-class-name: com.mysql.jdbc.Driver
     basepackage: com.yonyou.microservice.filter.mapper
     xmlLocation: classpath:mapper/**/*.xml
+redis:
+  hostName: ${redis.yc_base.ip:10.180.4.221}
+  port: ${redis.yc_base.port:6379}
+  password: ${redis.yc_base.password:Pass1234}
+  timeout: ${redis.yc_base.timeout:10000}
+  testWhileIdle: true 
+  maxIdle: ${redis.yc_base.maxIdle:300}  
+  maxTotal: ${redis.yc_base.maxTotal:1000}  
+  maxWaitMillis: ${redis.yc_base.maxWaitMillis:1000}  
+  minEvictableIdleTimeMillis: ${redis.yc_base.minEvictableIdleTimeMillis:300000}  
+  numTestsPerEvictionRun: ${redis.yc_base.numTestsPerEvictionRun:1024}  
+  timeBetweenEvictionRunsMillis: ${redis.yc_base.timeBetweenEvictionRunsMillis:30000}  
+  testOnBorrow: ${redis.yc_base.testOnBorrow:true}  
+  expire: 2592000
