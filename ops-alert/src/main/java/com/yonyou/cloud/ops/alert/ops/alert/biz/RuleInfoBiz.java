@@ -33,6 +33,12 @@ public class RuleInfoBiz extends BaseService<RuleInfoMapper, RuleInfo> {
 	@Autowired
 	RuleScopeBiz ruleScopebiz;
 	
+	/**
+	 * 根据appName 和hostIp查询报警规则
+	 * @param appName
+	 * @param hostIp
+	 * @return
+	 */
 	public List<RuleInfo> selectRuleInfoByAppOrIp(String appName, String hostIp) {
 		return mapper.selectRuleInfoByAppOrIp(appName, hostIp);
 	}

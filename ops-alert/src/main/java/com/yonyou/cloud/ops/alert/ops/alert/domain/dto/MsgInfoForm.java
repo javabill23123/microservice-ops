@@ -5,7 +5,7 @@ package com.yonyou.cloud.ops.alert.ops.alert.domain.dto;
  * @author daniell
  *
  */
-public class MsgInfoVO {
+public class MsgInfoForm {
 
 	private String path;
 	private String type;

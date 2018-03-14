@@ -3,7 +3,7 @@ package com.yonyou.cloud.ops.alert.ops.alert.domain.dto;
 import java.util.Date;
 
 import com.xiaoleilu.hutool.date.DateUtil;
-public class AlertInfoBO {
+public class AlertInfoBo {
     
 	/**
 	 * alertinfoId

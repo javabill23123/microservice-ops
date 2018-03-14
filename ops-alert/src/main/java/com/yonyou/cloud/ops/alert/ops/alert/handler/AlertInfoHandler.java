@@ -17,7 +17,7 @@ import com.xiaoleilu.hutool.json.JSONUtil;
 import com.yonyou.cloud.ops.alert.ops.alert.biz.AlertInfoBiz;
 import com.yonyou.cloud.ops.alert.ops.alert.biz.RuleInfoBiz;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.constants.AlertStatus;
-import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.MsgInfoVO;
+import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.MsgInfoForm;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.AlertInfo;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleInfo;
 import com.yonyou.cloud.ops.alert.ops.alert.utils.DateTimeUtils;
@@ -31,7 +31,7 @@ import com.yonyou.cloud.ops.alert.ops.alert.utils.FilterUtil;
 @Component
 public class AlertInfoHandler {
 
-private static final Logger loger = LoggerFactory.getLogger(AlertInfoHandler.class);
+	private static final Logger loger = LoggerFactory.getLogger(AlertInfoHandler.class);
 
 	@Value("${redis.listener.key}")
 	private String listenerKey;
@@ -48,45 +48,52 @@ private static final Logger loger = LoggerFactory.getLogger(AlertInfoHandler.cla
 	@Autowired
 	private AlertInfoBiz alertInfoBiz;
 
-	
 	public void redisFile() throws IOException {
 
-		String msgInfos = redisTemplate.opsForList().leftPop(listenerKey);
-		if (StringUtils.isNotBlank(msgInfos)) {
-			JSONObject jsonObject = JSONUtil.parseObj(msgInfos);
-			MsgInfoVO vo = JSONUtil.toBean(jsonObject, MsgInfoVO.class);
+		// String msgInfos = redisTemplate.opsForList().leftPop(listenerKey);
+		List<String> msgInfolists = redisTemplate.opsForList().range(listenerKey, 0, 100);
+		redisTemplate.opsForList().trim(listenerKey,1, 100);
+		for (String msgInfos : msgInfolists) {
+			if (StringUtils.isNotBlank(msgInfos)) {
+				JSONObject jsonObject = JSONUtil.parseObj(msgInfos);
+				MsgInfoForm vo = JSONUtil.toBean(jsonObject, MsgInfoForm.class);
 
-			List<RuleInfo> vv = ruleInfoBiz.selectRuleInfoByAppOrIp(vo.getType(), vo.getHost());
-			String msginfo = vo.getMsginfo();
-			for (RuleInfo rule : vv) {
-				System.out.println(msginfo);
-				System.out.println(rule.getKeyword());
-				if (FilterUtil.findTextIgnoreCase(msginfo, rule.getKeyword())) {
-					System.out.println(msginfo);
+				//查询包含改APPname的报警规则
+				List<RuleInfo> vv = ruleInfoBiz.selectRuleInfoByAppOrIp(vo.getType(), vo.getHost());
+				String msginfo = vo.getMsginfo();
+				for (RuleInfo rule : vv) {
+					loger.info("log内容"+msginfo);
+					loger.info("报警关键字"+rule.getKeyword());
+					if (FilterUtil.findTextIgnoreCase(msginfo, rule.getKeyword())) {
+						loger.info("触发报警关键字"+rule.getKeyword());
 
-					List<MsgInfoVO> list = new ArrayList<>();
-					list.add(vo);
+						List<MsgInfoForm> list = new ArrayList<>();
+						list.add(vo);
 
-					//规则组+关键字作为队列的key/
-					String queueKey=rule.getGroupId()+rule.getKeyword();
-					Long keylength = redisTemplateLong.opsForList().leftPush(queueKey,
-							DateTimeUtils.parseDateTime(vo.getLogDate()));
-					List<Long> keylist = redisTemplateLong.opsForList().range(queueKey, 0, keylength);
-					Long lastvalue = keylist.get(0);
-					if (keylength >= rule.getCount()) {
-						Long startValue = keylist.get(Integer.valueOf(rule.getCount() - 1));
-						if (lastvalue - startValue > rule.getTime()) {
-							redisTemplateLong.opsForList().trim(queueKey, 0, keylength - 1);
-							loger.info("触发报警规则，满足报警条件");
-							AlertInfo alertInfo = new AlertInfo();
-							alertInfo.setGroupId(rule.getGroupId());
-							alertInfo.setAlertDetail(msginfo);
-							alertInfo.setStatus(AlertStatus.Trigger.getValue());
-							alertInfoBiz.insertSelective(alertInfo);
+						// 规则组+关键字作为队列的key/
+						String queueKey = rule.getGroupId() + rule.getKeyword();
+						Long keylength = redisTemplateLong.opsForList().leftPush(queueKey,
+								DateTimeUtils.parseDateTime(vo.getLogDate()));
+						//获取队列所有内容
+						List<Long> keylist = redisTemplateLong.opsForList().range(queueKey, 0, keylength);
+						Long lastvalue = keylist.get(0);
+						if (keylength >= rule.getCount()) {
+							Long startValue = keylist.get(Integer.valueOf(rule.getCount() - 1));
+							if (lastvalue - startValue <= rule.getTime()*1000*60L) {
+//								redisTemplateLong.opsForList().trim(queueKey, 0, keylength - 1);
+								redisTemplateLong.opsForList().trim(queueKey, 100,  -1);
+								loger.info("触发报警规则，满足报警条件");
+								AlertInfo alertInfo = new AlertInfo();
+								alertInfo.setGroupId(rule.getGroupId());
+								alertInfo.setAlertDetail(msginfo);
+								alertInfo.setStatus(AlertStatus.Trigger.getValue());
+								alertInfoBiz.insertSelective(alertInfo);
+							}
 						}
 					}
 				}
 			}
 		}
+
 	}
 }

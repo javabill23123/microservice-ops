@@ -33,7 +33,7 @@
 	</select>
 	
 	
-  <resultMap id="selectBOResultMap" type="com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoBO"> 
+  <resultMap id="selectBOResultMap" type="com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoBo"> 
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="alert_detail" jdbcType="VARCHAR" property="alertDetail" />
 		<result column="group_id" jdbcType="INTEGER" property="groupId" />
