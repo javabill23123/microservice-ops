@@ -29,9 +29,10 @@
 				SELECT
 					group_id
 				FROM
-					`rule_scope`
+					`rule_scope` LEFT JOIN rule_group ON rule_group.id = rule_scope.group_id
 				WHERE
-					ip_app = #{appName} or ip_app=#{hostIp}
+				 rule_group.`status` = 1
+				 AND ip_app = #{appName} or ip_app=#{hostIp}
 			);
 	</select>
 	
