@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,17 +56,18 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 	}
 
 	public void sendMail() {
-
-		List<AlertInfo> alertbo = mapper.selectAlertAndGroupByStatus(AlertStatus.Trigger.getValue());
-		System.out.println("" + alertbo);
+		AlertInfoSearchForm SearchForm=new AlertInfoSearchForm();
+		SearchForm.setStatus(AlertStatus.Trigger.getValue());
+		List<AlertInfoBo> alertbo = mapper.selectAlertBO(SearchForm);
+ 
 		List<MessageTemplate> msgTemp = new ArrayList<MessageTemplate>();
 		AlarmMessageContext context = new AlarmMessageContext(emailMessage);
-		for (AlertInfo alert : alertbo) {
+		for (AlertInfoBo alert : alertbo) {
 			alert.getAlertDetail();
 			alert.getGroupName();
 			MessageTemplate msg = new MessageTemplate();
-			msg.setSubject("业务报警邮件");
-			msg.setContent(alert.getAlertDetail());
+			msg.setSubject(alert.getMailTitle());
+			msg.setContent(alert.getMailContent()+"\n报错详情信息如下:\n"+alert.getAlertDetail());
 
 			List<GroupUsers> GroupUserslists = userGroupAlertBiz.getList(alert.getGroupId()).getData();
 			Set<String> emailhs = new HashSet();
@@ -89,7 +91,10 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 
 			// 更正状态为已通知
 			alert.setStatus(AlertStatus.Notice.getValue());
-			mapper.updateByPrimaryKey(alert);
+
+			AlertInfo ainfo=new AlertInfo();
+			BeanUtils.copyProperties(alert, ainfo);
+			mapper.updateByPrimaryKey(ainfo);
 		}
 	}
 

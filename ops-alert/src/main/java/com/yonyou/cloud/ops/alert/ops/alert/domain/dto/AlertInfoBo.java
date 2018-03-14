@@ -45,6 +45,11 @@ public class AlertInfoBo {
      
     private String updateUser;
     
+    
+    private String mailTitle;
+    private String mailContent;
+    
+    
     public String getUpdateDate() {
 		return DateUtil.formatDateTime(updateDate);
 	}
@@ -93,5 +98,17 @@ public class AlertInfoBo {
 	}
 	public void setCreateDate(Date createDate) {
 		CreateDate = createDate;
+	}
+	public String getMailTitle() {
+		return mailTitle;
+	}
+	public void setMailTitle(String mailTitle) {
+		this.mailTitle = mailTitle;
+	}
+	public String getMailContent() {
+		return mailContent;
+	}
+	public void setMailContent(String mailContent) {
+		this.mailContent = mailContent;
 	}
 }

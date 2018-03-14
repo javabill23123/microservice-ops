@@ -26,13 +26,6 @@
 		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
 	</resultMap>
 	
-	<select id="selectAlertAndGroupByStatus" resultMap="selectBaseResultMap">
-		SELECT
-		rg.name as group_name,rg.descr,at.alert_detail,at.status ,at.group_id,at.id FROM alert_info
-		at,rule_group rg WHERE at.group_id=rg.id and at.status=#{status}
-	</select>
-	
-	
   <resultMap id="selectBOResultMap" type="com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoBo"> 
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="alert_detail" jdbcType="VARCHAR" property="alertDetail" />
@@ -42,10 +35,13 @@
 		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
 		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
 		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="mail_title" jdbcType="VARCHAR" property="mailTitle" />
+		<result column="mail_content" jdbcType="VARCHAR" property="mailContent" />
+	 
 	</resultMap>  
   
   	<select id="selectAlertBO"  parameterType="com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoSearchForm" resultMap="selectBOResultMap">
-		SELECT rg.name as group_name,at.alert_detail,at.status ,at.group_id,at.id ,at.create_date,at.update_date,at.update_user FROM alert_info
+		SELECT rg.name as group_name,at.alert_detail,at.status ,at.group_id,at.id ,at.create_date,at.update_date,at.update_user ,rg.mail_title,rg.mail_content FROM alert_info
 		at,rule_group rg WHERE at.group_id=rg.id 
 		<if test="status!=null and status!=''">
 			and at.status=#{status,jdbcType=VARCHAR}
