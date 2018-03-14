@@ -14,7 +14,7 @@
 	<logger name="org.springframework.orm.jpa" level="debug"
 		additivity="true"></logger>
 
-	<logger name="com.yonyou" level="debug" />
+	<logger name="com.yonyou" level="INFO" />
 
 
 	<!-- 控制台打印 -->
