@@ -159,13 +159,22 @@ public class AdminAccessFilter extends ZuulFilter {
         // 申请客户端密钥头
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
         ctx.addZuulRequestHeader(USER_HEAD_ID,user.getId());
-        ctx.addZuulRequestHeader(USER_HEAD_NAME,user.getName());
-        ctx.addZuulRequestHeader(USER_HEAD_REMARK,user.getRemark());
+        String name=URLEncoder.encode(user.getName());
+        ctx.addZuulRequestHeader(USER_HEAD_NAME,name);
+        String remark=URLEncoder.encode(user.getRemark());
+        ctx.addZuulRequestHeader(USER_HEAD_REMARK,remark);
         ctx.addZuulRequestHeader(REPBODY_DEALER_CODE,user.getDealerCode());
-        ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,user.getDealerName());
+        String dealerName=URLEncoder.encode(user.getDealerName());
+        ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,dealerName);
         ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
-    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+",username="+user.getName()+",dealercode="+user.getDealerCode()+
-    			"dealername="+user.getDealerName()+",telphone="+user.getTelPhone());
+    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+
+    			",username="+user.getName()+
+    			",encode(username)="+name+
+    			",dealercode="+user.getDealerCode()+
+    			",dealername="+user.getDealerName()+
+    			",encode(dealername)="+dealerName+
+    			",telphone="+user.getTelPhone()+
+    			",remark="+remark);
         BaseContextHandler.remove();
         return null;
     }
