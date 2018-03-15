@@ -10,6 +10,9 @@ public class ClientInfo implements IJwtInfo {
     String clientId;
     String name;
     String remark;
+    String dealerName;
+    String dealerCode;
+    private String telPhone;
 
     public ClientInfo(String clientId, String name, String id) {
         this.clientId = clientId;
@@ -17,11 +20,15 @@ public class ClientInfo implements IJwtInfo {
         this.id = id;
     }
 
-    public ClientInfo(String clientId, String name, String id,String remark) {
+    public ClientInfo(String clientId, String name, String id,String dealerCode,
+    		String dealerName,String telPhone,String remark) {
         this.clientId = clientId;
         this.name = name;
         this.id = id;
         this.remark=remark;
+        this.dealerCode=dealerCode;
+        this.dealerName=dealerName;
+        this.telPhone=telPhone;
     }
 
     public void setId(String id) {
@@ -45,23 +52,34 @@ public class ClientInfo implements IJwtInfo {
         this.remark = remark;
     }
 
-    @Override
     public String getUniqueName() {
         return clientId;
     }
 
-    @Override
     public String getId() {
         return id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-	@Override
 	public String getRemark() {
 		return this.remark;
+	}
+
+	public String getDealerName() {
+		// TODO Auto-generated method stub
+		return dealerName;
+	}
+
+	public String getDealerCode() {
+		// TODO Auto-generated method stub
+		return dealerCode;
+	}
+
+	public String getTelPhone() {
+		// TODO Auto-generated method stub
+		return telPhone;
 	}
 }

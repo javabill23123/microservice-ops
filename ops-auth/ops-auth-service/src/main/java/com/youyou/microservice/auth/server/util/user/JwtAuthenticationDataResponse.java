@@ -1,6 +1,8 @@
 package com.youyou.microservice.auth.server.util.user;
 
 import java.io.Serializable;
+
+import com.xiaoleilu.hutool.json.JSONObject;
 /**
  *  @author joy
  */
@@ -8,9 +10,9 @@ public class JwtAuthenticationDataResponse  implements Serializable{
 
 	private static final long serialVersionUID = 3499186841961348924L;
 	private final String jwt;
-    private final String rData;
+    private final JSONObject rData;
 
-    public JwtAuthenticationDataResponse(String jwt,String data) {
+    public JwtAuthenticationDataResponse(String jwt,JSONObject data) {
         this.jwt = jwt;
         this.rData=data;
     }
@@ -19,7 +21,7 @@ public class JwtAuthenticationDataResponse  implements Serializable{
 		return jwt;
 	}
 
-	public String getrData() {
+	public JSONObject getrData() {
 		return rData;
 	}
     

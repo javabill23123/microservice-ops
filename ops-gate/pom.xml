@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.yonyou.cloud</groupId>
 	<artifactId>ops-gate</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>com.yonyou.cloud</groupId>
 			<artifactId>ops-common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -49,10 +49,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -112,6 +108,18 @@
 			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>1.1.4</version>
 		</dependency>
+		<!-- Redis客户端 -->    
+		<dependency>    
+		   <groupId>redis.clients</groupId>     
+ 		   <artifactId>jedis</artifactId>    
+ 		   <version>2.9.0</version>    
+		</dependency>    
+		<!-- redis Spring 基于注解配置 -->     
+		<dependency>      
+		  <groupId>org.springframework.data</groupId>      
+		  <artifactId>spring-data-redis</artifactId>      
+ 		  <version>1.7.2.RELEASE</version>      
+		</dependency>   		
 	</dependencies>
 
 

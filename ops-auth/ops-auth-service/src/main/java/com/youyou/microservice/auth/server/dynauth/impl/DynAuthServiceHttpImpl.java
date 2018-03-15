@@ -68,7 +68,7 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 		String param = "?" + queryString;
 		// 4. 请求body
 		HttpHeaders headers = new HttpHeaders();
-		if(request.getContentType().contains("-form")){
+		if(request.getContentType()!=null && request.getContentType().contains("-form")){
 		    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		}
 		HttpEntity<String> entity = new HttpEntity<String>(body, headers);
@@ -91,7 +91,7 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 	 */
 	private String getBody(HttpServletRequest request) {
 	    String body="";
-		if(request.getContentType().contains("-form")){
+		if(request.getContentType()!=null && request.getContentType().contains("-form")){
 			String tmp="";
 			Enumeration<String> map=request.getParameterNames();
 			while ( map.hasMoreElements() ){

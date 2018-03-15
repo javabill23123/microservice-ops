@@ -37,41 +37,42 @@ import com.yonyou.cloud.ops.mq.service.MqProducerService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class OpsMqApplicationTests {
-	@Autowired
-	private TransportClient client;
+//	@Autowired
+//	private TransportClient client;
 
-	@Test
-	public void contextLoads() {
-//		MultiGetRequestBuilder builder = client.prepareMultiGet();
-//		//builder.add("demo_mq", "track","");
-//		builder.add("demo_mq", "track","*");
-//		client.prepareMultiGet().
-		SearchResponse searchResponse  = client.prepareSearch("demo_mq")
-		.setTypes("track")
-		.setQuery(QueryBuilders.matchAllQuery())
-		.setSearchType(SearchType.QUERY_THEN_FETCH)  
-        .setFrom(10).setSize(10)//分页  
-        .addSort("@timestamp", SortOrder.DESC)//排序  
-        .get();  
-		
-		SearchHits hits = searchResponse.getHits();  
-        long total = hits.getTotalHits();  
-        System.out.println(total);  
-        SearchHit[] searchHits = hits.getHits();  
-        for(SearchHit s : searchHits)  
-        {  
-        	
-        	String properties = s.getSource().get("properties").toString();
-        	System.out.println(properties);
-        	System.out.println(fromStr(properties).get("column1"));
-        }  
+//	@Test
+//	public void contextLoads() {
+////		MultiGetRequestBuilder builder = client.prepareMultiGet();
+////		//builder.add("demo_mq", "track","");
+////		builder.add("demo_mq", "track","*");
+////		client.prepareMultiGet().
+//		SearchResponse searchResponse  = client.prepareSearch("demo_mq")
+//		.setTypes("track")
+//		.setQuery(QueryBuilders.matchAllQuery())
+//		.setSearchType(SearchType.QUERY_THEN_FETCH)  
+//        .setFrom(10).setSize(10)//分页  
+//        .addSort("@timestamp", SortOrder.DESC)//排序  
+//        .get();  
+//		
+//		SearchHits hits = searchResponse.getHits();  
+//        long total = hits.getTotalHits();  
+//        System.out.println(total);  
+//        SearchHit[] searchHits = hits.getHits();  
+//        for(SearchHit s : searchHits)  
+//        {  
+//        	
+//        	String properties = s.getSource().get("properties").toString();
+//        	System.out.println(properties);
+//        	System.out.println(fromStr(properties).get("column1"));
+//        }  
 		
 		
 //		MultiGetResponse responses = builder.get();
 //		System.out.println(responses.getResponses());
 //		responses.forEach(response -> System.out.println(response.getResponse().getSource().get("properties")));
-	}
+//	}
 	
 	public Map<String,String> fromStr(String str){
 		Map<String, String> strMap = new HashMap<String, String>();  
@@ -90,12 +91,12 @@ public class OpsMqApplicationTests {
 	MqDataApi mqDataApi;
 
 	
-	@Test
-	public void test2(){
-		PageResultResponse<MqData> page = mqDataApi.pageQueryMqData(1, 20, "demo_mq", "track", "properties.column1:9ef524e9*", "@timestamp", "desc");
-		System.out.println(page.getData());
-		
-	}
+//	@Test
+//	public void test2(){
+//		PageResultResponse<MqData> page = mqDataApi.pageQueryMqData(1, 20, "demo_mq", "track", "properties.column1:9ef524e9*", "@timestamp", "desc");
+//		System.out.println(page.getData());
+//		
+//	}
 	
 	@Autowired
 	MqProducerService mqProducerService;
@@ -113,12 +114,17 @@ public class OpsMqApplicationTests {
 		pro.setSuccess("false");
 		pro.setMsgKey("bbbb");
 		
-//		mqProducerService.insert("mq", pro);
+		try {
+			mqProducerService.save(pro);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 //		mqProducerService.update("mq",pro, "AV_JMnIaZG64QQzzpAPt");
 		
 //		System.out.println("data===="+mqProducerService.selectOne("mq", "_type:"));
-		System.out.println("dataList===="+mqProducerService.selectList("mq", "occurTime:1510882840569").size());
+//		System.out.println("dataList===="+mqProducerService.selectList("mq", "occurTime:1510882840569").size());
 		
 	}
 	
@@ -128,66 +134,66 @@ public class OpsMqApplicationTests {
 	private MqConsumerService mqConsumerService;
 	@Autowired
 	MqConsumeDetailInfoService mqConsumeDetailInfoService;
-	@Test
-	public void mqMessageServiceTest(){
-		MqMessage m = mqMessageService.selectOne(MqOpsConstant.INDEX, "msgKey:49c5ea89-9df4-4d17-bbad-676ebd4419a9");
-		m.setSuccess("true");
-		try {
-			mqMessageService.update(MqOpsConstant.INDEX, m, m.getId());
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(JSONUtil.toJsonPrettyStr(m));
-	}
-	
-	@Test
-	public void insertTest(){
-		for(int i =0;i<100;i++){
-			String uuid = UUID.randomUUID().toString();
-			
-			MqMessage mqMessage = new MqMessage();
-			mqMessage.setMsgKey(uuid);
-			mqMessage.setOccurTime(System.currentTimeMillis());
-			mqMessage.setProduceSuccessTime(System.currentTimeMillis());
-			mqMessage.setConsumeSuccessTime(System.currentTimeMillis());
-			mqMessage.setData("{\"alco\": \"cn.sh.ly\"}");
-			mqMessage.setHost("10.32.38.3");
-			mqMessage.setExchangeName("exchange_dol_l");
-			mqMessage.setMsg("ok");
-			mqMessage.setRoutingKey("keyyyyyyy");
-			mqMessage.setSender("发送方clod");
-			mqMessage.setSuccess("true");
-			mqMessage.setStatus(MqMessageStatus.PRODUCED.toString());
-			MqConsumer mqConsumer = new MqConsumer();
-			mqConsumer.setMsgKey(uuid);
-			mqConsumer.setHost("host");
-			mqConsumer.setData("{\"alco\": \"cn.sh.ly\"}");
-			mqConsumer.setMsg("msg");
-			mqConsumer.setQueueName("queuename");
-			mqConsumer.setOccurTime(System.currentTimeMillis());
-			MqConsumeDetailInfo mqConsumeDetailInfo = new MqConsumeDetailInfo();
-			mqConsumeDetailInfo.setMsgKey(uuid);
-			mqConsumeDetailInfo.setAppName("aapname" + i);
-			mqConsumeDetailInfo.setData("sdfasdfsgsdfasdfs");
-			mqConsumeDetailInfo.setHost("host");
-			mqConsumeDetailInfo.setMsg("msg");
-			mqConsumeDetailInfo.setOccurTime(System.currentTimeMillis());
-			mqConsumeDetailInfo.setQueueName("queuename");
-			mqConsumeDetailInfo.setSuccess("ture");
-			try {
-//				mqConsumerService.insert(MqOpsConstant.INDEX, mqConsumer);
-				mqMessageService.insert(MqOpsConstant.INDEX, mqMessage);
-//				mqConsumeDetailInfo.setConsumerId(String.valueOf(i));
-//				mqConsumeDetailInfoService.insert(MqOpsConstant.INDEX, mqConsumeDetailInfo);
-//				mqConsumeDetailInfo.setConsumerId(String.valueOf(i*10));
-//				mqConsumeDetailInfoService.insert(MqOpsConstant.INDEX, mqConsumeDetailInfo);
-//				mqConsumeDetailInfo.setConsumerId(String.valueOf(i*100));
-//				mqConsumeDetailInfoService.insert(MqOpsConstant.INDEX, mqConsumeDetailInfo);
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+//	@Test
+//	public void mqMessageServiceTest(){
+//		MqMessage m = mqMessageService.selectOne(MqOpsConstant.INDEX, "msgKey:49c5ea89-9df4-4d17-bbad-676ebd4419a9");
+//		m.setSuccess("true");
+//		try {
+//			mqMessageService.update(MqOpsConstant.INDEX, m, m.getId());
+//		} catch (JsonProcessingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(JSONUtil.toJsonPrettyStr(m));
+//	}
+//	
+//	@Test
+//	public void insertTest(){
+//		for(int i =0;i<100;i++){
+//			String uuid = UUID.randomUUID().toString();
+//			
+//			MqMessage mqMessage = new MqMessage();
+//			mqMessage.setMsgKey(uuid);
+//			mqMessage.setOccurTime(System.currentTimeMillis());
+//			mqMessage.setProduceSuccessTime(System.currentTimeMillis());
+//			mqMessage.setConsumeSuccessTime(System.currentTimeMillis());
+//			mqMessage.setData("{\"alco\": \"cn.sh.ly\"}");
+//			mqMessage.setHost("10.32.38.3");
+//			mqMessage.setExchangeName("exchange_dol_l");
+//			mqMessage.setMsg("ok");
+//			mqMessage.setRoutingKey("keyyyyyyy");
+//			mqMessage.setSender("发送方clod");
+//			mqMessage.setSuccess("true");
+//			mqMessage.setStatus(MqMessageStatus.PRODUCED.toString());
+//			MqConsumer mqConsumer = new MqConsumer();
+//			mqConsumer.setMsgKey(uuid);
+//			mqConsumer.setHost("host");
+//			mqConsumer.setData("{\"alco\": \"cn.sh.ly\"}");
+//			mqConsumer.setMsg("msg");
+//			mqConsumer.setQueueName("queuename");
+//			mqConsumer.setOccurTime(System.currentTimeMillis());
+//			MqConsumeDetailInfo mqConsumeDetailInfo = new MqConsumeDetailInfo();
+//			mqConsumeDetailInfo.setMsgKey(uuid);
+//			mqConsumeDetailInfo.setAppName("aapname" + i);
+//			mqConsumeDetailInfo.setData("sdfasdfsgsdfasdfs");
+//			mqConsumeDetailInfo.setHost("host");
+//			mqConsumeDetailInfo.setMsg("msg");
+//			mqConsumeDetailInfo.setOccurTime(System.currentTimeMillis());
+//			mqConsumeDetailInfo.setQueueName("queuename");
+//			mqConsumeDetailInfo.setSuccess("ture");
+//			try {
+////				mqConsumerService.insert(MqOpsConstant.INDEX, mqConsumer);
+////				mqMessageService.insert(MqOpsConstant.INDEX, mqMessage);
+////				mqConsumeDetailInfo.setConsumerId(String.valueOf(i));
+////				mqConsumeDetailInfoService.insert(MqOpsConstant.INDEX, mqConsumeDetailInfo);
+////				mqConsumeDetailInfo.setConsumerId(String.valueOf(i*10));
+////				mqConsumeDetailInfoService.insert(MqOpsConstant.INDEX, mqConsumeDetailInfo);
+////				mqConsumeDetailInfo.setConsumerId(String.valueOf(i*100));
+////				mqConsumeDetailInfoService.insert(MqOpsConstant.INDEX, mqConsumeDetailInfo);
+//			} catch (JsonProcessingException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 }

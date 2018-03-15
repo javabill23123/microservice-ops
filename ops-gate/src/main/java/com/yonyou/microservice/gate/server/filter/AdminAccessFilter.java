@@ -30,6 +30,7 @@ import com.yonyou.microservice.auth.client.jwt.ServiceAuthUtil;
 import com.yonyou.microservice.gate.common.context.BaseContextHandler;
 import com.yonyou.microservice.gate.common.msg.TokenErrorResponse;
 import com.yonyou.microservice.gate.common.msg.TokenForbiddenResponse;
+import com.yonyou.microservice.gate.common.msg.TokenKickOutResponse;
 import com.yonyou.microservice.gate.common.vo.authority.IgnoreUriInfo;
 import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 import com.yonyou.microservice.gate.common.vo.log.LogInfo;
@@ -55,6 +56,9 @@ public class AdminAccessFilter extends ZuulFilter {
 	private static final String USER_HEAD_ID="userId";
 	private static final String USER_HEAD_NAME="userName";
 	private static final String USER_HEAD_REMARK="remark";
+	private static final String REPBODY_DEALER_NAME = "dealerName";
+	private static final String REPBODY_DEALER_CODE = "dealerCode";
+	private static final String REPBODY_TELPHONE = "telPhone";
 	private static final String PERMISSION="permission";
 	private static final String HTTP_GET="GET";
 	private static final String LOG_OUT="autht/invalid";
@@ -115,11 +119,13 @@ public class AdminAccessFilter extends ZuulFilter {
     	logger.info("--AdminAccessFilter.run(),进入网关");
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
+    	logger.info("--AdminAccessFilter.run(),requestUri="+request.getRequestURI());
         final String requestUri = request.getRequestURI().substring(zuulPrefix.length());
         final String method = request.getMethod();
         BaseContextHandler.setToken(null);
         // 不进行拦截的地址
         if (isStartWith(requestUri)) {
+        	logger.info("--AdminAccessFilter.run(),忽略身份认证");
             return null;
         }
         if(requestUri.contains(LOG_OUT)){
@@ -129,13 +135,20 @@ public class AdminAccessFilter extends ZuulFilter {
         try {
         	//从JWT中解析出用户信息
             user = getJWTUser(request,ctx);
+            if(user==null){
+                setFailedRequest(JSON.toJSONString(new TokenKickOutResponse("user was kicked out")),200);
+            	logger.info("--user为空，退出网关");
+                return null;
+            }
         } catch (Exception e) {
         	//如果jwt中的用户信息获取失败，这块返回信息可能要改成统一的response格式
             setFailedRequest(JSON.toJSONString(new TokenErrorResponse(e.getMessage())),200);
+        	logger.error("--AdminAccessFilter.run(),解析jwt出现异常,"+e.getMessage());
             return null;
         }
 //        if(!(requestUri.contains(SPEC_URI_INFO)||requestUri.contains(SPEC_URI_MENUS))){
         if(!SPEC_URI_INFO.contains(requestUri)){
+        	logger.info("--AdminAccessFilter.run(),开始uri访问权限检查");
             List<PermissionInfo> permissionInfos = cacheService.getAllPermissionInfo();
             // 判断资源是否启用权限约束
             Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
@@ -146,8 +159,13 @@ public class AdminAccessFilter extends ZuulFilter {
         // 申请客户端密钥头
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
         ctx.addZuulRequestHeader(USER_HEAD_ID,user.getId());
-        ctx.addZuulRequestHeader(USER_HEAD_NAME,user.getUniqueName());
+        ctx.addZuulRequestHeader(USER_HEAD_NAME,user.getName());
         ctx.addZuulRequestHeader(USER_HEAD_REMARK,user.getRemark());
+        ctx.addZuulRequestHeader(REPBODY_DEALER_CODE,user.getDealerCode());
+        ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,user.getDealerName());
+        ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
+    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+",username="+user.getName()+",dealercode="+user.getDealerCode()+
+    			"dealername="+user.getDealerName()+",telphone="+user.getTelPhone());
         BaseContextHandler.remove();
         return null;
     }
@@ -201,6 +219,10 @@ public class AdminAccessFilter extends ZuulFilter {
      */
     private IJwtInfo getJWTUser(HttpServletRequest request,RequestContext ctx) throws Exception {
         String authToken = request.getHeader(userAuthConfig.getTokenHeader());
+        logger.info("--Authorization:"+authToken);
+        if(authToken==null || "".equals(authToken)){
+        	throw new Exception("jwt is null");
+        }
         if(StringUtils.isBlank(authToken)){
             authToken = request.getParameter("Authorization");
         }
@@ -238,6 +260,7 @@ public class AdminAccessFilter extends ZuulFilter {
         List<PermissionInfo> permissionInfos = getPermissionInfos(ctx.getRequest(), username) ;
         Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
         if (result.size() <= 0) {
+        	logger.info("--AdminAccessFilter.run(),访问拒绝,uri="+requestUri);
             setFailedRequest(JSON.toJSONString(new TokenForbiddenResponse("access was denied!")), 200);
         } else{
             PermissionInfo[] pms =  result.toArray(new PermissionInfo[]{});

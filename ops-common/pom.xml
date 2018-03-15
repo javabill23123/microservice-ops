@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.yonyou.cloud</groupId>
   <artifactId>ops-common</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   
 
     <parent>
@@ -96,12 +96,12 @@
         <dependency>
             <groupId>com.yonyou.cloud</groupId>
 	        <artifactId>common-elegance</artifactId>
-	        <version>0.0.1-SNAPSHOT</version>
+	        <version>0.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
     
     <distributionManagement>
-		<repository>
+<!-- 		<repository>
 			<id>nexus-releases</id>
 			<name>Releases name</name>
 			<url>http://210.13.111.26:10160/nexus/content/repositories/releases/</url>
@@ -110,9 +110,14 @@
 			<id>nexus-snapshots</id>
 			<name>snapshots name</name>
 			<url>http://210.13.111.26:10160/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
+		</snapshotRepository> -->
+		
+		<snapshotRepository>
+	        <id>nexus-snapshots</id>
+	        <name>user snapshot</name>
+	        <url>http://dce.carapptest.gtmc.com.cn:32081/repository/maven-snapshots/</url>
+	    </snapshotRepository>
 	</distributionManagement>
-    
     <build>
         <plugins>
             <plugin>
