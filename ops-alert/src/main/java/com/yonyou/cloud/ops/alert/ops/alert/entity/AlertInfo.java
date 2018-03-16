@@ -44,6 +44,17 @@ public class AlertInfo {
 	@Column(name="app_name")
 	private String appName;
 	
+	@Column(name="alert_desc")
+	private String alertDesc;
+	
+	public String getAlertDesc() {
+		return alertDesc;
+	}
+
+	public void setAlertDesc(String alertDesc) {
+		this.alertDesc = alertDesc;
+	}
+	
     public String getAppName() {
 		return appName;
 	}

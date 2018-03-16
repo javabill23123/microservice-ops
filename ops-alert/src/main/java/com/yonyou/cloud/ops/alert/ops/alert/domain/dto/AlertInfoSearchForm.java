@@ -19,7 +19,9 @@ public class AlertInfoSearchForm extends EsPageQuery{
     /**
      * 规则组名称
      */
-    private String groupName; 
+    private String groupName;
+    
+    private String appName;
     
 	public Integer getId() {
 		return id;
@@ -44,5 +46,11 @@ public class AlertInfoSearchForm extends EsPageQuery{
 	}
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+	public String getAppName() {
+		return appName;
+	}
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 }

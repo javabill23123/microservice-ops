@@ -1,7 +1,6 @@
 package com.yonyou.cloud.ops.alert.ops.alert.domain.dto;
 
 import java.util.Date;
-
 import com.xiaoleilu.hutool.date.DateUtil;
 public class AlertInfoBo {
     
@@ -50,6 +49,8 @@ public class AlertInfoBo {
     private String mailContent;
     
     private String appName;
+    
+	private String alertDesc;
     
     public String getUpdateDate() {
 		return DateUtil.formatDateTime(updateDate);
@@ -117,5 +118,11 @@ public class AlertInfoBo {
 	}
 	public void setAppName(String appName) {
 		this.appName = appName;
+	}
+	public String getAlertDesc() {
+		return alertDesc;
+	}
+	public void setAlertDesc(String alertDesc) {
+		this.alertDesc = alertDesc;
 	}
 }
