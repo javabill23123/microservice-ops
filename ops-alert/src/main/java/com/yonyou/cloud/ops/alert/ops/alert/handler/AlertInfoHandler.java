@@ -2,6 +2,7 @@ package com.yonyou.cloud.ops.alert.ops.alert.handler;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -87,6 +88,8 @@ public class AlertInfoHandler {
 								alertInfo.setGroupId(rule.getGroupId());
 								alertInfo.setAlertDetail(msginfo);
 								alertInfo.setStatus(AlertStatus.Trigger.getValue());
+								alertInfo.setAppName(vo.getType());
+								alertInfo.setCreateDate(new Date());
 								alertInfoBiz.insertSelective(alertInfo);
 							}
 						}

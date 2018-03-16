@@ -49,6 +49,7 @@ public class AlertInfoBo {
     private String mailTitle;
     private String mailContent;
     
+    private String appName;
     
     public String getUpdateDate() {
 		return DateUtil.formatDateTime(updateDate);
@@ -110,5 +111,11 @@ public class AlertInfoBo {
 	}
 	public void setMailContent(String mailContent) {
 		this.mailContent = mailContent;
+	}
+	public String getAppName() {
+		return appName;
+	}
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 }

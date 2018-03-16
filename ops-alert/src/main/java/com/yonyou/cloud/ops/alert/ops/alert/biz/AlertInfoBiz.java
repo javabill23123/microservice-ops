@@ -62,14 +62,24 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
  
 		List<MessageTemplate> msgTemp = new ArrayList<MessageTemplate>();
 		AlarmMessageContext context = new AlarmMessageContext(emailMessage);
-		for (AlertInfoBo alert : alertbo) {
-			alert.getAlertDetail();
-			alert.getGroupName();
+		for (AlertInfoBo alertBo : alertbo) {
+			alertBo.getAlertDetail();
+			alertBo.getGroupName();
 			MessageTemplate msg = new MessageTemplate();
-			msg.setSubject(alert.getMailTitle());
-			msg.setContent(alert.getMailContent()+"\n报错详情信息如下:\n"+alert.getAlertDetail());
+			msg.setSubject(alertBo.getMailTitle());
+			
+			StringBuffer sbu=new StringBuffer();
+			sbu.append(alertBo.getMailContent());
+			sbu.append("\n服务名称：");
+			sbu.append(alertBo.getAppName());
+			sbu.append("\n触发报警规则组：");
+			sbu.append(alertBo.getGroupName()); 
+			sbu.append("\n报错详情信息如下:\n");
+			sbu.append(alertBo.getAlertDetail());
+		 
+			msg.setContent(sbu.toString());
 
-			List<GroupUsers> GroupUserslists = userGroupAlertBiz.getList(alert.getGroupId()).getData();
+			List<GroupUsers> GroupUserslists = userGroupAlertBiz.getList(alertBo.getGroupId()).getData();
 			Set<String> emailhs = new HashSet();
 			for (GroupUsers gus : GroupUserslists) {
 				int i = 0;
@@ -90,10 +100,10 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 			context.AlarmMessage(msgTemp);
 
 			// 更正状态为已通知
-			alert.setStatus(AlertStatus.Notice.getValue());
+			alertBo.setStatus(AlertStatus.Notice.getValue());
 
 			AlertInfo ainfo=new AlertInfo();
-			BeanUtils.copyProperties(alert, ainfo);
+			BeanUtils.copyProperties(alertBo, ainfo);
 			mapper.updateByPrimaryKey(ainfo);
 		}
 	}

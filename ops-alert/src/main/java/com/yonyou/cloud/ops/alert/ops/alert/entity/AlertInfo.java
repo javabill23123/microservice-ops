@@ -36,10 +36,23 @@ public class AlertInfo {
     private String updateUser;
     
 	@Transient
-    public RuleGroup ruleGroup;
+	private RuleGroup ruleGroup;
     
+	/**
+	 * 触发报警的服务名
+	 */
+	@Column(name="app_name")
+	private String appName;
 	
-    public String getUpdateUser() {
+    public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getUpdateUser() {
 		return updateUser;
 	}
 
