@@ -78,13 +78,13 @@
 		<!-- left join rule_scope rc on rg.id=rc.group_id -->
 		where 1=1
 		<if test="null != ruleName  and  '' != ruleName  ">
-			AND ri.name = #{ruleName}
+			AND ri.name like CONCAT(CONCAT('%',#{ruleName},'%'))
 		</if>
 		<if test="groupName !=null and groupName !='' ">
-			AND rg.name =#{groupName}
+			AND rg.name like CONCAT(CONCAT('%',#{groupName},'%'))
 		</if>
 		<if test="keyword !=null and keyword !='' ">
-			AND ri.keyword = #{keyword}
+			AND ri.keyword like CONCAT(CONCAT('%',#{keyword},'%'))
 		</if>
 		<if test="status !=null and status !='' ">
 			AND rg.status=#{status}
