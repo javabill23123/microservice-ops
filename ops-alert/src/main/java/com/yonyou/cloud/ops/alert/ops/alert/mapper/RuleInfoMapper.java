@@ -11,4 +11,7 @@ import tk.mybatis.mapper.common.Mapper;
 public interface RuleInfoMapper extends Mapper<RuleInfo> {
 
 	public List<RuleInfo> selectRuleInfoByAppOrIp(@Param("appName") String appName, @Param("hostIp") String hostIp);
+
+	List<RuleInfo> selectRuleInfoAll(@Param("ruleName") String ruleName, @Param("groupName") String groupName,
+			@Param("keyword") String keyword);
 }

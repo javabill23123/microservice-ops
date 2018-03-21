@@ -1,6 +1,4 @@
-package com.yonyou.microservice.gate.admin.vo;
-
-import com.yonyou.microservice.gate.admin.entity.User;
+package com.yonyou.cloud.ops.alert.ops.alert.domain.dto;
 
 import java.util.List;
 
@@ -11,9 +9,8 @@ public class GroupUsers {
     private Integer id;
     private String code;
 	private String name;
-    List<User> members ;
-    List<User> leaders;
-    
+	List<UserBo> members ;
+    List<UserBo> leaders;
     public Integer getId() {
 		return id;
 	}
@@ -41,32 +38,27 @@ public class GroupUsers {
     public GroupUsers() {
     }
 
-    public GroupUsers(List<User> members, List<User> leaders) {
-        this.members = members;
-        this.leaders = leaders; 
-    }
-    
-    public GroupUsers(List<User> members, List<User> leaders,int id,String code,String name) {
+    public GroupUsers(List<UserBo> members, List<UserBo> leaders,int id,String code,String name) {
         this.members = members;
         this.leaders = leaders;
-        this.id= id;
+        this.id=id;
         this.name=name;
         this.code=code;
     }
 
-    public List<User> getMembers() {
+    public List<UserBo> getMembers() {
         return members;
     }
 
-    public void setMembers(List<User> members) {
+    public void setMembers(List<UserBo> members) {
         this.members = members;
     }
 
-    public List<User> getLeaders() {
+    public List<UserBo> getLeaders() {
         return leaders;
     }
 
-    public void setLeaders(List<User> leaders) {
+    public void setLeaders(List<UserBo> leaders) {
         this.leaders = leaders;
     }
 }

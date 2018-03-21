@@ -69,6 +69,16 @@ public class GroupBiz extends BaseService<GroupMapper,Group>{
     public GroupUsers getGroupUsers(int groupId) {
         return new GroupUsers(userMapper.selectMemberByGroupId(groupId),userMapper.selectLeaderByGroupId(groupId));
     }
+    
+    /**
+     * 获取群组信息已经关联用户
+     * @param groupId
+     * @return
+     */
+    public GroupUsers getGroupInfoAndUsers(int groupId) {
+    	Group group=this.selectById(groupId);
+        return new GroupUsers(userMapper.selectMemberByGroupId(groupId),userMapper.selectLeaderByGroupId(groupId),group.getId(),group.getCode(),group.getName());
+    }
 
     /**
      * 变更群主所分配用户
