@@ -72,7 +72,6 @@ zuul:
     connect-timeout-millis: 60000
     socket-timeout-millis: 60000
       
-      
   store:
     mysql:
       enabled: true
