@@ -5,7 +5,6 @@ import javax.persistence.*;
 @Table(name = "rule_group")
 public class RuleGroup {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(generator = "JDBC")
     private Integer id;
 
@@ -13,15 +12,21 @@ public class RuleGroup {
 
     private String descr;
     
-    //通知类型
+    /**
+     * 通知类型
+     */
     @Column(name="alarm_type")
     private String alarmType;
     
-    //邮件主题
+    /**
+     * 邮件主题
+     */
     @Column(name="mail_title")
     private String mailTitle;
     
-    //邮件内容
+    /**
+     * 邮件内容
+     */
     @Column(name="mail_content")
     private String mailContent;
     

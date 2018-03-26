@@ -5,7 +5,6 @@ import javax.persistence.*;
 @Table(name = "rule_scope")
 public class RuleScope {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String type;

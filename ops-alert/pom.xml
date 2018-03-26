@@ -33,7 +33,7 @@
 
 		<!-- 相关依赖的版本 -->
 		<!-- 二方库 -->
-		<commonElegance.verison>0.0.1-SNAPSHOT</commonElegance.verison>
+		<commonElegance.verison>0.0.2-SNAPSHOT</commonElegance.verison>
 		<mom.version>0.0.1-SNAPSHOT</mom.version>
 		<!-- 三方库 -->
 		<mapper.version>3.4.2</mapper.version>
@@ -141,6 +141,20 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.6</version>
 		</dependency>
+		
+		<dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-zipkin-stream</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
 
 	</dependencies>
 	<dependencyManagement>

@@ -41,12 +41,18 @@ public class RuleGroupBo {
 	
     private String descr;
     
-    //通知类型
+    /**
+     * 通知类型
+     */
     private String alarmType;
-	//邮件主题
+	/**
+	 * 邮件主题
+	 */
     private String mailTitle;
     
-    //邮件内容
+    /**
+     * 邮件内容
+     */
     private String mailContent;
     
     private Boolean status;

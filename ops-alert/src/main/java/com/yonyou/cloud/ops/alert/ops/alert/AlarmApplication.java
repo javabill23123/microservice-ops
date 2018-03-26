@@ -7,7 +7,11 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 
 import com.spring4all.swagger.EnableSwagger2Doc;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 @SpringBootApplication
 @EnableSwagger2Doc
 @EnableDiscoveryClient

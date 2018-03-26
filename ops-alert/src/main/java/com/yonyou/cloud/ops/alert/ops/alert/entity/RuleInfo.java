@@ -5,7 +5,6 @@ import javax.persistence.*;
 @Table(name = "rule_info")
 public class RuleInfo {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "rule_desc")

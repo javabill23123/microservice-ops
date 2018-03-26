@@ -37,7 +37,7 @@ public class RuleGroupRest extends BaseController<RuleGroupBiz, RuleGroup> {
 	
 	@RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public  RuleGroupBo  Groupdetail(@PathVariable int id) {
+	public  RuleGroupBo  groupdetail(@PathVariable int id) {
 		return baseService. selectByGroupId(id);
 	}
 	/**
