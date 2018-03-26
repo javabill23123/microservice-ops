@@ -16,10 +16,15 @@ import java.util.regex.Pattern;
  *
  */
 public class FilterUtil {
-    //定义要找到的关键字
+    /**
+     * 定义要找到的关键字
+     */
     public String text;
     
-    //定义要找到的规则
+    /**
+     * 定义要找到的规则
+     * @param aString
+     */
     
     
     public FilterUtil(String aString){

@@ -11,27 +11,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.yonyou.cloud.common.beans.PageResultResponse;
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.cloud.common.service.BaseService;
-import com.yonyou.cloud.common.service.utils.PageQuery;
 import com.yonyou.cloud.ops.alert.ops.alert.alarm.AlarmMessageContext;
 import com.yonyou.cloud.ops.alert.ops.alert.alarm.mails.EmailMessage;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.constants.AlertStatus;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoBo;
+import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoForm;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoSearchForm;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.GroupUsers;
+import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.RuleGroupForm;
+import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.RuleInfoForm;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.UserBo;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.mail.MessageTemplate;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.AlertInfo;
-import com.yonyou.cloud.ops.alert.ops.alert.entity.UserGroup;
-import com.yonyou.cloud.ops.alert.ops.alert.entity.UserInfo;
+import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleGroup;
+import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleInfo;
+import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleScope;
+import com.yonyou.cloud.ops.alert.ops.alert.entity.UserGroupAlert;
 import com.yonyou.cloud.ops.alert.ops.alert.feign.IUserService;
-import com.yonyou.cloud.ops.alert.ops.alert.handler.AlertInfoHandler;
 import com.yonyou.cloud.ops.alert.ops.alert.mapper.AlertInfoMapper;
+import com.yonyou.cloud.ops.alert.ops.alert.mapper.RuleGroupMapper;
 
 /**
  * 
@@ -39,6 +45,7 @@ import com.yonyou.cloud.ops.alert.ops.alert.mapper.AlertInfoMapper;
  *
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED)
 public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 	private static final Logger loger = LoggerFactory.getLogger(AlertInfoBiz.class);
 	@Autowired
@@ -52,6 +59,63 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 	@Autowired
 	UserGroupAlertBiz userGroupAlertBiz;
 
+	@Autowired
+	RuleGroupMapper ruleGroupMapper;
+
+	public Integer creatGroupByHttp(RuleGroupForm ruleGroupForm) {
+		// 保存规则组
+		RuleGroup rulegroup = new RuleGroup();
+		BeanUtils.copyProperties(ruleGroupForm, rulegroup);
+		List<RuleGroup> list = ruleGroupMapper.select(rulegroup);
+		if (list.size() == 0) {
+			rulegroup.setStatus(true);
+			ruleGroupMapper.insertRuleGroup(rulegroup);
+			return rulegroup.getId();
+		} else {
+			// 删除原有多余报警用户组
+			UserGroupAlert userGroupAlertSearch = new UserGroupAlert();
+			userGroupAlertSearch.setRuleGroupId(list.get(0).getId());
+			userGroupAlertBiz.delete(userGroupAlertSearch);
+		}
+
+		// 保存报警用户组
+		for (Integer ugid : ruleGroupForm.getUserGroupIds()) {
+			UserGroupAlert userGroupAlert = new UserGroupAlert();
+			userGroupAlert.setRuleGroupId(list.get(0).getId());
+			userGroupAlert.setUserGroupId(ugid);
+			userGroupAlertBiz.insert(userGroupAlert);
+		}
+		return list.get(0).getId();
+	}
+
+	public RestResultResponse<AlertInfo> httpAlertInfoSave(AlertInfoForm form) {
+
+		RuleGroupForm ruleGroupForm = new RuleGroupForm();
+		ruleGroupForm.setName(form.getRuleGroupName());
+		if(StringUtils.isNotBlank(form.getMailContent())) {
+			ruleGroupForm.setMailContent(form.getMailContent());
+		}
+		if(StringUtils.isNotBlank(form.getMailContent())) {
+			ruleGroupForm.setMailTitle(form.getMailContent());
+		}
+		if(StringUtils.isNotBlank(form.getAlarmType())) {
+			ruleGroupForm.setAlarmType(form.getAlarmType());
+		}
+		 
+		ruleGroupForm.setUserGroupIds(form.getUserGroupIds()); 
+		
+
+		Integer groupId = creatGroupByHttp(ruleGroupForm);
+
+		AlertInfo info = new AlertInfo();
+		BeanUtils.copyProperties(form, info);
+		info.setGroupId(groupId);
+		info.setStatus(AlertStatus.Trigger.getValue());
+		mapper.insert(info);
+		return new RestResultResponse<AlertInfo>().success(true);
+
+	}
+
 	public PageResultResponse<AlertInfoBo> selectByQuery(AlertInfoSearchForm searchForm) {
 		Page<Object> result = PageHelper.startPage(searchForm.getPage(), searchForm.getLimit());
 		List<AlertInfoBo> list = mapper.selectAlertBO(searchForm);
@@ -59,10 +123,10 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 	}
 
 	public void sendMail() {
-		AlertInfoSearchForm SearchForm=new AlertInfoSearchForm();
-		SearchForm.setStatus(AlertStatus.Trigger.getValue());
-		List<AlertInfoBo> alertbo = mapper.selectAlertBO(SearchForm);
- 
+		AlertInfoSearchForm searchForm = new AlertInfoSearchForm();
+		searchForm.setStatus(AlertStatus.Trigger.getValue());
+		List<AlertInfoBo> alertbo = mapper.selectAlertBO(searchForm);
+
 		List<MessageTemplate> msgTemp = new ArrayList<MessageTemplate>();
 		AlarmMessageContext context = new AlarmMessageContext(emailMessage);
 		for (AlertInfoBo alertBo : alertbo) {
@@ -70,8 +134,8 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 			alertBo.getGroupName();
 			MessageTemplate msg = new MessageTemplate();
 			msg.setSubject(alertBo.getMailTitle());
-			
-			StringBuffer sbu=new StringBuffer();
+
+			StringBuffer sbu = new StringBuffer();
 			sbu.append(alertBo.getMailContent());
 			sbu.append("\n服务名称：");
 			sbu.append(alertBo.getAppName());
@@ -81,12 +145,12 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 			sbu.append(alertBo.getAlertDesc());
 			sbu.append("\n报错详情信息如下:\n");
 			sbu.append(alertBo.getAlertDetail());
-		 
+
 			msg.setContent(sbu.toString());
 			loger.info(sbu.toString());
-			List<GroupUsers> GroupUserslists = userGroupAlertBiz.getList(alertBo.getGroupId()).getData();
+			List<GroupUsers> groupUserslists = userGroupAlertBiz.getList(alertBo.getGroupId()).getData();
 			Set<String> emailhs = new HashSet();
-			for (GroupUsers gus : GroupUserslists) {
+			for (GroupUsers gus : groupUserslists) {
 				int i = 0;
 				for (UserBo user : gus.getMembers()) {
 					if (StringUtils.isNotBlank(user.getEmail())) {
@@ -95,19 +159,19 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 					}
 				}
 				String[] arr = new String[emailhs.size()];
-				String[] aa=emailhs.toArray(arr);
+				String[] aa = emailhs.toArray(arr);
 				msg.setToAddress(aa);
-				if(emailhs.size()!=0) {
+				if (emailhs.size() != 0) {
 					msgTemp.add(msg);
 				}
-				
+
 			}
 			context.AlarmMessage(msgTemp);
 
 			// 更正状态为已通知
 			alertBo.setStatus(AlertStatus.Notice.getValue());
 
-			AlertInfo ainfo=new AlertInfo();
+			AlertInfo ainfo = new AlertInfo();
 			BeanUtils.copyProperties(alertBo, ainfo);
 			mapper.updateByPrimaryKey(ainfo);
 		}
