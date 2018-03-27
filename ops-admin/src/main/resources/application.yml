@@ -33,11 +33,12 @@ spring:
         maxOpenPreparedStatements: 20
   
     rabbitmq:
-        host: 10.180.4.221
-        port : 5672
-        username: mqadmin
-        password: Pass1234
-        virtual-host: /
+        host: ${rabbitmq.host:10.180.4.221}
+        port : ${rabbitmq.port:5672}
+        username: ${rabbitmq.username:mqadmin}
+        password: ${rabbitmq.password:Pass1234}
+        virtual-host: ${rabbitmq.vhost:/}
+        
 # 配置zipKin Server的地址
     zipkin:
         base-url: http://10.180.4.221:8808
