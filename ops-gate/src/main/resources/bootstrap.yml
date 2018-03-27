@@ -4,7 +4,7 @@ spring:
       discovery:
         enabled: true
         serviceId: server-config
-      name: port,db,redis,gate,mq
+      name: port,db,redis,gate
       profile: ${config.profile:dev}
 management:
   security:

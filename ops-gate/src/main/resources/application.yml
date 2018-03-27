@@ -16,12 +16,12 @@ spring:
     
     
     #rabbitmq配置
-    rabbitmq:
-        host: ${rabbitmq.host:10.180.4.221}
-        port : ${rabbitmq.port:5672}
-        username: ${rabbitmq.username:mqadmin}
-        password: ${rabbitmq.password:Pass1234}
-        virtual-host: ${rabbitmq.vhost:/}
+#    rabbitmq:
+#        host: ${rabbitmq.host:10.180.4.221}
+#        port : ${rabbitmq.port:5672}
+#        username: ${rabbitmq.username:mqadmin}
+#        password: ${rabbitmq.password:Pass1234}
+#        virtual-host: ${rabbitmq.vhost:/}
         
     datasource:
        driverClassName: com.mysql.jdbc.Driver
