@@ -10,6 +10,8 @@
     <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
     <result column="data" jdbcType="VARCHAR" property="data" />
     <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="msgKey" jdbcType="VARCHAR" property="msgKey" />
     <result column="crt_time" jdbcType="DATE" property="crtTime" />
     <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
     <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
@@ -17,4 +19,18 @@
     <result column="upd_user" jdbcType="VARCHAR" property="updUser" />
     <result column="upd_name" jdbcType="VARCHAR" property="updName" />
   </resultMap>
+   <select id="getNotifyMessage" resultMap="BaseResultMap">
+    select * from notify_third_message m
+    where m.app_id = #{appId} and m.bizId=#{bizId}
+  </select>
+  
+   <select id="getNotifyMessageByKey" resultMap="BaseResultMap">
+    select * from notify_third_message m
+    where m.msgKey = #{msgKey} 
+  </select>
+  
+  <update id="updateNotisyMessageByMeskey">
+    update notify_third_message set status = #{status}
+    where msgKey = #{msgKey} 
+  </update>
 </mapper>

@@ -30,6 +30,11 @@ spring:
         testOnReturn: false
         poolPreparedStatements: true
         maxOpenPreparedStatements: 20
+    rabbitmq: 
+        host: ${mq.yc_base.host:10.180.4.221}
+        port: ${mq.yc_base.port:5672}
+        username: ${mq.yc_base.username:mqadmin}
+        password: ${mq.yc_base.password:Pass1234}
 mybatis:
     basepackage: com.yonyou.cloud.ops.notify.mapper
     xmlLocation: classpath:mapper/**/*.xml
