@@ -53,6 +53,8 @@ public class AlertInfoHandler {
 
 		// String msgInfos = redisTemplate.opsForList().leftPop(listenerKey);
 		List<String> msgInfolists = redisTemplate.opsForList().range(listenerKey, 0, 100);
+		
+		loger.info("当前从redis队列中获取了："+msgInfolists.size()+"条数据");
 		redisTemplate.opsForList().trim(listenerKey,1, 100);
 		for (String msgInfos : msgInfolists) {
 			if (StringUtils.isNotBlank(msgInfos)) {
