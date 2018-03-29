@@ -127,6 +127,7 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 		searchForm.setStatus(AlertStatus.Trigger.getValue());
 		List<AlertInfoBo> alertbo = mapper.selectAlertBO(searchForm);
 
+		loger.info("当前正在通知的邮件有："+alertbo.size()+"封");
 		List<MessageTemplate> msgTemp = new ArrayList<MessageTemplate>();
 		AlarmMessageContext context = new AlarmMessageContext(emailMessage);
 		for (AlertInfoBo alertBo : alertbo) {
