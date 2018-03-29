@@ -68,12 +68,12 @@ public class EmailMessage extends AlarmMessageSender {
 				con = sms.sendTextMail(mailInfo);// 发送文体格式
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("错误原因是:" + e.getMessage());
+				log.info("错误原因是:" + e.getMessage());
 			}
 			if (con) {
-				System.out.println("发送成功!");
+				log.info("发送成功!");
 			} else {
-				System.out.println("发送失败!");
+				log.info("发送失败!");
 			}
 		}
 

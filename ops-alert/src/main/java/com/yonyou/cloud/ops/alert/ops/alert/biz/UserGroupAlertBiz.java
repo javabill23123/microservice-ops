@@ -3,6 +3,8 @@ package com.yonyou.cloud.ops.alert.ops.alert.biz;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,7 @@ import com.yonyou.cloud.ops.alert.ops.alert.feign.IUserService;
 import com.yonyou.cloud.ops.alert.ops.alert.mapper.UserGroupAlertMapper;
 @Service
 public class UserGroupAlertBiz extends BaseService<UserGroupAlertMapper, UserGroupAlert>{
-
+	private static final Logger loger = LoggerFactory.getLogger(UserGroupAlertBiz.class);
 	@Autowired
 	private IUserService iUserService;
 	
@@ -34,6 +36,7 @@ public class UserGroupAlertBiz extends BaseService<UserGroupAlertMapper, UserGro
 			RestResultResponse<GroupUsers> list=iUserService.getUsers(groupalert.getUserGroupId());
 			bolsit.add(list.getData());
 		}
+		loger.info("调用admin 获取当前用户组下用户个数为"+bolsit.size());
 		return new RestResultResponse<RuleScope>().success(true).data(bolsit);
 	}
 }

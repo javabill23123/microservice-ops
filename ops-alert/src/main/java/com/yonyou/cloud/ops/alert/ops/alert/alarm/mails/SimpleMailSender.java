@@ -102,7 +102,7 @@ public class SimpleMailSender {
 			// 创建邮件的接收者地址，并设置到邮件消息中
 			InternetAddress[] sendTo = new InternetAddress[mailInfo.getToAddress().length];
 			for (int i = 0; i < mailInfo.getToAddress().length; i++) {
-				System.out.println("发送到:" + mailInfo.getToAddress()[i]);
+				loger.info("发送到:" + mailInfo.getToAddress()[i]);
 				sendTo[i] = new InternetAddress(mailInfo.getToAddress()[i]);
 			}
 			// Message.RecipientType.TO属性表示接收者的类型为TO
@@ -126,6 +126,7 @@ public class SimpleMailSender {
 			return true;
 		} catch (MessagingException ex) {
 			ex.printStackTrace();
+			loger.info("发送邮件报错" + ex.getMessage());
 		}
 		return false;
 	}
