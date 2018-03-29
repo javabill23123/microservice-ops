@@ -22,9 +22,10 @@ public class ThirdMessageListener extends AbstractConsumerListener<NotifyThirdMe
 	private NotifyThirdMessageService notifyThirdMessageService;
 	
 	@Override
-	public void handleMessage(NotifyThirdMessage mes)  {
-		logger.info("--handleMessage,data="+JSONObject.fromObject(mes).toString());
+	public void handleMessage(NotifyThirdMessage mes) throws Exception  {
+		logger.info("--handleMessage,收到数据,data="+JSONObject.fromObject(mes).toString());
 		notifyThirdMessageService.sendMessage(mes);
+		logger.info("--handleMessage,处理结束");
 	}
 
 }

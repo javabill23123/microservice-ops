@@ -21,7 +21,8 @@ import com.yonyou.cloud.ops.notify.service.NotifyThirdMessageService;
 
 import net.sf.json.JSONObject;
 
-@RestController("/notify")
+@RestController()
+@RequestMapping("notify")
 public class NotifyThirdMessageController extends BaseController<NotifyThirdMessageService, NotifyThirdMessage>{
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass()); 
@@ -34,10 +35,10 @@ public class NotifyThirdMessageController extends BaseController<NotifyThirdMess
 	public RestResultResponse<NotifyThirdMessage> getNotification(@RequestParam("appId") String appId,
 			@RequestParam("bizId") String bizId)
 			throws Exception {
-		logger.info("--NotifyThirdMessageController,appId="+appId+",bizId="+bizId);
+		logger.info("--查询消息,appId="+appId+",bizId="+bizId);
 		//根据appid和bizId查询消息状态
 		List<NotifyThirdMessage> list=notifyThirdMessageService.getNotifyMessage(appId, bizId);
-		logger.info("--NotifyThirdMessageController,message size="+list.size());
+		logger.info("--查询消息,message size="+list.size());
 		return new RestResultResponse<>().success(true).data(list);
 	}
 	
@@ -45,7 +46,7 @@ public class NotifyThirdMessageController extends BaseController<NotifyThirdMess
 	@YcApi
 	public RestResultResponse<Map<String,String>> reSendMessage()
 			throws Exception {
-		logger.info("--NotifyThirdMessageController,reSendMessage");
+		logger.info("--开始重发消息");
 		//重新发送消息
 		notifyThirdMessageService.reSendMessage();
 		Map<String,String> map=new HashMap();
@@ -56,17 +57,18 @@ public class NotifyThirdMessageController extends BaseController<NotifyThirdMess
 	
 	@RequestMapping(value="thirdapi/demo",method=RequestMethod.POST)
 	@YcApi
-	public RestResultResponse<Map<String,String>> receiveMessage(@RequestBody NotifyThirdMessage message)
+	public RestResultResponse<Map<String,String>> receiveMessage(@RequestBody String message,
+			@RequestParam("bizId") String bizId)
 			throws Exception {
 		if(message==null){
-			logger.info("--NotifyThirdMessageController,null");
+			logger.info("--message=null,bizId="+bizId);
 		}else{
-			logger.info("--NotifyThirdMessageController,message="+JSONObject.fromObject(message).toString());
+			logger.info("--message="+message+",bizId="+bizId);
 		}
 		
 		Map<String,String> map=new HashMap();
-		map.put("resultcode", "ok");
-		map.put("message", "重发成功");
+		map.put("resultcode", "1001002");
+		map.put("message", "成功");
 		return new RestResultResponse<>().success(true).data(map);
 	}
 	
