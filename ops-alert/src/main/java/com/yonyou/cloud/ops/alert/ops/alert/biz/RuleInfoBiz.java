@@ -2,22 +2,15 @@ package com.yonyou.cloud.ops.alert.ops.alert.biz;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.yonyou.cloud.common.beans.PageResultResponse;
 import com.yonyou.cloud.common.service.BaseService;
-import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.RuleGroupForm;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.RuleInfoDto;
-import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.RuleScopeForm;
-import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleGroup;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleInfo;
-import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleScope;
-import com.yonyou.cloud.ops.alert.ops.alert.entity.UserGroupAlert;
 import com.yonyou.cloud.ops.alert.ops.alert.mapper.RuleInfoMapper;
 
 

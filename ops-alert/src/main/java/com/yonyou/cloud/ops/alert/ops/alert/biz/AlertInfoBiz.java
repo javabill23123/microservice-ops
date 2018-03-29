@@ -27,13 +27,10 @@ import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoForm;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoSearchForm;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.GroupUsers;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.RuleGroupForm;
-import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.RuleInfoForm;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.UserBo;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.mail.MessageTemplate;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.AlertInfo;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleGroup;
-import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleInfo;
-import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleScope;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.UserGroupAlert;
 import com.yonyou.cloud.ops.alert.ops.alert.feign.IUserService;
 import com.yonyou.cloud.ops.alert.ops.alert.mapper.AlertInfoMapper;
@@ -127,6 +124,7 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 		searchForm.setStatus(AlertStatus.Trigger.getValue());
 		List<AlertInfoBo> alertbo = mapper.selectAlertBO(searchForm);
 
+		loger.info("当前正在通知的邮件有："+alertbo.size()+"封");
 		List<MessageTemplate> msgTemp = new ArrayList<MessageTemplate>();
 		AlarmMessageContext context = new AlarmMessageContext(emailMessage);
 		for (AlertInfoBo alertBo : alertbo) {
@@ -149,7 +147,7 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 			msg.setContent(sbu.toString());
 			loger.info(sbu.toString());
 			List<GroupUsers> groupUserslists = userGroupAlertBiz.getList(alertBo.getGroupId()).getData();
-			Set<String> emailhs = new HashSet();
+			Set<String> emailhs = new HashSet<String>();
 			for (GroupUsers gus : groupUserslists) {
 				int i = 0;
 				for (UserBo user : gus.getMembers()) {

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.cloud.common.service.BaseService;
 import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.GroupUsers;
-import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.UserGroupAlerBo;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.RuleScope;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.UserGroupAlert;
 import com.yonyou.cloud.ops.alert.ops.alert.feign.IUserService;

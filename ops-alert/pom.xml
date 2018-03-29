@@ -142,7 +142,8 @@
 			<version>1.5.6</version>
 		</dependency>
 		
-		<dependency>
+		<!-- zipkin支持相关依赖 -->
+<!-- 		<dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-sleuth-zipkin-stream</artifactId>
         </dependency>
@@ -154,7 +155,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
-        </dependency>
+        </dependency> -->
 
 	</dependencies>
 	<dependencyManagement>

@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.yonyou.cloud.mom.client.producer.MqSenderDefaultImpl;
 import com.yonyou.cloud.ops.notify.mq.listener.ThirdMessageListener;
+import com.yonyou.cloud.track.Track;
 
 @Configuration
 public class MqConfig {
@@ -60,5 +61,17 @@ public class MqConfig {
 		mqSenderDefaultImpl.setRabbitOperations(rabbitOperations);
 		return mqSenderDefaultImpl;
 	}
+	
+	@Bean
+	public ThirdMessageListener thirdMessageListener() {
+		ThirdMessageListener thirdMessageListener = new ThirdMessageListener();
+		return thirdMessageListener;
+	}
+	
+//	@Bean
+//	public Track track(ThirdMessageListener thirdMessageListener) {
+//		Track trace = new Track(thirdMessageListener);
+//		return trace;
+//	}
 	
 }
