@@ -28,6 +28,10 @@ spring:
        url: ${db.yc_base.url:jdbc:mysql://10.180.8.205:3306/yc_base?useUnicode=true&amp;characterEncoding=utf8mb4}
        username: ${db.yc_base.username:root}
        password: ${db.yc_base.pwd:rcs}
+    http:
+      multipart:
+        max-file-size: 10Mb
+        max-request-size: 10Mb
 server:
     port: ${ops.gate.port:8766} #启动端口
 
