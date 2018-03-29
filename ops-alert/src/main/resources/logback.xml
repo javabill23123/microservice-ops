@@ -9,13 +9,15 @@
 
 	<logger name="org.springframework.web.servlet" level="INFO"
 		additivity="true"></logger>
-	<logger name="org.springframework.jdbc" level="INFO"
-		additivity="true"></logger>
+	
 	<logger name="org.springframework.orm.jpa" level="debug"
 		additivity="true"></logger>
 
 	<logger name="com.yonyou" level="INFO" />
-
+<logger name="org.springframework.jdbc" level="debug"
+		additivity="true"></logger>
+		
+		<logger name="com.yonyou.cloud.ops.alert.ops.alert.mapper" level="DEBUG"/>
 
 	<!-- 控制台打印 -->
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

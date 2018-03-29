@@ -29,6 +29,11 @@
     where m.msgKey = #{msgKey} 
   </select>
   
+   <select id="getNotifyMessageByStatus" resultMap="BaseResultMap">
+    select * from notify_third_message m
+    where m.status = #{status} limit 2000
+  </select>
+  
   <update id="updateNotisyMessageByMeskey">
     update notify_third_message set status = #{status}
     where msgKey = #{msgKey} 
