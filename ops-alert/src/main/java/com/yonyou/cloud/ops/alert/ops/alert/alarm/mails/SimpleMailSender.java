@@ -71,6 +71,7 @@ public class SimpleMailSender {
 			loger.info("邮件发送成功");
 			return true;
 		} catch (MessagingException ex) {
+			loger.info("发送邮件报错" + ex.getMessage());
 			ex.printStackTrace();
 		}
 		return false;
