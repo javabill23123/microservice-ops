@@ -38,7 +38,13 @@ public class NotifyThirdMessage {
     
     @Column(name = "upd_time")
     private Date uptTime;
-
+    
+    @Column(name = "status")
+    private String status;
+    
+    @Column(name = "msgKey")
+    private String msgKey;
+    
 
     /**
      * @return id
@@ -132,6 +138,22 @@ public class NotifyThirdMessage {
 
 	public void setUptTime(Date uptTime) {
 		this.uptTime = uptTime;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMsgKey() {
+		return msgKey;
+	}
+
+	public void setMsgKey(String msgKey) {
+		this.msgKey = msgKey;
 	}
 
 }
