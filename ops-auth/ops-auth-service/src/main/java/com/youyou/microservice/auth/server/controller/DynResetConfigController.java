@@ -68,16 +68,17 @@ public class DynResetConfigController {
 		return map;
 	}
     
-    @RequestMapping(value = "demoUser", method = RequestMethod.POST)
+    @RequestMapping(value = "api/demoUser", method = RequestMethod.POST)
 	public String demoUser(HttpServletRequest p0) throws IOException {//, @RequestBody String body
-    	String data="{\"username\":\"test\",\"userId\":15002345678912345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
+    	String data="{\"username\":\"test\",\"userId\":1512345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
     	logger.info("--demoUser,"+data);
     	return data;
     }
     
-    @RequestMapping(value = "demoUser", method = RequestMethod.GET)
+    @RequestMapping(value = "api/demoUser", method = RequestMethod.GET)
 	public String demoUser2() {
-    	String data="{\"username\":\"test\",\"userId\":15002345678912345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
+    	String data="{\"username\":\"test\",\"userId\":150345,\"name\":\"testName111111111111\",\"dealerName\":\"tes23423424sdfsdfsfsddfsfdsfsfsdfsddftName\",\"dealerCode\":\"testCode\",\"telPhone\":\"1111144333222342\"}";
+    	data="{\"birthday\":\"\",\"sex\":\"null\",\"status\":\"0\",\"dealerName\":\"0\",\"passWord\":\"27008a2f874037cc555da69711258e92\",\"username\":\"13817482782\",\"address\":\"null\",\"telPhone\":\"13817482782\",\"description\":\"\",\"userId\":177847,\"name\":\"夏银龙\",\"dealerCode\":\"31A20\",\"resultCode\":\"1\",\"communtiyFlag\":\"0\",\"uuid\":\"181829\"}";
     	logger.info("--demoUser,"+data);
     	return data;
     }

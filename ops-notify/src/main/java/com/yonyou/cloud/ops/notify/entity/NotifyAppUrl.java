@@ -16,6 +16,9 @@ public class NotifyAppUrl {
     @Column(name = "url")
     private String url;
 
+    @Column(name = "contentType")
+    private String contentType;
+
     @Column(name = "crt_time")
     private Date crtTime;
 
@@ -104,6 +107,14 @@ public class NotifyAppUrl {
 
 	public void setUptTime(Date uptTime) {
 		this.uptTime = uptTime;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
     
 }
