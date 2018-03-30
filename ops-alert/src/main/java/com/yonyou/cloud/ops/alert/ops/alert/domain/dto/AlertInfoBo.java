@@ -95,12 +95,14 @@ public class AlertInfoBo {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	public String getCreateDate() {
-		return DateUtil.formatDateTime(CreateDate);
+	
+	public Date getCreateDate() {
+		return CreateDate;
 	}
 	public void setCreateDate(Date createDate) {
 		CreateDate = createDate;
 	}
+ 
 	public String getMailTitle() {
 		return mailTitle;
 	}

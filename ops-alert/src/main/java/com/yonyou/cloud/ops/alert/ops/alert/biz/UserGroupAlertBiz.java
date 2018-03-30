@@ -36,7 +36,7 @@ public class UserGroupAlertBiz extends BaseService<UserGroupAlertMapper, UserGro
 			RestResultResponse<GroupUsers> list=iUserService.getUsers(groupalert.getUserGroupId());
 			bolsit.add(list.getData());
 		}
-		loger.info("调用admin 获取当前用户组下用户个数为"+bolsit.size());
+		loger.info("调用admin 获取需要报警的用户组个数为"+bolsit.size());
 		return new RestResultResponse<RuleScope>().success(true).data(bolsit);
 	}
 }

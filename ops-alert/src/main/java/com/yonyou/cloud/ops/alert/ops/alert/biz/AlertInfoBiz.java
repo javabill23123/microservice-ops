@@ -1,6 +1,7 @@
 package com.yonyou.cloud.ops.alert.ops.alert.biz;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.yonyou.cloud.common.beans.PageResultResponse;
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.cloud.common.service.BaseService;
@@ -35,6 +37,7 @@ import com.yonyou.cloud.ops.alert.ops.alert.entity.UserGroupAlert;
 import com.yonyou.cloud.ops.alert.ops.alert.feign.IUserService;
 import com.yonyou.cloud.ops.alert.ops.alert.mapper.AlertInfoMapper;
 import com.yonyou.cloud.ops.alert.ops.alert.mapper.RuleGroupMapper;
+import com.yonyou.cloud.ops.alert.ops.alert.utils.DateTimeUtils;
 
 /**
  * 
@@ -171,6 +174,9 @@ public class AlertInfoBiz extends BaseService<AlertInfoMapper, AlertInfo> {
 
 			AlertInfo ainfo = new AlertInfo();
 			BeanUtils.copyProperties(alertBo, ainfo);
+			if(alertBo.getCreateDate()!=null) {
+				ainfo.setCreateDate(alertBo.getCreateDate());
+			}
 			mapper.updateByPrimaryKey(ainfo);
 		}
 	}

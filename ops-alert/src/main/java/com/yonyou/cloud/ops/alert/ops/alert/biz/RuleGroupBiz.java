@@ -142,6 +142,7 @@ public class RuleGroupBiz extends BaseService<RuleGroupMapper, RuleGroup> {
 			rule.setTime(ruleInfoForm.getRuleTime());
 			rule.setCount(ruleInfoForm.getRuleCount());
 			rule.setGroupId(groupid);
+			rule.setName(ruleInfoForm.getRuleName());
 			ruleInfobiz.insert(rule);
 		}
 
