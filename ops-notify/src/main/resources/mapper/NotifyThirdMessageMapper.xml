@@ -11,7 +11,6 @@
     <result column="data" jdbcType="VARCHAR" property="data" />
     <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
     <result column="status" jdbcType="VARCHAR" property="status" />
-    <result column="msgKey" jdbcType="VARCHAR" property="msgKey" />
     <result column="crt_time" jdbcType="DATE" property="crtTime" />
     <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
     <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
@@ -38,4 +37,9 @@
     update notify_third_message set status = #{status}
     where msgKey = #{msgKey} 
   </update>
+  
+  <insert id="insertMessage" parameterType="com.yonyou.cloud.ops.notify.entity.NotifyThirdMessage" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into notify_third_message(app_id,biz_id,data,notify_url,status,crt_time) 
+    values(#{appId},#{bizId},#{data},#{notifyUrl},#{status},#{crtTime})
+</insert>
 </mapper>

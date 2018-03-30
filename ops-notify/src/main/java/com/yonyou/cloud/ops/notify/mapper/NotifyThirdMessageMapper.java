@@ -14,9 +14,11 @@ public interface NotifyThirdMessageMapper extends Mapper<NotifyThirdMessage> {
 
     public List<NotifyThirdMessage> getNotifyMessage(@Param("appId")String appId,@Param("bizId") String bizId);
     
-    public List<NotifyThirdMessage> getNotifyMessageByKey(@Param("msgKey")String msgKey);
+    public List<NotifyThirdMessage> getNotifyMessageById(@Param("id")String id);
     
     public List<NotifyThirdMessage> getNotifyMessageByStatus(@Param("status")String status);
     
-    public void updateNotisyMessageByMeskey(@Param("status")String status,@Param("msgKey") String msgKey);
+    public void updateNotisyMessageById(@Param("status")String status,@Param("id") String id);
+    
+    public void insertMessage(NotifyThirdMessage msg);
 }
