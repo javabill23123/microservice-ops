@@ -42,9 +42,6 @@ public class NotifyThirdMessage {
     @Column(name = "status")
     private String status;
     
-    @Column(name = "msgKey")
-    private String msgKey;
-    
 
     /**
      * @return id
@@ -146,14 +143,6 @@ public class NotifyThirdMessage {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getMsgKey() {
-		return msgKey;
-	}
-
-	public void setMsgKey(String msgKey) {
-		this.msgKey = msgKey;
 	}
 
 }

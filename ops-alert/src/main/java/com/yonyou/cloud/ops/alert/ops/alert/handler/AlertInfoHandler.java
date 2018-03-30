@@ -92,7 +92,7 @@ public class AlertInfoHandler {
 								alertInfo.setStatus(AlertStatus.Trigger.getValue());
 								alertInfo.setAppName(vo.getType());
 								alertInfo.setCreateDate(new Date());
-								alertInfo.setAlertDesc(rule.getKeyword()+":"+rule.getTime()+"分钟出现"+rule.getCount()+"次");
+								alertInfo.setAlertDesc(rule.getKeyword()+":"+rule.getTime()+"分钟出现"+rule.getCount()+"次 ;log地址:"+vo.getPath());
 								alertInfoBiz.insertSelective(alertInfo);
 							}
 						}

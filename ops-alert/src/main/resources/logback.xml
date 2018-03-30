@@ -9,15 +9,12 @@
 
 	<logger name="org.springframework.web.servlet" level="INFO"
 		additivity="true"></logger>
-	
+
 	<logger name="org.springframework.orm.jpa" level="debug"
 		additivity="true"></logger>
 
 	<logger name="com.yonyou" level="INFO" />
-<logger name="org.springframework.jdbc" level="debug"
-		additivity="true"></logger>
-		
-		<logger name="com.yonyou.cloud.ops.alert.ops.alert.mapper" level="DEBUG"/>
+	<!-- <logger name="com.yonyou.cloud.ops.alert.ops.alert.mapper" level="DEBUG"/> -->
 
 	<!-- 控制台打印 -->
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -25,8 +22,8 @@
 			<pattern>${PATTERN}</pattern>
 		</encoder>
 	</appender>
-	
-	
+
+
 	<!-- 每天产生一个文件 -->
 	<appender name="ALLFILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -45,8 +42,8 @@
 			<pattern>${PATTERN}</pattern>
 		</layout>
 	</appender>
-	
-	
+
+
 	<appender name="ERRORFILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<!-- 文件路径 -->
@@ -73,7 +70,8 @@
 	</appender>
 	
 	
-	<!----> <appender name="WARNFILE"
+	<!---->
+	<appender name="WARNFILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${FILE_PATH}/logs_warn.log</file>
 		<rollingPolicy
@@ -91,13 +89,13 @@
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>WARN</level>
 		</filter>
-	</appender> 
-	
+	</appender>
+
 	<root level="info">
 		<appender-ref ref="ALLFILE" />
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="ERRORFILE" />
 	</root>
 
-	<jmxConfigurator/>
+	<jmxConfigurator />
 </configuration>
