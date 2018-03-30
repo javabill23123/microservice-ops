@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.yonyou.cloud.ops.notify.entity.NotifyAppUrl;
-import com.yonyou.cloud.ops.notify.entity.NotifyThirdMessage;
+import com.yonyou.cloud.ops.notify.entity.NotifyMqMessage;
 
 import tk.mybatis.mapper.common.Mapper;
 /**

@@ -18,8 +18,7 @@ public class RestTemplateUtil {
 	private RestTemplate restTemplate;
 	
 
-	public String sendMessage(String url,String contentType,String msgKey,
-			String bizId,String data){
+	public String sendMessage(String url,String contentType,String bizId,String data){
 		// 组装 http 请求
 		// 1.charset
 		if (restTemplate == null) {

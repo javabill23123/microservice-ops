@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import com.spring4all.swagger.EnableSwagger2Doc;
-import com.yonyou.cloud.ops.notify.entity.NotifyThirdMessage;
+import com.yonyou.cloud.ops.notify.entity.NotifyMqMessage;
 
 import net.sf.json.JSONObject;
 
