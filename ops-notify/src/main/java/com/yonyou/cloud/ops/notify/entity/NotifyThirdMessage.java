@@ -37,7 +37,7 @@ public class NotifyThirdMessage {
     private String updName;
     
     @Column(name = "upd_time")
-    private Date uptTime;
+    private Date updTime;
     
     @Column(name = "status")
     private String status;
@@ -130,11 +130,11 @@ public class NotifyThirdMessage {
 	}
 
 	public Date getUptTime() {
-		return uptTime;
+		return updTime;
 	}
 
-	public void setUptTime(Date uptTime) {
-		this.uptTime = uptTime;
+	public void setUptTime(Date updTime) {
+		this.updTime = updTime;
 	}
 
 	public String getStatus() {

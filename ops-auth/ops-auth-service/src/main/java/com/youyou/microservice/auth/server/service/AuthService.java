@@ -1,6 +1,7 @@
 package com.youyou.microservice.auth.server.service;
 
 
+import com.yonyou.cloud.common.jwt.IJwtInfo;
 import com.youyou.microservice.auth.server.vo.FrontUser;
 /**
  *  @author joy
@@ -47,4 +48,11 @@ public interface AuthService {
      * @return
      */
     Boolean invalid(String token);
+
+    /**
+     * 根据jwt取得用户信息
+     * @param token
+     * @return
+     */
+    IJwtInfo getUserInfoByJwt(String jwt) throws Exception;
 }

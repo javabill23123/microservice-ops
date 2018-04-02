@@ -1,15 +1,21 @@
 package com.youyou.microservice.auth.server.controller;
 
-import com.youyou.microservice.auth.server.util.user.JwtAuthenticationRequest;
-import com.youyou.microservice.auth.server.util.user.JwtAuthenticationResponse;
-import com.youyou.microservice.auth.server.service.AuthService;
-import com.youyou.microservice.auth.server.vo.FrontUser;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import com.yonyou.cloud.common.jwt.JwtInfo;
+import com.youyou.microservice.auth.server.service.AuthService;
+import com.youyou.microservice.auth.server.util.user.JwtAuthenticationRequest;
+import com.youyou.microservice.auth.server.util.user.JwtAuthenticationResponse;
+import com.youyou.microservice.auth.server.vo.FrontUser;
 /**
  *  @author joy
  */
@@ -64,5 +70,15 @@ public class AuthController {
         } else {
             return ResponseEntity.ok(userInfo);
         }
+    }
+
+    @RequestMapping(value = "userInfo", method = RequestMethod.POST)
+    public ResponseEntity<?> getUserInfoByJwt(
+            @RequestBody String jwt) throws Exception {
+    	if(jwt==null || "".equals(jwt)){
+    		return ResponseEntity.ok("jwt can't be null");
+    	}
+    	JwtInfo userInfo=(JwtInfo)authService.getUserInfoByJwt(jwt);
+        return ResponseEntity.ok(userInfo);
     }
 }

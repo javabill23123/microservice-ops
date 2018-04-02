@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import com.google.common.collect.Collections2;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.yonyou.cloud.common.jwt.IJwtInfo;
+import com.yonyou.cloud.common.jwt.JwtInfo;
 import com.yonyou.cloud.common.service.utils.ClientUtil;
 import com.yonyou.microservice.auth.client.config.ServiceAuthConfig;
 import com.yonyou.microservice.auth.client.config.UserAuthConfig;
@@ -35,6 +38,7 @@ import com.yonyou.microservice.gate.common.vo.authority.IgnoreUriInfo;
 import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 import com.yonyou.microservice.gate.common.vo.log.LogInfo;
 import com.yonyou.microservice.gate.common.vo.user.UserInfo;
+import com.yonyou.microservice.gate.server.feign.IAuthService;
 import com.yonyou.microservice.gate.server.feign.IIgnoreUriService;
 import com.yonyou.microservice.gate.server.feign.ILogService;
 import com.yonyou.microservice.gate.server.service.CacheService;
@@ -91,6 +95,8 @@ public class AdminAccessFilter extends ZuulFilter {
     IIgnoreUriService iIgnoreUriService;
     @Autowired
     CacheService cacheService;
+    @Autowired
+    IAuthService authService;
     
     private List<IgnoreUriInfo> startWithList;
     
@@ -167,14 +173,21 @@ public class AdminAccessFilter extends ZuulFilter {
         String dealerName=URLEncoder.encode(user.getDealerName());
         ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,dealerName);
         ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
-    	logger.info("--AdminAccessFilter.run(),添加头信息,userid="+user.getId()+
+        
+        String tmp="";
+        Map<String,String> map =user.getParam();
+        for(Entry<String,String> entry:map.entrySet()){
+            ctx.addZuulRequestHeader(entry.getKey(),entry.getValue());
+            tmp=tmp+","+entry.getKey()+"="+entry.getValue();
+        }
+    	logger.info("--添加头信息,userid="+user.getId()+
     			",username="+user.getName()+
     			",encode(username)="+name+
     			",dealercode="+user.getDealerCode()+
     			",dealername="+user.getDealerName()+
     			",encode(dealername)="+dealerName+
     			",telphone="+user.getTelPhone()+
-    			",remark="+remark);
+    			",remark="+remark+tmp);
         BaseContextHandler.remove();
         return null;
     }
@@ -238,7 +251,9 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(userAuthConfig.getTokenHeader(),authToken);
         //将token放到threadlocal中
         BaseContextHandler.setToken(authToken);
-        return cacheService.getInfoFromToken(authToken);
+        JwtInfo info=authService.getUserInfo(authToken);
+        return info;
+//        return cacheService.getInfoFromToken(authToken);
     }
 
     /**
