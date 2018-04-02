@@ -14,11 +14,13 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.mongodb.DuplicateKeyException;
 import com.yonyou.cloud.common.beans.PageResultResponse;
-import com.yonyou.cloud.common.service.BaseEsService;
 import com.yonyou.cloud.common.service.utils.PageQuery;
 import com.yonyou.cloud.ops.mq.common.MqMessageStatus;
 import com.yonyou.cloud.ops.mq.common.MqMessageType;
@@ -44,8 +46,10 @@ public class MqMessageService{
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+//    @Retryable(value = DuplicateKeyException.class,maxAttempts = 3,backoff = @Backoff(delay = 1000))
+    @Retryable(value = org.springframework.dao.DuplicateKeyException.class,maxAttempts = 3,backoff = @Backoff(delay = 1000))
 	public void save (MqMessage mqMessage, MqMessageType mqMessageType) throws Exception{
-		
+    	
 		MqMessage oldMessage = mqMessageRepository.findByMsgKey(mqMessage.getMsgKey());
 		
 //		MqMessage oldMessage = selectOne(MqOpsConstant.INDEX, "msgKey:" + "\"" +mqMessage.getMsgKey() + "\"");
@@ -65,6 +69,7 @@ public class MqMessageService{
 			mongoTemplate.updateMulti(query, update, MqMessage.class);
 //			update(MqOpsConstant.INDEX, oldMessage, oldMessage.getId());
 		}
+
 	}
 
 	private void updateMsgStatus(MqMessage oldMessage, MqMessage newMessage, MqMessageType mqMessageType) {
