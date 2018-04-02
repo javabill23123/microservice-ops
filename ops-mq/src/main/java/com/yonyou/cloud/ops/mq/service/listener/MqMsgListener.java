@@ -80,7 +80,7 @@ public class MqMsgListener implements ChannelAwareMessageListener{
 			
 			mqMessageService.save(mqMessage, mqMessageType);
 		} catch (Exception e) {
-			logger.error("mqMsgListener onMessage Error! message:{}", message.toString());
+			logger.error("mqMsgListener onMessage Error! \n errmsg:{} \n message:{}",e.getMessage(), message.toString());
 		} finally{
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		}
