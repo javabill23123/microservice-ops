@@ -19,7 +19,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.mongodb.DuplicateKeyException;
 import com.yonyou.cloud.common.beans.PageResultResponse;
 import com.yonyou.cloud.common.service.utils.PageQuery;
 import com.yonyou.cloud.ops.mq.common.MqMessageStatus;
@@ -46,26 +45,37 @@ public class MqMessageService{
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
-//    @Retryable(value = DuplicateKeyException.class,maxAttempts = 3,backoff = @Backoff(delay = 1000))
     @Retryable(value = org.springframework.dao.DuplicateKeyException.class,maxAttempts = 3,backoff = @Backoff(delay = 1000))
 	public void save (MqMessage mqMessage, MqMessageType mqMessageType) throws Exception{
     	
 		MqMessage oldMessage = mqMessageRepository.findByMsgKey(mqMessage.getMsgKey());
-		
+
 //		MqMessage oldMessage = selectOne(MqOpsConstant.INDEX, "msgKey:" + "\"" +mqMessage.getMsgKey() + "\"");
-		
 		if(oldMessage == null){
 			updateMsgStatus(mqMessage, mqMessage, mqMessageType);
 			mqMessageRepository.insert(mqMessage);
 		} else {
 			updateMsgStatus(oldMessage, mqMessage, mqMessageType);
+
 	        Query query=new Query(Criteria.where("msgKey").is(oldMessage.getMsgKey()));
-	        Update update= new Update().set("produceSuccessTime", oldMessage.getProduceSuccessTime())
-	        						   .set("produceStatus", oldMessage.getProduceStatus())
-	        						   .set("produceFailTimes", oldMessage.getProduceFailTimes())
-	        						   .set("consumeSuccessTime", oldMessage.getConsumeSuccessTime())
-	        						   .set("consumeStatus", oldMessage.getConsumeStatus())
-	        						   .set("consumeFailTimes", oldMessage.getConsumeFailTimes());
+	        Update update= new Update();
+	        
+	        switch (mqMessageType) {
+			case PRODUCER:
+				update= new Update().set("produceSuccessTime", oldMessage.getProduceSuccessTime())
+				   .set("produceStatus", oldMessage.getProduceStatus())
+				   .set("produceFailTimes", oldMessage.getProduceFailTimes());
+				break;
+			case CONSUMER:
+				update= new Update()
+				   .set("consumeSuccessTime", oldMessage.getConsumeSuccessTime())
+				   .set("consumeStatus", oldMessage.getConsumeStatus())
+				   .set("consumeFailTimes", oldMessage.getConsumeFailTimes());
+				break;
+			default:
+				break;
+			}
+	        
 			mongoTemplate.updateMulti(query, update, MqMessage.class);
 //			update(MqOpsConstant.INDEX, oldMessage, oldMessage.getId());
 		}
