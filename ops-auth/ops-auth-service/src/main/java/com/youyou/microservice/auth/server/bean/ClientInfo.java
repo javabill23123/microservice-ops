@@ -1,18 +1,23 @@
 package com.youyou.microservice.auth.server.bean;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.yonyou.cloud.common.jwt.IJwtInfo;
 
 /**
  *  @author joy
  */
 public class ClientInfo implements IJwtInfo {
-    String clientId;
-    String name;
-    String remark;
-    String dealerName;
-    String dealerCode;
+	private String clientId;
+	private String name;
+	private String remark;
+	private String dealerName;
+	private String dealerCode;
     private String telPhone;
+    private boolean kickOut;
+    private Map<String,String> params;
 
     public ClientInfo(String clientId, String name, String id) {
         this.clientId = clientId;
@@ -21,7 +26,7 @@ public class ClientInfo implements IJwtInfo {
     }
 
     public ClientInfo(String clientId, String name, String id,String dealerCode,
-    		String dealerName,String telPhone,String remark) {
+    		String dealerName,String telPhone,boolean kickOut,Map<String,String> params,String remark) {
         this.clientId = clientId;
         this.name = name;
         this.id = id;
@@ -29,6 +34,9 @@ public class ClientInfo implements IJwtInfo {
         this.dealerCode=dealerCode;
         this.dealerName=dealerName;
         this.telPhone=telPhone;
+        this.kickOut=kickOut;
+        this.params=params;
+        this.remark=remark;
     }
 
     public void setId(String id) {
@@ -69,17 +77,28 @@ public class ClientInfo implements IJwtInfo {
 	}
 
 	public String getDealerName() {
-		// TODO Auto-generated method stub
 		return dealerName;
 	}
 
 	public String getDealerCode() {
-		// TODO Auto-generated method stub
 		return dealerCode;
 	}
 
 	public String getTelPhone() {
-		// TODO Auto-generated method stub
 		return telPhone;
 	}
+
+	@Override
+	public boolean getKickout() {
+		return kickOut;
+	}
+
+	@Override
+	public Map<String, String> getParam() {
+		if(params==null){
+			params=new HashMap();
+		}
+		return params;
+	}
+
 }

@@ -39,7 +39,7 @@ public class ServiceAuthUtil {
 
     public IJwtInfo getInfoFromToken(String token) throws Exception {
         try {
-            return JwtHelper.getInfoFromToken(token, serviceAuthConfig.getPubKeyPath());
+            return JwtHelper.getInfoFromToken(token, serviceAuthConfig.getPubKeyPath(),null);
         } catch (ExpiredJwtException ex) {
             throw new JwtTokenExpiredException("Client token expired!");
         } catch (SignatureException ex) {
