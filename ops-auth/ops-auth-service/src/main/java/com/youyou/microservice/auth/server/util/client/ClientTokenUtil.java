@@ -27,7 +27,7 @@ public class ClientTokenUtil {
     }
 
     public IJwtInfo getInfoFromToken(String token) throws Exception {
-        return JwtHelper.getInfoFromToken(token,pubKeyPath);
+        return JwtHelper.getInfoFromToken(token,pubKeyPath,null);
     }
 
 }

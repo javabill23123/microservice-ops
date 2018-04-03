@@ -21,6 +21,8 @@ public class JwtTokenUtil {
     private String priKeyPath;
     @Value("${jwt.pub-key.path}")
     private String pubKeyPath;
+    @Value("${jwt.params}")
+	private String jwtParams;
 
 //    @Autowired
 //    private RedisTemplate<String, Object> redisTemplate;
@@ -31,7 +33,11 @@ public class JwtTokenUtil {
     }
 
     public IJwtInfo getInfoFromToken(String token) throws Exception {
-        return JwtHelper.getInfoFromToken(token,pubKeyPath);
+    	if(jwtParams==null){
+    		jwtParams="";
+    	}
+    	String[] paramNames=jwtParams.split(",");
+        return JwtHelper.getInfoFromToken(token,pubKeyPath,paramNames);
     }
 
 
