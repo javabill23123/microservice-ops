@@ -1,11 +1,18 @@
 package com.youyou.microservice.auth.server.dynauth.handler.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.xiaoleilu.hutool.json.JSONObject;
+import com.yonyou.cloud.common.jwt.IJwtInfo;
 import com.yonyou.cloud.common.jwt.JwtInfo;
 import com.youyou.microservice.auth.server.dynauth.handler.DynAuthHttpResultHandler;
 import com.youyou.microservice.auth.server.dynauth.handler.DynHttpAuthHandler;
@@ -30,7 +37,16 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 	private static final String REPBODY_DEALER_NAME = "dealerName";
 	private static final String REPBODY_DEALER_CODE = "dealerCode";
 	private static final String REPBODY_TELPHONE = "telPhone";
+	private static final String REPBODY_KICKOUT = "kickOut";
+	
+	@Value("${jwt.params}")
+	private String jwtParams;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+	@Value("${redis.expire}")
+    private int expire;
+	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -45,13 +61,34 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 		String dealerName = (String) sk.get(REPBODY_DEALER_NAME);
 		String dealerCode = (String) sk.get(REPBODY_DEALER_CODE);
 		String telPhone = (String) sk.get(REPBODY_TELPHONE);
+		//接口返回是否互踢参数
+		Boolean kickOut=(Boolean) sk.get(REPBODY_KICKOUT);
+		if(kickOut==null)
+			kickOut=true;
+		//动态读取接口返回的各个参数值
+		String[] paramNames=jwtParams.split(",");
+		Map<String ,String> map=new HashMap();
+		for(int i=0;i<paramNames.length;i++){
+			String value = (String) sk.get(paramNames[i]);
+			map.put(paramNames[i], value);
+		}
+		
 		if (userId == null || "".equals(userId)) {
 			return new JwtAuthenticationDataResponse("", sk);
 		}
 		
 		try {
+    		IJwtInfo info=new JwtInfo(username, userId.toString(), name,dealerCode,dealerName,telPhone,
+					kickOut,map,"");
 			//直接根据用户信息返回jwt
-			jwt = jwtTokenUtil.generateToken(new JwtInfo(username, userId.toString(), name,dealerCode,dealerName,telPhone,""));
+			jwt = jwtTokenUtil.generateToken(info);
+    		//根据jwt缓存用户信息
+    		redisTemplate.opsForValue().set(jwt, info, expire, TimeUnit.SECONDS); 
+    		logger.info("--缓存信息jwt,"+jwt);
+    		String loginName=info.getUniqueName();
+    		//根据用户账号缓存有效的jwt，踢掉其它的jwt
+    		redisTemplate.opsForValue().set(loginName, jwt, expire, TimeUnit.SECONDS); 
+    		logger.info("--用登录账号缓存有效的jwt,loginName="+loginName);
 		} catch (Exception e) {
 			logger.error("生成jwt失败",e);
 			return new JwtAuthenticationDataResponse("", sk);

@@ -145,6 +145,8 @@ auth:
     secret: 123456
     pub-key:
       path: client/pub.key
+#jwt:
+#  params: openid  #demo:openid,test
 groovy:
   filter:
     path: ${groovy.path:D:\\Del\\groovy\\}

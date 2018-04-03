@@ -25,8 +25,8 @@ public class CacheService {
     IIgnoreUriService iIgnoreUriService;
     @Autowired
     private IUserService userService;
-    @Autowired
-    private UserAuthUtil userAuthUtil;
+//    @Autowired
+//    private UserAuthUtil userAuthUtil;
     @Autowired
     private RedisTemplate redisTemplate;
 	@Value("${redis.expire}")
@@ -54,57 +54,60 @@ public class CacheService {
      */
 //    @Cacheable(value = "gate",key="'gate.jwt.'+#authToken")
     public IJwtInfo getInfoFromToken(String authToken) throws Exception{
-    	logger.info("--getInfoFromToken from jwtUtil,"+authToken);
-    	IJwtInfo result=null;
-    	try{
-        	//根据jwt取jwtInfo
-        	Object jwtInfo=redisTemplate.opsForValue().get(authToken);
-        	if(jwtInfo!=null){
-        		//取得登录账号
-        		String loginName=((IJwtInfo)jwtInfo).getUniqueName();
-        		logger.info("--jwt,loginName="+loginName);
-        		//根据账号取得有效的jwt
-            	Object jwt=redisTemplate.opsForValue().get(loginName);
-            	if(jwt!=null){
-            		//当前jwt与有效jwt是否匹配
-            		boolean r=authToken.equals(jwt);
-            		if(r){
-            			//设置jwt有效期
-            			redisTemplate.expire(authToken, expire, TimeUnit.SECONDS); 
-            			//设置loginName有效期
-            			redisTemplate.expire(loginName, expire, TimeUnit.SECONDS); 
-            			result=(IJwtInfo)jwtInfo;
-                		logger.info("--延长jwt和登录账号有效期"+loginName);
-            		}else{
-                		logger.info("--jwt已经被踢掉,loginName="+loginName+",jwt="+authToken);
-            		}
-            	}else{//根据账号没有找到有效的jwt，则认为当前这个jwt即为有效的jwt
-            		logger.info("--根据登录账号没有找到有效的jwt");
-            		//缓存登录账号有效的jwt
-            		redisTemplate.opsForValue().set(loginName, authToken, expire, TimeUnit.SECONDS); 
-        			//设置jwt有效期
-        			redisTemplate.expire(authToken, expire, TimeUnit.SECONDS); 
-        			result=(IJwtInfo)jwtInfo;
-            		logger.info("--设置账号有效的jwt,loginName="+loginName+",jwt="+authToken);
-            	}
-        	}else{//如果jwt在缓存找不到，则认为这个jwt是新的有效jwt
-        		logger.info("--没有jwt缓存信息");
-        		IJwtInfo info=userAuthUtil.getInfoFromToken(authToken);
-        		//根据jwt缓存用户信息
-        		redisTemplate.opsForValue().set(authToken, info, expire, TimeUnit.SECONDS); 
-        		logger.info("--缓存信息jwt,"+authToken);
-        		String loginName=info.getUniqueName();
-        		//根据用户账号缓存有效的jwt，踢掉其它的jwt
-        		redisTemplate.opsForValue().set(loginName, authToken, expire, TimeUnit.SECONDS); 
-        		logger.info("--用登录账号缓存有效的jwt,loginName="+loginName);
-        		result= info;
-        	}
-    	}catch(Exception e){
-    		logger.info("--redis发生异常，从jwt取信息");
-    		IJwtInfo info=userAuthUtil.getInfoFromToken(authToken);
-    		result= info;
-    	}
-    	return result;
+//    	logger.info("--getInfoFromToken from jwtUtil,"+authToken);
+//    	IJwtInfo result=null;
+//    	try{
+//        	//根据jwt取jwtInfo
+//        	Object jwtInfo=redisTemplate.opsForValue().get(authToken);
+//        	if(jwtInfo!=null){
+//        		//取得登录账号
+//        		String loginName=((IJwtInfo)jwtInfo).getUniqueName();
+//        		logger.info("--jwt,loginName="+loginName);
+//        		//根据账号取得有效的jwt
+//            	Object jwt=redisTemplate.opsForValue().get(loginName);
+//            	if(jwt!=null){
+//            		//当前jwt与有效jwt是否匹配
+//            		boolean r=authToken.equals(jwt);
+//            		boolean kickOut=((IJwtInfo)jwtInfo).getKickout();
+//            		//当前jwt与有效jwt匹配，或者不互踢
+//            		if(r||!kickOut){
+//            			//设置jwt有效期
+//            			redisTemplate.expire(authToken, expire, TimeUnit.SECONDS); 
+//            			//设置loginName有效期
+//            			redisTemplate.expire(loginName, expire, TimeUnit.SECONDS); 
+//            			result=(IJwtInfo)jwtInfo;
+//                		logger.info("--延长jwt和登录账号有效期"+loginName);
+//            		}else{
+//                		logger.info("--jwt已经被踢掉,loginName="+loginName+",jwt="+authToken+",currentJwt="+jwt);
+//            		}
+//            	}else{//根据账号没有找到有效的jwt，则认为当前这个jwt即为有效的jwt
+//            		logger.info("--根据登录账号没有找到有效的jwt");
+//            		//缓存登录账号有效的jwt
+//            		redisTemplate.opsForValue().set(loginName, authToken, expire, TimeUnit.SECONDS); 
+//        			//设置jwt有效期
+//        			redisTemplate.expire(authToken, expire, TimeUnit.SECONDS); 
+//        			result=(IJwtInfo)jwtInfo;
+//            		logger.info("--设置账号有效的jwt,loginName="+loginName+",jwt="+authToken);
+//            	}
+//        	}else{//如果jwt在缓存找不到，则认为这个jwt是新的有效jwt
+//        		logger.info("--没有jwt缓存信息");
+//        		IJwtInfo info=userAuthUtil.getInfoFromToken(authToken);
+//        		//根据jwt缓存用户信息
+//        		redisTemplate.opsForValue().set(authToken, info, expire, TimeUnit.SECONDS); 
+//        		logger.info("--缓存信息jwt,"+authToken);
+//        		String loginName=info.getUniqueName();
+//        		//根据用户账号缓存有效的jwt，踢掉其它的jwt
+//        		redisTemplate.opsForValue().set(loginName, authToken, expire, TimeUnit.SECONDS); 
+//        		logger.info("--用登录账号缓存有效的jwt,loginName="+loginName);
+//        		result= info;
+//        	}
+//    	}catch(Exception e){
+//    		logger.info("--redis发生异常，从jwt取信息");
+//    		IJwtInfo info=userAuthUtil.getInfoFromToken(authToken);
+//    		result= info;
+//    	}
+//    	return result;
+    	return null;
     }
     @Cacheable(value = "gate",key="'gate.permission.user.'+#username")
     public List<PermissionInfo> getPermissionByUsername(String username){
