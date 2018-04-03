@@ -38,7 +38,7 @@ public class ServiceFeignInterceptor implements RequestInterceptor {
 //    	System.out.println("-------x4:"+BaseContextHandler.getToken());
 //    	System.out.println("-------url:"+requestTemplate.url());
     	
-        requestTemplate.header(serviceAuthConfig.getTokenHeader(), serviceAuthUtil.getClientToken());
+//        requestTemplate.header(serviceAuthConfig.getTokenHeader(), serviceAuthUtil.getClientToken());
         requestTemplate.header(userAuthConfig.getTokenHeader(), BaseContextHandler.getToken());
     }
 }
