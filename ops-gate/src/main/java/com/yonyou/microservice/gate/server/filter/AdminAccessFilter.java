@@ -251,9 +251,9 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(userAuthConfig.getTokenHeader(),authToken);
         //将token放到threadlocal中
         BaseContextHandler.setToken(authToken);
-        JwtInfo info=authService.getUserInfo(authToken);
-        return info;
-//        return cacheService.getInfoFromToken(authToken);
+//        JwtInfo info=authService.getUserInfo(authToken);
+//        return info;
+        return cacheService.getInfoFromToken(authToken);
     }
 
     /**
