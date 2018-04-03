@@ -187,6 +187,7 @@ public class AdminAccessFilter extends ZuulFilter {
     			",dealername="+user.getDealerName()+
     			",encode(dealername)="+dealerName+
     			",telphone="+user.getTelPhone()+
+    			",kickOut="+user.getKickout()+
     			",remark="+remark+tmp);
         BaseContextHandler.remove();
         return null;
