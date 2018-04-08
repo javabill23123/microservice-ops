@@ -163,6 +163,8 @@ public class AuthServiceImpl implements AuthService {
     	}catch(Exception e){
     		logger.info("--redis发生异常，从jwt取信息");
     		IJwtInfo info=authUtilService.getInfoFromToken(jwtToken);
+    		//根据jwt缓存用户信息
+    		redisTemplate.opsForValue().set(jwtToken, info, expire, TimeUnit.SECONDS); 
     		result= info;
     	}
     	return result;

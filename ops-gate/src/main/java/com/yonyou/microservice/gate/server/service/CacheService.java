@@ -104,6 +104,8 @@ public class CacheService {
     	}catch(Exception e){
     		logger.info("--redis发生异常，从jwt取信息");
     		IJwtInfo info=userAuthUtil.getInfoFromToken(authToken);
+    		//根据jwt缓存用户信息
+    		redisTemplate.opsForValue().set(authToken, info, expire, TimeUnit.SECONDS); 
     		result= info;
     	}
     	return result;
