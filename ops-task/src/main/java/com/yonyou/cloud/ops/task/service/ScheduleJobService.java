@@ -370,22 +370,25 @@ public class ScheduleJobService {
          
       List qList = new LinkedList<Object>();
       StringBuilder s = new StringBuilder("select * from TS_SCHEDLED_LOG where 1=1\n");
-      
-      if(!StrUtil.isBlank((String)queryMap.get("taskName"))){
+      String taskName="taskName";
+      String startTime="startTime";
+      String endTime="endTime";
+      String responseInfo="responseInfo";
+      if(!StrUtil.isBlank((String)queryMap.get(taskName))){
     	  s.append(" and SCHEDLED_NAME like ? \n");
-    	  qList.add("%"+queryMap.get("taskName")+"%"); 
+    	  qList.add("%"+queryMap.get(taskName)+"%"); 
       }
-      if((Long)queryMap.get("startTime")!=null){
+      if((Long)queryMap.get(startTime)!=null){
     	  s.append(" and CREATE_DATE >? \n");  
-    	  qList.add(DateTimeUtils.stampToDate(String.valueOf(queryMap.get("startTime"))));
+    	  qList.add(DateTimeUtils.stampToDate(String.valueOf(queryMap.get(startTime))));
       }
-      if((Long)queryMap.get("endTime")!=null){
+      if((Long)queryMap.get(endTime)!=null){
     	  s.append(" and CREATE_DATE <? \n");  
-    	  qList.add(DateTimeUtils.stampToDate(String.valueOf(queryMap.get("endTime"))));
+    	  qList.add(DateTimeUtils.stampToDate(String.valueOf(queryMap.get(endTime))));
       }
-      if(!StrUtil.isBlank((String)queryMap.get("responseInfo"))){
+      if(!StrUtil.isBlank((String)queryMap.get(responseInfo))){
     	  s.append(" and RESPONSE_INFO like ? \n"); 
-    	  qList.add("%"+queryMap.get("responseInfo")+"%");
+    	  qList.add("%"+queryMap.get(responseInfo)+"%");
       }
       s.append("order by id desc");
       

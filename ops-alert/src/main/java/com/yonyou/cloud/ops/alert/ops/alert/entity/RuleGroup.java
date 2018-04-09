@@ -30,6 +30,9 @@ public class RuleGroup {
     @Column(name="mail_content")
     private String mailContent;
     
+    /**
+     * 规则组状态{0：禁用；1：重启}
+     */
     private Boolean status;
 
     public String getAlarmType() {

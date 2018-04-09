@@ -99,15 +99,16 @@ public class HttpUtil {
 		return postContainSsl(urlPath, data, "application/json;charset=utf-8", headers);
 	}
 
-	 public static String postContainSsl(String urlPath, String data, String ContentType, Map<String, String> headers) {
+	 public static String postContainSsl(String urlPath, String data, String contentType, Map<String, String> headers) {
 		logger.debug("url:" + urlPath);
 		SslUtil.trustAllHosts();
 		String result = "";
+		String httpS="https";
 		StringBuffer sb = new StringBuffer();
 		HttpURLConnection connection = null;
 		try {
 			URL url = new URL(urlPath);
-			if (url.getProtocol().toLowerCase().equals("https")) {
+			if (httpS.equals(url.getProtocol().toLowerCase())) {
 				HttpsURLConnection httpConn = (HttpsURLConnection) url.openConnection();
 				httpConn.setHostnameVerifier(SslUtil.DO_NOT_VERIFY);
 				connection = httpConn;
@@ -130,7 +131,7 @@ public class HttpUtil {
 			// 设置POST方式连接
 			connection.setRequestMethod("POST"); 
 			// 设置请求属性
-			connection.setRequestProperty("Content-Type", ContentType);
+			connection.setRequestProperty("Content-Type", contentType);
 			// 维持长连接
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Charset", "UTF-8");
@@ -244,6 +245,7 @@ public class HttpUtil {
 	public static String sendGet(String url, String param) {
 		logger.info("get请求开始");
 		String result = "";
+		String httpS="https";
 		BufferedReader in = null;
 		HttpURLConnection connection = null;
 		try {
@@ -252,7 +254,7 @@ public class HttpUtil {
 			logger.debug("请求url:" + urlNameString);
 			URL realUrl = new URL(urlNameString);
 			// 打开和URL之间的连接
-			if (realUrl.getProtocol().toLowerCase().equals("https")) {
+			if (httpS.equals(realUrl.getProtocol().toLowerCase())) {
 				HttpsURLConnection https = (HttpsURLConnection) realUrl.openConnection();
 				https.setHostnameVerifier(SslUtil.DO_NOT_VERIFY);
 				connection = https;
@@ -298,6 +300,7 @@ public class HttpUtil {
 	public static byte[] sendGetPicture(String url, String param) {
 		logger.info("get请求开始");
 		byte[] result = null;
+		String httpS="https";
 		BufferedReader in = null;
 		HttpURLConnection connection = null;
 		try {
@@ -306,7 +309,7 @@ public class HttpUtil {
 			logger.debug("请求url:" + urlNameString);
 			URL realUrl = new URL(urlNameString);
 			// 打开和URL之间的连接
-			if (realUrl.getProtocol().toLowerCase().equals("https")) {
+			if (httpS.equals(realUrl.getProtocol().toLowerCase())) {
 				HttpsURLConnection https = (HttpsURLConnection) realUrl.openConnection();
 				https.setHostnameVerifier(SslUtil.DO_NOT_VERIFY);
 				connection = https;
@@ -384,11 +387,12 @@ public class HttpUtil {
 		logger.debug("url:" + urlPath);
 		SslUtil.trustAllHosts();
 		String result = "";
+		String httpS="https";
 		StringBuffer sb = new StringBuffer();
 		HttpURLConnection connection = null;
 		try {
 			URL url = new URL(urlPath);
-			if (url.getProtocol().toLowerCase().equals("https")) {
+			if (httpS.equals(url.getProtocol().toLowerCase())) {
 				HttpsURLConnection httpConn = (HttpsURLConnection) url.openConnection();
 				httpConn.setHostnameVerifier(SslUtil.DO_NOT_VERIFY);
 				connection = httpConn;
@@ -396,10 +400,14 @@ public class HttpUtil {
 				connection = (HttpURLConnection) url.openConnection();
 			}
 			// 设置参数
-			connection.setDoOutput(true); // 需要输出
-			connection.setDoInput(true); // 需要输入
-			connection.setUseCaches(false); // 不允许缓存
-			connection.setRequestMethod("POST"); // 设置POST方式连接
+			// 需要输出
+			connection.setDoOutput(true);
+			// 需要输入
+			connection.setDoInput(true); 
+			// 不允许缓存
+			connection.setUseCaches(false); 
+			// 设置POST方式连接
+			connection.setRequestMethod("POST"); 
 			// 设置请求属性
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			// 维持长连接
@@ -437,15 +445,16 @@ public class HttpUtil {
 
 	public static String getParams(String method, Map<String, String> paramValues) {
 		String params = "";
+		String get="get";
 		Set<String> key = paramValues.keySet();
 		String beginLetter = "";
-		if (method.equalsIgnoreCase("get")) {
+		if (method.equalsIgnoreCase(get)) {
 			beginLetter = "?";
 		}
 
 		for (Iterator<String> it = key.iterator(); it.hasNext();) {
 			String s = (String) it.next();
-			if (params.equals("")) {
+			if ("".equals(params)) {
 				params += beginLetter + s + "=" + paramValues.get(s);
 			} else {
 				params += "&" + s + "=" + paramValues.get(s);

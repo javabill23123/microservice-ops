@@ -51,12 +51,13 @@ public class ScheduledJob implements Job {
         String workTime=String.valueOf(endTime-statrTime);
         int returnFlag=0;  
         String localAddr="";
+        String ok="OK";
         try {
         	if(!StringUtils.isBlank(out)){
         		try {
         			JSONObject ob=JSONUtil.parseObj(out);
         			String resultCode=ob.getStr("result");
-        			if("OK".equals(resultCode)) {
+        			if(ok.equals(resultCode)) {
                 		returnFlag=1;
                 	}
 				} catch (Exception e) {
