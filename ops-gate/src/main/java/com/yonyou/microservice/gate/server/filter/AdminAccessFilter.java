@@ -165,12 +165,19 @@ public class AdminAccessFilter extends ZuulFilter {
         // 申请客户端密钥头
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
         ctx.addZuulRequestHeader(USER_HEAD_ID,user.getId());
-        String name=URLEncoder.encode(user.getName());
+        String name="";
+        String remark="";
+        String dealerName="";
+		try {
+			name = URLEncoder.encode(user.getName(),"utf-8");
+			dealerName = URLEncoder.encode(user.getDealerName(),"utf-8");
+			remark = URLEncoder.encode(user.getRemark(),"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage());
+		}
         ctx.addZuulRequestHeader(USER_HEAD_NAME,name);
-        String remark=URLEncoder.encode(user.getRemark());
         ctx.addZuulRequestHeader(USER_HEAD_REMARK,remark);
         ctx.addZuulRequestHeader(REPBODY_DEALER_CODE,user.getDealerCode());
-        String dealerName=URLEncoder.encode(user.getDealerName());
         ctx.addZuulRequestHeader(REPBODY_DEALER_NAME,dealerName);
         ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
         
