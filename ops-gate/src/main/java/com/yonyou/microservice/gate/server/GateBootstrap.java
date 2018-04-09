@@ -26,10 +26,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.spring4all.swagger.EnableSwagger2Doc;
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.cloud.zuul.db.api.EnableZuulProxyStore;
-import com.yonyou.microservice.auth.client.EnableAceAuthClient;
+import com.yonyou.microservice.auth.client.EnableOpsAuthClient;
 import com.yonyou.microservice.filter.annotation.EnableGroovyFilter;
 import com.yonyou.microservice.gate.common.msg.ZuulExceptionResponse;
-import com.yonyou.microservice.gate.ratelimit.EnableAceGateRateLimit;
+import com.yonyou.microservice.gate.ratelimit.EnableOpsGateRateLimit;
 import com.yonyou.microservice.gate.ratelimit.config.IUserPrincipal;
 import com.yonyou.microservice.gate.ratelimit.config.properties.RateLimitProperties;
 import com.yonyou.microservice.gate.server.config.UserPrincipal;
@@ -44,8 +44,8 @@ import com.yonyou.microservice.gate.server.utils.DbLog;
 @EnableZuulProxyStore
 @ComponentScan(basePackages = {"com.yonyou.cloud.zuul.db","com.yonyou.microservice.gate.server"})
 @EnableScheduling
-@EnableAceAuthClient
-@EnableAceGateRateLimit
+@EnableOpsAuthClient
+@EnableOpsGateRateLimit
 @RestController
 @EnableGroovyFilter
 @EnableCaching

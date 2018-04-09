@@ -141,7 +141,7 @@ auth:
       path: jwt/pub.key
   client:
     token-header: client-token
-    id: ace-gate  #不填则默认读取spring.application.name
+    id: ops-gate  #不填则默认读取spring.application.name
     secret: 123456
     pub-key:
       path: client/pub.key

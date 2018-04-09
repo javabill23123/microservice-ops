@@ -8,7 +8,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import org.apache.log4j.Logger;
-
+/**
+ * 反射工具类
+ * @author joy
+ *
+ */
 public class ReflectionUtils {
 	private static final Logger logger = Logger.getLogger(ReflectionUtils.class);
 
@@ -18,9 +22,9 @@ public class ReflectionUtils {
     public static void setFieldValue(final Object object, final String fieldName, final Object value) {
         Field field = getDeclaredField(object, fieldName);
 
-        if (field == null)
+        if (field == null){
             throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
-
+        }
         makeAccessible(field);
 
         try {
@@ -36,9 +40,9 @@ public class ReflectionUtils {
     public static Object getFieldValue(final Object object, final String fieldName) {
         Field field = getDeclaredField(object, fieldName);
 
-        if (field == null)
+        if (field == null){
             throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
-
+        }
         makeAccessible(field);
 
         Object result = null;
@@ -56,9 +60,9 @@ public class ReflectionUtils {
     public static Object invokeMethod(final Object object, final String methodName, final Class<?>[] parameterTypes,
             final Object[] parameters) throws InvocationTargetException {
         Method method = getDeclaredMethod(object, methodName, parameterTypes);
-        if (method == null)
+        if (method == null){
             throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + object + "]");
-
+        }
         method.setAccessible(true);
 
         try {
@@ -159,9 +163,10 @@ public class ReflectionUtils {
      */
     public static IllegalArgumentException convertToUncheckedException(Exception e) {
         if (e instanceof IllegalAccessException || e instanceof IllegalArgumentException
-                || e instanceof NoSuchMethodException)
+                || e instanceof NoSuchMethodException){
             return new IllegalArgumentException("Refelction Exception.", e);
-        else
+        }else{
             return new IllegalArgumentException(e);
+        }
     }
 }

@@ -11,6 +11,11 @@ import com.yonyou.microservice.auth.client.exception.JwtTokenExpiredException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
+/**
+ * 认证工具类
+ * @author joy
+ *
+ */
 @Service
 public class AuthUtilService {
 

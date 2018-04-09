@@ -17,7 +17,12 @@ import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
 import com.yonyou.microservice.gate.common.vo.user.UserInfo;
 import com.yonyou.microservice.gate.server.feign.IIgnoreUriService;
 import com.yonyou.microservice.gate.server.feign.IUserService;
-
+/**
+ * 
+ * @author joy
+ *@create 2018-01-9
+ * 缓存服务类，对特定数据做缓存
+ */
 @Service
 public class CacheService {
 	private static Logger logger=Logger.getLogger(CacheService.class);
@@ -52,7 +57,6 @@ public class CacheService {
      * @return cache
      * @throws Exception
      */
-//    @Cacheable(value = "gate",key="'gate.jwt.'+#authToken")
     public IJwtInfo getInfoFromToken(String authToken) throws Exception{
     	logger.info("--getInfoFromToken from jwtUtil,"+authToken);
     	IJwtInfo result=null;

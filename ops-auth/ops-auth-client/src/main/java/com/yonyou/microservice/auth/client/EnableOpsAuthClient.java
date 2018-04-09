@@ -14,5 +14,5 @@ import java.lang.annotation.*;
 @Import(AutoConfiguration.class)
 @Documented
 @Inherited
-public @interface EnableAceAuthClient {
+public @interface EnableOpsAuthClient {
 }

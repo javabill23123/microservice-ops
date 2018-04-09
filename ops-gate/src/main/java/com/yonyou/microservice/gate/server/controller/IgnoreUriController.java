@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * 
+ * @author joy
+ *
+ *权限忽略定时更新接口
+ */
 @RestController
 public class IgnoreUriController {
 	private static Logger logger=Logger.getLogger(IgnoreUriController.class);
@@ -19,7 +24,7 @@ public class IgnoreUriController {
 	@CacheEvict(value="gate", allEntries=true)
     public Map cleanIgnoreUriCache() {
     	logger.info("--IgnoreUriController cleanIgnoreUriCache was called");
-    	Map<String,String> map=new HashMap();
+    	Map<String,String> map=new HashMap(16);
     	map.put("message", "ok");
         return map;
     }

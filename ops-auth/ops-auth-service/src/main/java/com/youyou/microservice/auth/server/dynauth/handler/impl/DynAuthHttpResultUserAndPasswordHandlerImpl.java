@@ -63,11 +63,12 @@ public class DynAuthHttpResultUserAndPasswordHandlerImpl implements DynAuthHttpR
 		String telPhone = (String) sk.get(REPBODY_TELPHONE);
 		//接口返回是否互踢参数
 		Boolean kickOut=(Boolean) sk.get(REPBODY_KICKOUT);
-		if(kickOut==null)
+		if(kickOut==null){
 			kickOut=true;
+		}
 		//动态读取接口返回的各个参数值
 		String[] paramNames=jwtParams.split(",");
-		Map<String ,String> map=new HashMap();
+		Map<String ,String> map=new HashMap(16);
 		for(int i=0;i<paramNames.length;i++){
 			String value = (String) sk.get(paramNames[i]);
 			map.put(paramNames[i], value);

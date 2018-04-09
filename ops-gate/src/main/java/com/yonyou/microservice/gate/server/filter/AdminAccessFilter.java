@@ -175,10 +175,12 @@ public class AdminAccessFilter extends ZuulFilter {
         ctx.addZuulRequestHeader(REPBODY_TELPHONE,user.getTelPhone());
         
         String tmp="";
+        StringBuilder sb=new StringBuilder();
         Map<String,String> map =user.getParam();
         for(Entry<String,String> entry:map.entrySet()){
             ctx.addZuulRequestHeader(entry.getKey(),entry.getValue());
-            tmp=tmp+","+entry.getKey()+"="+entry.getValue();
+            sb.append(","+entry.getKey()+"="+entry.getValue());
+//            tmp=tmp+","+entry.getKey()+"="+entry.getValue();
         }
     	logger.info("--添加头信息,userid="+user.getId()+
     			",username="+user.getName()+
@@ -188,7 +190,7 @@ public class AdminAccessFilter extends ZuulFilter {
     			",encode(dealername)="+dealerName+
     			",telphone="+user.getTelPhone()+
     			",kickOut="+user.getKickout()+
-    			",remark="+remark+tmp);
+    			",remark="+remark+sb.toString());
         BaseContextHandler.remove();
         return null;
     }

@@ -16,11 +16,13 @@ import com.yonyou.microservice.gate.server.config.ZuulConfig;
  */
 @FeignClient(value = "ops-auth",configuration = {ZuulConfig.class})
 public interface IAuthService {
-	/**
-	 * 读取用户信息
-	 * @param username
-	 * @return
-	 */
+
 	  @RequestMapping(value = "/jwt/userInfo", method = RequestMethod.POST)
+		/**
+		 * 根据jwt读取用户信息
+		 * @param jwt
+		 * @return 用户信息
+		 * @throws Exception
+		 */
 	  public JwtInfo getUserInfo(String jwt) throws Exception;
 }

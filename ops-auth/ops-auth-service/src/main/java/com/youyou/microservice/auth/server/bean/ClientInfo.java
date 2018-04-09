@@ -60,30 +60,37 @@ public class ClientInfo implements IJwtInfo {
         this.remark = remark;
     }
 
+    @Override
     public String getUniqueName() {
         return clientId;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
 	public String getRemark() {
 		return this.remark;
 	}
 
+    @Override
 	public String getDealerName() {
 		return dealerName;
 	}
 
+    @Override
 	public String getDealerCode() {
 		return dealerCode;
 	}
 
+    @Override
 	public String getTelPhone() {
 		return telPhone;
 	}
@@ -96,7 +103,7 @@ public class ClientInfo implements IJwtInfo {
 	@Override
 	public Map<String, String> getParam() {
 		if(params==null){
-			params=new HashMap();
+			params=new HashMap(16);
 		}
 		return params;
 	}

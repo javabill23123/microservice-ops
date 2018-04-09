@@ -23,10 +23,16 @@ import com.alibaba.fastjson.util.IOUtils;
 import com.youyou.microservice.auth.server.entity.AuthProvider;
 import com.youyou.microservice.auth.server.mapper.AuthProviderMapper;
 import com.youyou.microservice.auth.server.util.client.ReflectionUtils;
-
+/**
+ * 动态配置的url更新接口，供ops-task定时调用
+ * @author joy
+ *
+ */
 @RestController
 @RequestMapping("dynController")
 public class DynResetConfigController {
+	private static final String CONST_DYNCONTROLLER="DynController";
+	private static final String CONST_HANDLERMAP="handlerMap";
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -51,9 +57,9 @@ public class DynResetConfigController {
 		}
 		if(urlMap.size()>0){
 			List<String> tl=new ArrayList();
-			Map<String, Object> map=(Map<String, Object>)ReflectionUtils.getFieldValue(mapping, "handlerMap");
+			Map<String, Object> map=(Map<String, Object>)ReflectionUtils.getFieldValue(mapping, CONST_HANDLERMAP);
 			map.keySet().forEach(key->{
-				if(map.get(key).toString().contains("DynController")){
+				if(map.get(key).toString().contains(CONST_DYNCONTROLLER)){
 					tl.add(key);
 				}
 			});
@@ -63,7 +69,7 @@ public class DynResetConfigController {
 			mapping.setUrlMap(urlMap);
 			mapping.initApplicationContext();
 		}
-    	Map<String,String> map=new HashMap();
+    	Map<String,String> map=new HashMap(16);
     	map.put("message", "ok");
 		return map;
 	}
@@ -86,35 +92,42 @@ public class DynResetConfigController {
     @RequestMapping(value = "demoHeader", method = RequestMethod.GET)
 	public String demoUser3(HttpServletRequest p0) {
     	String data="";
+    	StringBuilder sb=new StringBuilder();
     	Enumeration<String> heads=p0.getHeaderNames();
     	while (heads.hasMoreElements()){
     		String name=heads.nextElement();
-    		data=data+name+"="+p0.getHeader(name)+",";
+//    		data=data+name+"="+p0.getHeader(name)+",";
+    		sb.append(name+"="+p0.getHeader(name)+",");
     	}
-    	return data;
+    	return sb.toString();
+//    	return data;
     }
     
     @RequestMapping(value = "demoHeader", method = RequestMethod.POST)
 	public String demoUser4(HttpServletRequest p0) {
     	String data="";
+    	StringBuilder sb=new StringBuilder();
     	Enumeration<String> heads=p0.getHeaderNames();
     	while (heads.hasMoreElements()){
     		String name=heads.nextElement();
-    		data=data+name+"="+p0.getHeader(name)+",";
+    		sb.append(name+"="+p0.getHeader(name)+",");
+//    		data=data+name+"="+p0.getHeader(name)+",";
     	}
-    	logger.info(data);
+    	logger.info(sb.toString());
 		String body="";
 		String tmp="";
+    	StringBuilder sb2=new StringBuilder();
 		Enumeration<String> map=p0.getParameterNames();
 		while ( map.hasMoreElements() ){
 			String name=map.nextElement();
 			String[] values=p0.getParameterValues(name);
 			for(int i=0 ;i<values.length;i++){
-				body=body+tmp+name+"="+values[i];
+//				body=body+tmp+name+"="+values[i];
+	    		sb2.append(tmp+name+"="+values[i]);
 				tmp="&";
 			}
 		}
-    	logger.info(body);
+    	logger.info(sb2.toString());
     	return data;
     }
 }

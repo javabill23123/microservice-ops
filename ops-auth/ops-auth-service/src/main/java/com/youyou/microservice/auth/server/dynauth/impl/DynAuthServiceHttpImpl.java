@@ -36,6 +36,7 @@ import com.youyou.microservice.auth.server.util.user.JwtAuthenticationDataRespon
 @Service("dynAuthServiceHttpImpl")
 @DynAuth(type = "http")
 public class DynAuthServiceHttpImpl implements DynAuthService {
+	private static final String CONST_FORM="-form";
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -45,6 +46,7 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 
 	private static final String AUTH_CODE = "authCode";
 
+    @Override
 	public JwtAuthenticationDataResponse auth(HttpServletRequest request, AuthProvider pInfo) {
 		// 获取请求的信息 url后的参数 uri post/get body信息
 		String queryString = request.getQueryString();
@@ -68,7 +70,7 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 		String param = "?" + queryString;
 		// 4. 请求body
 		HttpHeaders headers = new HttpHeaders();
-		if(request.getContentType()!=null && request.getContentType().contains("-form")){
+		if(request.getContentType()!=null && request.getContentType().contains(CONST_FORM)){
 		    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		}
 		HttpEntity<String> entity = new HttpEntity<String>(body, headers);
@@ -91,14 +93,16 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 	 */
 	private String getBody(HttpServletRequest request) {
 	    String body="";
-		if(request.getContentType()!=null && request.getContentType().contains("-form")){
+    	StringBuilder sb=new StringBuilder();
+		if(request.getContentType()!=null && request.getContentType().contains(CONST_FORM)){
 			String tmp="";
 			Enumeration<String> map=request.getParameterNames();
 			while ( map.hasMoreElements() ){
 				String name=map.nextElement();
 				String[] values=request.getParameterValues(name);
 				for(int i=0 ;i<values.length;i++){
-					body=body+tmp+name+"="+values[i];
+//					body=body+tmp+name+"="+values[i];
+					sb.append(tmp+name+"="+values[i]);
 					tmp="&";
 				}
 			}
@@ -112,13 +116,14 @@ public class DynAuthServiceHttpImpl implements DynAuthService {
 			try {
 				br = request.getReader();
 				while ((str = br.readLine()) != null) {
-					body += str;
+//					body += str;
+					sb.append(str);
 				}
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			}
 		}
-		return body;
+		return sb.toString();
 	}
 
 }

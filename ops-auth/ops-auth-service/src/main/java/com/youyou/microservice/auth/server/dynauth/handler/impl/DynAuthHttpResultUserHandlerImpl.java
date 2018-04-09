@@ -71,7 +71,7 @@ public class DynAuthHttpResultUserHandlerImpl implements DynAuthHttpResultHandle
 		Boolean kickOut=(Boolean) sk.get(REPBODY_KICKOUT);
 		//动态读取接口返回的各个参数值
 		String[] paramNames=jwtParams.split(",");
-		Map<String ,String> map=new HashMap();
+		Map<String ,String> map=new HashMap(16);
 		for(int i=0;i<paramNames.length;i++){
 			String value = (String) sk.get(paramNames[i]);
 			map.put(paramNames[i], value);

@@ -51,8 +51,9 @@ public interface AuthService {
 
     /**
      * 根据jwt取得用户信息
-     * @param token
+     * @param jwt
      * @return
+     * @throws Exception
      */
     IJwtInfo getUserInfoByJwt(String jwt) throws Exception;
 }

@@ -19,6 +19,12 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.yonyou.microservice.gate.common.msg.ZuulExceptionResponse;
 
+/**
+ * 
+ * @author joy
+ * 
+ *zuul错误处理类
+ */
 @Component
 public class MySendErrorFilter extends ZuulFilter {
 
