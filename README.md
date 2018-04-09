@@ -27,7 +27,7 @@
 * **平台UI部分**，参考 [这个项目](https://github.com/yonyou-auto-dev/microservice-ops-ui)，使用VUE+ELementUI实现运维的界面，前后端分离。
 
 * **网关服务 ops-gate：**  
-	基于SpringCloud Netflix Zuul开发，实现了基于JWT的权限认证(也支持业务自行认证，只由网关代理JWT)、URL鉴权、动态路由、动态filter、认证忽略、权限判断。
+	基于SpringCloud Netflix Zuul开发，实现了基于JWT的权限认证(也支持业务自行认证，只由网关代理JWT)、URL鉴权、动态路由、动态filter、认证忽略、权限判断、限流。
 	
 * **权限服务 ops-auth：**  
 	网关通过调用它来实现对应的认证功能，运营系统的身份认证的逻辑在该服务中实现，支持其它系统的认证代理(后台做相关配置即可)，同时支持服务之间的调用时的鉴权。  
