@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yonyou.cloud.common.beans.RestResultResponse;
 import com.yonyou.microservice.gate.admin.biz.GroupBiz;
 import com.yonyou.microservice.gate.admin.vo.GroupUsers;
-
+/**
+ * 
+ * @author daniell
+ *
+ */
 @RestController
 @RequestMapping("api")
 public class GroupRest {
