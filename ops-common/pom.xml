@@ -58,8 +58,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>4.3.4.RELEASE</version>
-        </dependency>
+            </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
@@ -96,7 +95,7 @@
         <dependency>
             <groupId>com.yonyou.cloud</groupId>
 	        <artifactId>common-elegance</artifactId>
-	        <version>0.0.2-SNAPSHOT</version>
+	        <version>0.0.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
     
@@ -112,10 +111,15 @@
 			<url>http://210.13.111.26:10160/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository> -->
 		
-		<snapshotRepository>
+<!-- 		<snapshotRepository>
 	        <id>nexus-snapshots</id>
 	        <name>user snapshot</name>
 	        <url>http://dce.carapptest.gtmc.com.cn:32081/repository/maven-snapshots/</url>
+	    </snapshotRepository> -->
+	    <snapshotRepository>
+	        <id>nexus</id>  
+        		<name>internal nexus repository</name>  
+        		<url>http://dev-pv.saicmotor.com:9090/nexus/content/repositories/snapshots/</url>  
 	    </snapshotRepository>
 	</distributionManagement>
     <build>
