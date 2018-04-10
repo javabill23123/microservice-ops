@@ -3,10 +3,11 @@ package com.yonyou.cloud.ops.task.entity;
 import java.io.Serializable;
 
 /**
- * 定时任务实体
- * 
- * @author yang
+ *  定时任务实体
+ * @author daniell
+ *
  */
+    
 public class ScheduleEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
