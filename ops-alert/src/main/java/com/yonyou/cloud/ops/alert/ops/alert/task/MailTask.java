@@ -23,7 +23,7 @@ public class MailTask {
 
 	@Scheduled(cron = "${redis.task.schedule}")
 	public void sendMail() {
-		alertInfoBiz.sendMail();
+//		alertInfoBiz.sendMail();
 	}
 
 }

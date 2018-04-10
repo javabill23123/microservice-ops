@@ -36,7 +36,7 @@
 			</fileNamePattern>
 			<maxFileSize>10MB</maxFileSize>
 			<maxHistory>100</maxHistory>
-			<totalSizeCap>20GB</totalSizeCap>
+			<totalSizeCap>5GB</totalSizeCap>
 		</rollingPolicy>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<pattern>${PATTERN}</pattern>
@@ -55,7 +55,7 @@
 			</fileNamePattern>
 			<maxFileSize>10MB</maxFileSize>
 			<maxHistory>100</maxHistory>
-			<totalSizeCap>20GB</totalSizeCap>
+			<totalSizeCap>5GB</totalSizeCap>
 		</rollingPolicy>
 		<append>true</append>
 		<layout class="ch.qos.logback.classic.PatternLayout">
@@ -80,7 +80,7 @@
 			</fileNamePattern>
 			<maxFileSize>10MB</maxFileSize>
 			<maxHistory>100</maxHistory>
-			<totalSizeCap>20GB</totalSizeCap>
+			<totalSizeCap>5GB</totalSizeCap>
 		</rollingPolicy>
 		<append>true</append>
 		<layout class="ch.qos.logback.classic.PatternLayout">
