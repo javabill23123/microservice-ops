@@ -56,12 +56,12 @@
 		<if test="appName!=null and appName!=''">
 			and at.app_name like CONCAT(CONCAT('%',#{appName},'%'))
 		</if>
-		<if test="endDate!=null and endDate!=''">
-			and at.create_date  <![CDATA[>=]]>   #{endDate, jdbcType=TIMESTAMP} 
-			 
-		</if>
+		
 		<if test="startDate!=null and startDate!=''">
-			and  at.create_date  <![CDATA[<=]]>  #{startDate, jdbcType=TIMESTAMP} 
+			and  at.create_date  <![CDATA[>=]]>  #{startDate, jdbcType=TIMESTAMP} 
+		</if>
+		<if test="endDate!=null and endDate!=''">
+			and at.create_date  <![CDATA[<=]]>   #{endDate, jdbcType=TIMESTAMP}  
 		</if>  
 		    order by at.id DESC
 	</select>
