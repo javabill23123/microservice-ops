@@ -57,7 +57,7 @@
 			and at.app_name like CONCAT(CONCAT('%',#{appName},'%'))
 		</if>
 		<if test="endDate!=null and endDate!=''"> 
-			<![CDATA[AND DATE_FORMAT(at.create_date,'%Y-%m-%d') >= DATE_FORMAT(#{endDate, jdbcType=DATE},'%Y-%m-%d')]]>
+			<![CDATA[AND DATE_FORMAT(at.create_date,'%Y-%m-%d') <= DATE_FORMAT(#{endDate, jdbcType=DATE},'%Y-%m-%d')]]>
 		</if>
 		<if test="startDate!=null and startDate!=''">
 			<![CDATA[AND DATE_FORMAT(at.create_date,'%Y-%m-%d') >= DATE_FORMAT(#{startDate, jdbcType=DATE},'%Y-%m-%d')]]>
