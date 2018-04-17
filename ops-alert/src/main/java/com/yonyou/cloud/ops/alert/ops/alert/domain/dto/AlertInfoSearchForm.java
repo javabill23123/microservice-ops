@@ -25,20 +25,21 @@ public class AlertInfoSearchForm extends EsPageQuery{
     
     private String appName;
     
-    private Date startDate;
+    private Long startDate;
     
-    private Date endDate;
+    private Long endDate;
     
-	public Date getStartDate() {
+ 
+	public Long getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
+	public void setStartDate(Long startDate) {
 		this.startDate = startDate;
 	}
-	public Date getEndDate() {
+	public Long getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(Date endDate) {
+	public void setEndDate(Long endDate) {
 		this.endDate = endDate;
 	}
 	public Integer getId() {
