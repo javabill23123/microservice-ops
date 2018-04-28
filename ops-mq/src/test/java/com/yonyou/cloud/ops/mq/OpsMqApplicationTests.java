@@ -37,7 +37,6 @@ import com.yonyou.cloud.ops.mq.service.MqProducerService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
 public class OpsMqApplicationTests {
 //	@Autowired
 //	private TransportClient client;

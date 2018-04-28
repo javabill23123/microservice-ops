@@ -1,5 +1,7 @@
 package com.yonyou.cloud.ops.alert.ops.alert.domain.dto;
 
+import java.util.Date;
+
 import com.yonyou.cloud.common.service.utils.EsPageQuery;
 
 public class AlertInfoSearchForm extends EsPageQuery{
@@ -23,11 +25,28 @@ public class AlertInfoSearchForm extends EsPageQuery{
     
     private String appName;
     
+    private String startDate;
+    
+    private String endDate;
+ 
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+ 
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 	public Integer getGroupId() {
 		return groupId;

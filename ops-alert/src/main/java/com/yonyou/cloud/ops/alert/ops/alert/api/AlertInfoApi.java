@@ -14,11 +14,7 @@ import com.yonyou.cloud.ops.alert.ops.alert.domain.dto.AlertInfoForm;
 import com.yonyou.cloud.ops.alert.ops.alert.entity.AlertInfo;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
  * 
