@@ -35,7 +35,7 @@ public class MqDataMongoDbTest {
 	@Test
 	public void insert(){
 		List<MqMessage> l = new ArrayList<MqMessage>();
-		for(int i = 0;i<1000000;i++){
+		for(int i = 0;i<10;i++){
 			MqMessage mqMessage = new MqMessage();
 			mqMessage.setMsgKey(UUID.randomUUID().toString());
 			mqMessage.setOccurTime(System.currentTimeMillis());
