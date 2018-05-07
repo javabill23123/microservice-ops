@@ -29,7 +29,7 @@ import com.yonyou.cloud.zuul.db.api.EnableZuulProxyStore;
 import com.yonyou.microservice.auth.client.EnableAceAuthClient;
 import com.yonyou.microservice.filter.annotation.EnableGroovyFilter;
 import com.yonyou.microservice.gate.common.msg.ZuulExceptionResponse;
-import com.yonyou.microservice.gate.ratelimit.EnableAceGateRateLimit;
+import com.yonyou.microservice.gate.ratelimit.EnableOpsGateRateLimit;
 import com.yonyou.microservice.gate.ratelimit.config.IUserPrincipal;
 import com.yonyou.microservice.gate.ratelimit.config.properties.RateLimitProperties;
 import com.yonyou.microservice.gate.server.config.UserPrincipal;
@@ -45,7 +45,7 @@ import com.yonyou.microservice.gate.server.utils.DbLog;
 @ComponentScan(basePackages = {"com.yonyou.cloud.zuul.db","com.yonyou.microservice.gate.server"})
 @EnableScheduling
 @EnableAceAuthClient
-@EnableAceGateRateLimit
+@EnableOpsGateRateLimit
 @RestController
 @EnableGroovyFilter
 @EnableCaching
