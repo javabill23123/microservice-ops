@@ -50,8 +50,8 @@ zuul:
     repository: IN_MEMORY #REDIS, JPA, IN_MEMORY
     behind-proxy: true
     default-policy: #optional - will apply unless specific policy exists
-      limit: 600
-      refresh-interval: 60 #default value (in seconds)
+      limit: ${zuul.yc_base.limit:600}
+      refresh-interval: ${zuul.yc_base.limit-interval:60} #default value (in seconds)
       type: #optional
         - user
         - origin
