@@ -78,7 +78,8 @@ public class AdminAccessFilter extends ZuulFilter {
 
     @Value("${zuul.prefix}")
     private String zuulPrefix;
-
+    @Value("${gate.ignore.addHeader:false}")
+    private boolean ignoreUrlAddHeader;
     @Autowired
     private ServiceAuthConfig serviceAuthConfig;
 
@@ -120,49 +121,8 @@ public class AdminAccessFilter extends ZuulFilter {
         return true;
     }
 
-    @Override
-    public Object run() {
-    	logger.info("--AdminAccessFilter.run(),进入网关");
-        RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
-    	logger.info("--AdminAccessFilter.run(),requestUri="+request.getRequestURI());
-        final String requestUri = request.getRequestURI().substring(zuulPrefix.length());
-        final String method = request.getMethod();
-        BaseContextHandler.setToken(null);
-        // 不进行拦截的地址
-        if (isStartWith(requestUri)) {
-        	logger.info("--AdminAccessFilter.run(),忽略身份认证");
-            return null;
-        }
-        if(requestUri.contains(LOG_OUT)){
-        	cleanSession(request);
-        }
-        IJwtInfo user = null;
-        try {
-        	//从JWT中解析出用户信息
-            user = getJWTUser(request,ctx);
-            if(user==null){
-                setFailedRequest(JSON.toJSONString(new TokenKickOutResponse("user was kicked out")),200);
-            	logger.info("--user为空，退出网关");
-                return null;
-            }
-        } catch (Exception e) {
-        	//如果jwt中的用户信息获取失败，这块返回信息可能要改成统一的response格式
-            setFailedRequest(JSON.toJSONString(new TokenErrorResponse(e.getMessage())),200);
-        	logger.error("--AdminAccessFilter.run(),解析jwt出现异常,"+e.getMessage());
-            return null;
-        }
-//        if(!(requestUri.contains(SPEC_URI_INFO)||requestUri.contains(SPEC_URI_MENUS))){
-        if(!SPEC_URI_INFO.contains(requestUri)){
-        	logger.info("--AdminAccessFilter.run(),开始uri访问权限检查");
-            List<PermissionInfo> permissionInfos = cacheService.getAllPermissionInfo();
-            // 判断资源是否启用权限约束
-            Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
-            if(result.size()>0){
-    			checkAllow(requestUri, method, ctx, user.getUniqueName());
-            }
-        }
-        // 申请客户端密钥头
+    private void addHeader(RequestContext ctx, IJwtInfo user){
+    	// 申请客户端密钥头
         ctx.addZuulRequestHeader(serviceAuthConfig.getTokenHeader(),serviceAuthUtil.getClientToken());
         ctx.addZuulRequestHeader(USER_HEAD_ID,user.getId());
         String name=URLEncoder.encode(user.getName());
@@ -190,8 +150,78 @@ public class AdminAccessFilter extends ZuulFilter {
     			",kickOut="+user.getKickout()+
     			",remark="+remark+tmp);
         BaseContextHandler.remove();
-        return null;
     }
+    private void dealIgnoreUrlRequest(HttpServletRequest request, RequestContext ctx){
+    	IJwtInfo user=null;
+        try {
+        	//从JWT中解析出用户信息
+            user = getJWTUser(request,ctx);
+            if(user==null){
+            	logger.info("--is ignoreUrl,user is null");
+                return ;
+            }
+        } catch (Exception e) {
+        	logger.error("--is ignore Url,parse jwt exception,"+e.getMessage());
+            return ;
+        }
+        addHeader(ctx, user);
+    }
+    
+    @Override
+    public Object run() {
+    	logger.info("--进入网关");
+        RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
+    	logger.info("--requestUri="+request.getRequestURI());
+        final String requestUri = request.getRequestURI().substring(zuulPrefix.length());
+        final String method = request.getMethod();
+        BaseContextHandler.setToken(null);
+        // 不进行拦截的地址
+        if (isStartWith(requestUri)) {
+        	logger.info("--忽略身份认证");
+        	if(ignoreUrlAddHeader){
+        		this.dealIgnoreUrlRequest( request,  ctx);
+                return null;
+        	}
+            return null;
+        }
+        if(requestUri.contains(LOG_OUT)){
+        	cleanSession(request);
+        }
+        IJwtInfo user=this.dealControledUrlRequest( request,  ctx);
+
+        if(user!=null && !SPEC_URI_INFO.contains(requestUri)){
+        	logger.info("--AdminAccessFilter.run(),开始uri访问权限检查");
+            List<PermissionInfo> permissionInfos = cacheService.getAllPermissionInfo();
+            // 判断资源是否启用权限约束
+            Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
+            if(result.size()>0){
+    			checkAllow(requestUri, method, ctx, user.getUniqueName());
+            }
+        }
+      return null;
+      
+    }
+    
+    private IJwtInfo dealControledUrlRequest(HttpServletRequest request, RequestContext ctx){
+        IJwtInfo user = null;
+        try {
+        	//从JWT中解析出用户信息
+            user = getJWTUser(request,ctx);
+            if(user==null){
+                setFailedRequest(JSON.toJSONString(new TokenKickOutResponse("user was kicked out")),200);
+            	logger.info("--user为空，退出网关");
+                return null;
+            }
+        } catch (Exception e) {
+        	//如果jwt中的用户信息获取失败，这块返回信息可能要改成统一的response格式
+            setFailedRequest(JSON.toJSONString(new TokenErrorResponse(e.getMessage())),200);
+        	logger.error("--AdminAccessFilter.run(),解析jwt出现异常,"+e.getMessage());
+            return null;
+        }
+        addHeader(ctx, user);
+        return user;
+    }    
 
     /**
      * 获取目标权限资源
