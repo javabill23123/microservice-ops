@@ -129,7 +129,7 @@ hystrix:
 gate:
   ignore:
     startWith: /static,/auth/jwt,/captcha/jwt
-    addHeader: ${gate.ignore.addHeader:false}
+    addHeader: ${gate.yc_base.addHeader:false}
 logging:
   level:
     root: info

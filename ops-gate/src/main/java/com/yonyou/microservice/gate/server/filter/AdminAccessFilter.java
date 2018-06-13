@@ -164,6 +164,7 @@ public class AdminAccessFilter extends ZuulFilter {
         	logger.error("--is ignore Url,parse jwt exception,"+e.getMessage());
             return ;
         }
+    	logger.info("--enter ignoreUrl,add user header");
         addHeader(ctx, user);
     }
     
