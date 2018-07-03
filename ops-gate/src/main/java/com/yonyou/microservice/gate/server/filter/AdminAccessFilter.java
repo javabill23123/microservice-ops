@@ -189,8 +189,32 @@ public class AdminAccessFilter extends ZuulFilter {
         if(requestUri.contains(LOG_OUT)){
         	cleanSession(request);
         }
+        
+        /**
+         * 拦截dmsCloud，进行单独解析
+         */
+        if(requestUri.contains("/dmscloud")){
+        	logger.info("--gate拦截/dmscloud--");
+        	IJwtInfo user = null;
+            try {
+            	//从JWT中解析出用户信息
+                user = getJWTUserDMS(request,ctx);
+            } catch (Exception e) {
+            	logger.info("--gate拦截/dmscloud emd--"+e.getMessage());
+            }
+            if(null != user){
+            	 logger.info("--gate拦截/dmscloud emd--user.getDealerCode()="+user.getDealerCode());
+            	 logger.info("--gate拦截/dmscloud emd--user.getUniqueName()="+user.getUniqueName());
+            	 logger.info("--gate拦截/dmscloud emd--user.getName()="+user.getName());
+            	addHeader(ctx, user);
+            }
+            logger.info("--gate拦截/dmscloud emd--");
+            return null;
+        }      
+        
         IJwtInfo user=this.dealControledUrlRequest( request,  ctx);
 
+        //TO-DO:检查是否有权限限制
         if(user!=null && !SPEC_URI_INFO.contains(requestUri)){
         	logger.info("--AdminAccessFilter.run(),开始uri访问权限检查");
             List<PermissionInfo> permissionInfos = cacheService.getAllPermissionInfo();
@@ -277,15 +301,54 @@ public class AdminAccessFilter extends ZuulFilter {
         if(authToken==null || "".equals(authToken)){
         	throw new Exception("jwt is null");
         }
-        if(StringUtils.isBlank(authToken)){
-            authToken = request.getParameter("Authorization");
-        }
+//        if(StringUtils.isBlank(authToken)){
+//            authToken = request.getParameter("Authorization");
+//        }
         ctx.addZuulRequestHeader(userAuthConfig.getTokenHeader(),authToken);
         //将token放到threadlocal中
         BaseContextHandler.setToken(authToken);
 //        JwtInfo info=authService.getUserInfo(authToken);
 //        return info;
         return cacheService.getInfoFromToken(authToken);
+    }
+    
+    /**
+     * 获取DMS用户信息
+     * @param request
+     * @param ctx
+     * @return
+     * @throws Exception
+     */
+    private IJwtInfo getJWTUserDMS(HttpServletRequest request,RequestContext ctx) throws Exception {
+        String authToken =  getValueFromCookie(request, "jwt");
+        if(authToken==null || "".equals(authToken)){
+        	authToken=request.getHeader("jwt");
+        }
+        logger.info("--jwt--:"+authToken);
+//        if(StringUtils.isBlank(authToken)){
+//            authToken = request.getParameter("Authorization");
+//        }
+        ctx.addZuulRequestHeader(userAuthConfig.getTokenHeader(),authToken);
+        //将token放到threadlocal中
+        BaseContextHandler.setToken(authToken);
+//        JwtInfo info=authService.getUserInfo(authToken);
+//        return info;
+//        return cacheService.getInfoFromToken(authToken);
+        //先切换到支持DMS的redis模式
+        return cacheService.getInfoFromTokenDms(authToken);
+    }
+    
+    private String getValueFromCookie(HttpServletRequest requestContext,String cookieKey){
+        String value=null;
+        if(requestContext.getCookies()!=null){
+            for(javax.servlet.http.Cookie cookie : requestContext.getCookies()){
+                if(cookie.getName().equals(cookieKey)){
+                    value=cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return value;
     }
 
     /**
@@ -312,7 +375,7 @@ public class AdminAccessFilter extends ZuulFilter {
      * @throws UnsupportedEncodingException
      */
     private boolean checkAllow(final String requestUri, final String method ,RequestContext ctx,String username) {
-        log.debug("uri：" + requestUri + "----method：" + method);
+        logger.debug("uri：" + requestUri + "----method：" + method);
         List<PermissionInfo> permissionInfos = getPermissionInfos(ctx.getRequest(), username) ;
         Collection<PermissionInfo> result = getPermissionInfos(requestUri, method, permissionInfos);
         if (result.size() <= 0) {
@@ -351,7 +414,7 @@ public class AdminAccessFilter extends ZuulFilter {
      * @param code
      */
     private void setFailedRequest(String body, int code) {
-        log.debug("Reporting error ({}): {}", code, body);
+    	logger.debug("Reporting error ("+code+"): "+body);
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.setResponseStatusCode(code);
         if (ctx.getResponseBody() == null) {

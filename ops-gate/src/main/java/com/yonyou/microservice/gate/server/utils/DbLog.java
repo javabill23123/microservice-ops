@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.log4j.Logger;
+
 import com.yonyou.microservice.gate.common.vo.log.LogInfo;
 import com.yonyou.microservice.gate.server.feign.ILogService;
 
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DbLog extends Thread {
     private static DbLog dblog = null;
     private static BlockingQueue<LogInfo> logInfoQueue = new LinkedBlockingQueue<LogInfo>(1024);
+	private static Logger logger=Logger.getLogger(DbLog.class);
 
     public ILogService getLogService() {
         return logService;
@@ -48,7 +51,7 @@ public class DbLog extends Thread {
         try {
             logInfoQueue.offer(logInfo);
         } catch (Exception e) {
-            log.error("日志写入失败", e);
+            logger.error("日志写入失败", e);
         }
     }
 

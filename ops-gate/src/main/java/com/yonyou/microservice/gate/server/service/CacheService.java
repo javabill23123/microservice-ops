@@ -1,6 +1,8 @@
 package com.yonyou.microservice.gate.server.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -8,9 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.JWT;
 import com.yonyou.cloud.common.jwt.IJwtInfo;
+import com.yonyou.cloud.common.jwt.JwtInfo;
+import com.yonyou.cloud.common.jwt.StringHelper;
 import com.yonyou.microservice.auth.client.jwt.UserAuthUtil;
 import com.yonyou.microservice.gate.common.vo.authority.IgnoreUriInfo;
 import com.yonyou.microservice.gate.common.vo.authority.PermissionInfo;
@@ -37,6 +45,16 @@ public class CacheService {
 	@Value("${redis.expire}")
     private int expire;
 
+	@Autowired(required = false)
+	public void setRedisTemplate(RedisTemplate redisTemplate) {
+	    RedisSerializer stringSerializer = new StringRedisSerializer();
+	    redisTemplate.setKeySerializer(stringSerializer);
+	    redisTemplate.setValueSerializer(stringSerializer);
+	    redisTemplate.setHashKeySerializer(stringSerializer);
+	    redisTemplate.setHashValueSerializer(stringSerializer);
+	    this.redisTemplate = redisTemplate;
+	}
+	
     @Cacheable(value = "gate",key="'gate.ignoreuri'")
     public List<IgnoreUriInfo> getIgnoreUris() {
     	logger.info("--getIgnoreUris from db");
@@ -120,6 +138,107 @@ public class CacheService {
     	return result;
 //    	return null;
     }
+    
+    /**
+     * DMSredis解析方式
+     * @param authToken
+     * @return
+     * @throws Exception
+     */
+    public IJwtInfo getInfoFromTokenDms(String authToken) throws Exception{
+    	logger.info("--getInfoFromTokenDms from jwtUtil,"+authToken);
+    	IJwtInfo result=null;
+    	try{
+    		JWT jwt = JWT.decode(authToken);
+            String uid = jwt.getClaim("uid").asString();
+            logger.info("--getInfoFromTokenDms uid="+uid);
+            setRedisTemplate(redisTemplate);
+
+//        	Object jwtInfo=redisTemplate.opsForValue().get("USR_CTX:"+uid);
+//        	 logger.info("--getInfoFromTokenDms jwtInfo="+jwtInfo);
+            Object loginInfoObj = redisTemplate.opsForHash().get("USR_CTX:"+uid, "\"loginInfo\"");
+            logger.info("--getInfoFromTokenDms loginInfoObj="+"USR_CTX:"+uid+"=\\\"loginInfo\\\"");
+            logger.info("--getInfoFromTokenDms loginInfoObj="+loginInfoObj);
+            Object loginInfoObj3 = redisTemplate.opsForValue().get("test");
+            logger.info("--getInfoFromTokenDms loginInfoObj3="+loginInfoObj3);
+            redisTemplate.opsForValue().set("mygate", "mygate");
+            Object loginInfoObj11 = redisTemplate.opsForHash().get("USR_CTX:"+uid, "loginInfo");
+            logger.info("--getInfoFromTokenDms loginInfoObj11="+loginInfoObj11);
+            Object loginInfoObj12 = redisTemplate.opsForHash().get("USR_CTX:"+uid, "\"loginInfo\"");
+            logger.info("--getInfoFromTokenDms loginInfoObj12="+loginInfoObj12);
+            if(loginInfoObj!=null){
+//        		Map<String,Object> jwtMap = (Map<String,Object>)jwtInfo;
+        				
+        				//jwtMap.get("loginInfo");
+//        		 logger.info("--getInfoFromTokenDms loginInfoObj="+loginInfoObj);
+//        		if(null != loginInfoObj){
+//        			logger.info("--getInfoFromTokenDms loginInfo="+loginInfo);
+        			
+        			JSONObject json = JSONObject.parseObject(loginInfoObj.toString());  
+        			String dealerCode= StringHelper.getObjectValue(json.getString("dealerCode")).trim();
+        			String dealerName= StringHelper.getObjectValue(json.getString("dealerName")).trim();
+//        			String orgName= StringHelper.getObjectValue(json.getString("orgName")).trim();
+        			String userAccount= StringHelper.getObjectValue(json.getString("userAccount")).trim();
+        			String userId=  StringHelper.getObjectValue(json.getString("userId")).trim();
+        			String userIdT = StringHelper.getObjectValue(userId.substring(userId.indexOf(",")+1, userId.indexOf("]"))).trim();
+        			String userName= StringHelper.getObjectValue(json.getString("userName"));
+//    				logger.info("--getInfoFromTokenDms loginInfo.getUserName="+loginInfo.getUserName());
+        			
+        			 logger.info("--getInfoFromTokenDms dealerCode="+dealerCode);
+        			 logger.info("--getInfoFromTokenDms dealerName="+dealerName);
+        			 logger.info("--getInfoFromTokenDms userAccount="+userAccount);
+        			 logger.info("--getInfoFromTokenDms userId="+userId);
+        			 logger.info("--getInfoFromTokenDms userIdT="+userIdT);
+        			 logger.info("--getInfoFromTokenDms userName="+userName);
+        			
+					/**
+					 * map存放的数据
+					 */
+        			String groupCode= StringHelper.getObjectValue(json.getString("groupCode")).trim();
+        			String purchaseDepot= StringHelper.getObjectValue(json.getString("purchaseDepot")).trim();
+        			String carLoadDepot= StringHelper.getObjectValue(json.getString("carLoadDepot")).trim();
+        			String suppliesDepot= StringHelper.getObjectValue(json.getString("suppliesDepot")).trim();
+        			String repair= StringHelper.getObjectValue(json.getString("repair")).trim();
+        			String purchase= StringHelper.getObjectValue(json.getString("purchase")).trim();
+        			String isPartCustomer= StringHelper.getObjectValue(json.getString("isPartCustomer")).trim();
+        			String orgType= StringHelper.getObjectValue(json.getString("orgType")).trim();
+        			
+	       			 logger.info("--getInfoFromTokenDms repair befer="+repair);
+	       			 logger.info("--getInfoFromTokenDms purchase befer="+purchase);
+	       			 repair = repair.replaceAll("\"@class\":\"java.util.HashMap\",", "");
+	       			 purchase = purchase.replaceAll("\"@class\":\"java.util.HashMap\",", "");
+        			 logger.info("--getInfoFromTokenDms purchaseDepot="+purchaseDepot);
+        			 logger.info("--getInfoFromTokenDms carLoadDepot="+carLoadDepot);
+        			 logger.info("--getInfoFromTokenDms suppliesDepot="+suppliesDepot);
+        			 logger.info("--getInfoFromTokenDms repair after="+repair);
+        			 logger.info("--getInfoFromTokenDms purchase after="+purchase);
+    				Map<String,String> map=new HashMap<String,String>();
+    				map.put("GROUP_CODE", groupCode);
+    				map.put("PURCHASE_DEPOT", purchaseDepot);
+    				map.put("CAR_LOAD_DEPOT", carLoadDepot);
+    				map.put("SUPPLIES_DEPOT", suppliesDepot);
+    				map.put("REPAIR_PARAMETER", repair);
+    				map.put("PART_PARAMETER", purchase);
+    				map.put("IS_PART_CUSTOMER", isPartCustomer);
+    				map.put("ORG_TYPE", orgType);
+    				result = new JwtInfo(
+    						userAccount,
+    						userIdT,
+    						userName,
+    						dealerCode,
+    						dealerName,
+    						"",
+    						true,map,"根据token，生成用户信息"
+    				);
+//        			}
+        	}
+    	}catch(Exception e){
+    		logger.info("--redis发生异常，从jwt取信息");
+    		logger.error(e);
+    	}
+    	return result;
+    }
+    
     @Cacheable(value = "gate",key="'gate.permission.user.'+#username")
     public List<PermissionInfo> getPermissionByUsername(String username){
     	logger.info("--getPermissionByUsername from db");
