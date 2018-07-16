@@ -166,6 +166,7 @@ public class CacheService {
             logger.info("--getInfoFromTokenDms loginInfoObj11="+loginInfoObj11);
             Object loginInfoObj12 = redisTemplate.opsForHash().get("USR_CTX:"+uid, "\"loginInfo\"");
             logger.info("--getInfoFromTokenDms loginInfoObj12="+loginInfoObj12);
+            Object userAccessInfoObj = redisTemplate.opsForHash().get("USR_CTX:"+uid, "\"userAccessInfo\"");
             if(loginInfoObj!=null){
 //        		Map<String,Object> jwtMap = (Map<String,Object>)jwtInfo;
         				
@@ -221,6 +222,9 @@ public class CacheService {
     				map.put("PART_PARAMETER", purchase);
     				map.put("IS_PART_CUSTOMER", isPartCustomer);
     				map.put("ORG_TYPE", orgType);
+    				map.put("AUTH_TOKEN", authToken);//token
+    				map.put("USER_ACCESS_INFO", userAccessInfoObj==null?"":userAccessInfoObj.toString());
+    				
     				result = new JwtInfo(
     						userAccount,
     						userIdT,
